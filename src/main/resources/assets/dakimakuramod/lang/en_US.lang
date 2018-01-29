@@ -1,0 +1,8 @@
+# Item names
+item.dakimakuramod:dakimakura.name=Dakimakura
+
+# Item flavour text
+item.dakimakuramod:dakimakura.flavour=A huggable friend!
+
+# Creative tab
+itemGroup.dakimakuramod=Dakimakura Mod
