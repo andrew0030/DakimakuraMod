@@ -1,8 +1,8 @@
-# Item names
-item.dakimakuramod:dakimakura.name=Дакимакура
+# Block names
+tile.dakimakuramod:dakimakura.name=Дакимакура
 
-# Item flavour text
-item.dakimakuramod:dakimakura.flavour=Вайфу в твоих объятиях!
+# Block flavour text
+tile.dakimakuramod:dakimakura.flavour=Вайфу в твоих объятиях!
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
