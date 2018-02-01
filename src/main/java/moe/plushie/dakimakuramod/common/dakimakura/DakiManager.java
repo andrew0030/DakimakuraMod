@@ -2,12 +2,16 @@ package moe.plushie.dakimakuramod.common.dakimakura;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiJsonSerializer;
+import moe.plushie.dakimakuramod.common.network.PacketHandler;
+import moe.plushie.dakimakuramod.common.network.message.server.MessageServerSendDakiList;
 import net.minecraft.util.StringUtils;
 
 public class DakiManager {
@@ -21,7 +25,6 @@ public class DakiManager {
             packFolder.mkdir();
         }
         dakiMap = new HashMap<String, Daki>();
-        loadPacks();
     }
     
     public void loadPacks() {
@@ -32,6 +35,7 @@ public class DakiManager {
                 loadPack(files[i]);
             }
         }
+        sendDakiListToClients();
     }
     
     private void loadPack(File dir) {
@@ -50,12 +54,16 @@ public class DakiManager {
         if (dakiFile.exists()) {
             String dakiJson = readStringFromFile(dakiFile);
             if (!StringUtils.isNullOrEmpty(dakiJson)) {
-                Daki dakimakura = DakiSerializer.deserialize(dakiJson, packDir.getName(), dakieDir.getName());
+                Daki dakimakura = DakiJsonSerializer.deserialize(dakiJson, packDir.getName(), dakieDir.getName());
                 if (dakimakura != null) {
                     addDakiToMap(packDir.getName(), dakieDir.getName(), dakimakura);
                 }
             }
         }
+    }
+    
+    private void addDakiToMap(Daki daki) {
+        dakiMap.put(daki.getPackDirectoryName() + ":" + daki.getDakiDirectoryName(), daki);
     }
     
     private void addDakiToMap(String packDirName, String dakiDirName, Daki daki) {
@@ -84,7 +92,7 @@ public class DakiManager {
         return data;
     }
     
-    public ArrayList<Daki> getDakimakuraList() {
+    public ArrayList<Daki> getDakiList() {
         ArrayList<Daki> dakimakuraList = new ArrayList<Daki>();
         for (int i = 0; i < dakiMap.size(); i++) {
             String key = (String) dakiMap.keySet().toArray()[i];
@@ -93,10 +101,22 @@ public class DakiManager {
                 dakimakuraList.add(daki);
             }
         }
+        Collections.sort(dakimakuraList);
         return dakimakuraList;
+    }
+    
+    public void setDakiList(ArrayList<Daki> dakiList) {
+        dakiMap.clear();
+        for (int i = 0; i < dakiList.size(); i++) {
+            addDakiToMap(dakiList.get(i));
+        }
     }
     
     public File getPackFolder() {
         return packFolder;
+    }
+    
+    private void sendDakiListToClients() {
+        PacketHandler.NETWORK_WRAPPER.sendToAll(new MessageServerSendDakiList());
     }
 }

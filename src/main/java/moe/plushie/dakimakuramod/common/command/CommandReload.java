@@ -12,6 +12,6 @@ public class CommandReload extends AbstractCommand {
 
     @Override
     public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        DakimakuraMod.dakimakuraManager.loadPacks();
+        DakimakuraMod.getProxy().getDakimakuraManager().loadPacks();
     }
 }

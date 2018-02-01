@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
 import moe.plushie.dakimakuramod.client.render.tileentity.RenderBlockDakimakura;
+import moe.plushie.dakimakuramod.client.texture.DakiTextureManager;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -15,13 +16,15 @@ import net.minecraftforge.client.MinecraftForgeClient;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
+    private DakiTextureManager dakiTextureManager;
+    
     @Override
     public void initRenderers() {
-        ModelDakimakura modelDakimakura = new ModelDakimakura();
+        dakiTextureManager = new DakiTextureManager();
+        ModelDakimakura modelDakimakura = new ModelDakimakura(dakiTextureManager);
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(getModBlocks().BLOCK_DAKIMAKURA), new RenderItemDakimakura(modelDakimakura));
-        //RenderingRegistry.registerEntityRenderingHandler(EntityDakimakura.class, new RenderEntityDakimakura(modelDakimakura));
-        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelSteve, modelAlex));
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDakimakura.class, new RenderBlockDakimakura(modelDakimakura));
+        //DakimakuraMod.logger.info("Max texture size: " + GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE));
     }
     
     @Override
@@ -30,5 +33,9 @@ public class ClientProxy extends CommonProxy {
             return Minecraft.getMinecraft().getIntegratedServer();
         }
         return super.getServer();
+    }
+    
+    public DakiTextureManager getDakiTextureManager() {
+        return dakiTextureManager;
     }
 }

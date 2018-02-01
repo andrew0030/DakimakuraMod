@@ -1,18 +1,22 @@
-package moe.plushie.dakimakuramod.common.dakimakura;
+package moe.plushie.dakimakuramod.common.dakimakura.serialize;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public final class DakiSerializer {
+import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 
-    private DakiSerializer() {}
+public final class DakiJsonSerializer {
+
+    private DakiJsonSerializer() {}
     
     public static JsonElement serialize(Daki src) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("romaji-name", src.getRomajiName());
         jsonObject.addProperty("original-name", src.getOriginalName());
         jsonObject.addProperty("author", src.getAuthor());
+        jsonObject.addProperty("image-front", src.getImageFront());
+        jsonObject.addProperty("image-back", src.getImageBack());
         return jsonObject;
     }
     

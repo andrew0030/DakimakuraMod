@@ -1,6 +1,6 @@
 package moe.plushie.dakimakuramod.common.dakimakura;
 
-public class Daki {
+public class Daki implements Comparable<Daki> {
     
     private final String packDirectoryName;
     private final String dakiDirectoryName;
@@ -93,5 +93,16 @@ public class Daki {
         } else if (!packDirectoryName.equals(other.packDirectoryName))
             return false;
         return true;
+    }
+
+    @Override
+    public int compareTo(Daki o) {
+        int result = packDirectoryName.compareTo(o.packDirectoryName) * 1000;
+        return result + dakiDirectoryName.compareTo(o.dakiDirectoryName);
+    }
+
+    @Override
+    public String toString() {
+        return "Daki [packDirectoryName=" + packDirectoryName + ", dakiDirectoryName=" + dakiDirectoryName + "]";
     }
 }

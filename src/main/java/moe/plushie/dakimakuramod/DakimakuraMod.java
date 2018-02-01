@@ -12,7 +12,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import moe.plushie.dakimakuramod.common.command.CommandDakimakura;
 import moe.plushie.dakimakuramod.common.creativetab.CreativeTabDakimakura;
-import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.CommonProxy;
 
@@ -29,14 +28,11 @@ public class DakimakuraMod {
     
     public static CreativeTabDakimakura creativeTabDakimakura = new CreativeTabDakimakura();
     
-    public static DakiManager dakimakuraManager;
-    
     @EventHandler
     public void perInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         logger.info(String.format("Loading %s version %s", LibModInfo.NAME, LibModInfo.VERSION));
         proxy.preInit(event);
-        dakimakuraManager = new DakiManager(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
     }
     
     @EventHandler
@@ -53,6 +49,7 @@ public class DakimakuraMod {
     @EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandDakimakura());
+        proxy.getDakimakuraManager().loadPacks();
     }
     
     public static CommonProxy getProxy() {

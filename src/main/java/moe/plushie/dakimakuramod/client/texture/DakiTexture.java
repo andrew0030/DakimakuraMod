@@ -1,4 +1,4 @@
-package moe.plushie.dakimakuramod.client;
+package moe.plushie.dakimakuramod.client.texture;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,7 +46,7 @@ public class DakiTexture extends AbstractTexture {
     @Override
     public void loadTexture(IResourceManager resourceManager) throws IOException {
         DakimakuraMod.logger.info("loading raw texture " + daki.toString());
-        File dir = DakimakuraMod.dakimakuraManager.getPackFolder();
+        File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         dir = new File(dir, daki.getPackDirectoryName());
         dir = new File(dir, daki.getDakiDirectoryName());
         

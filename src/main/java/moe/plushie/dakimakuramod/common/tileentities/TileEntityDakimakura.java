@@ -3,9 +3,9 @@ package moe.plushie.dakimakuramod.common.tileentities;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
-import net.minecraft.item.ItemStack;
+import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -13,6 +13,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityDakimakura extends TileEntity {
     
@@ -22,29 +23,20 @@ public class TileEntityDakimakura extends TileEntity {
     private String dakiDirName;
     private boolean flipped;
     
-    public void setDaki(ItemStack itemStack) {
-        packDirName = null;
-        dakiDirName = null;
-        if (itemStack.hasTagCompound()) {
-            NBTTagCompound compound = itemStack.getTagCompound();
-            if (compound.hasKey(ItemBlockDakimakura.TAG_DAKI_PACK_NAME, NBT.TAG_STRING) & compound.hasKey(ItemBlockDakimakura.TAG_DAKI_DIR_NAME, NBT.TAG_STRING)) {
-                packDirName = compound.getString(ItemBlockDakimakura.TAG_DAKI_PACK_NAME);
-                dakiDirName = compound.getString(ItemBlockDakimakura.TAG_DAKI_DIR_NAME);
-            } 
+    public void setDaki(Daki daki) {
+        if (daki != null) {
+            packDirName = daki.getPackDirectoryName();
+            dakiDirName = daki.getDakiDirectoryName();
+        } else {
+            packDirName = null;
+            dakiDirName = null;
         }
         markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    public void setDaki(Daki daki) {
-        this.packDirName = daki.getPackDirectoryName();
-        this.dakiDirName = daki.getDakiDirectoryName();
-        markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-    
     public Daki getDaki() {
-        return DakimakuraMod.dakimakuraManager.getDakiFromMap(packDirName, dakiDirName);
+        return DakimakuraMod.getProxy().getDakimakuraManager().getDakiFromMap(packDirName, dakiDirName);
     }
     
     public void setFlipped(boolean flipped) {
@@ -65,9 +57,9 @@ public class TileEntityDakimakura extends TileEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey(ItemBlockDakimakura.TAG_DAKI_PACK_NAME, NBT.TAG_STRING) & compound.hasKey(ItemBlockDakimakura.TAG_DAKI_DIR_NAME, NBT.TAG_STRING)) {
-            packDirName = compound.getString(ItemBlockDakimakura.TAG_DAKI_PACK_NAME);
-            dakiDirName = compound.getString(ItemBlockDakimakura.TAG_DAKI_DIR_NAME);
+        if (compound.hasKey(DakiNbtSerializer.TAG_DAKI_PACK_NAME, NBT.TAG_STRING) & compound.hasKey(DakiNbtSerializer.TAG_DAKI_DIR_NAME, NBT.TAG_STRING)) {
+            packDirName = compound.getString(DakiNbtSerializer.TAG_DAKI_PACK_NAME);
+            dakiDirName = compound.getString(DakiNbtSerializer.TAG_DAKI_DIR_NAME);
         }
         flipped = compound.getBoolean(TAG_FLIPPED);
     }
@@ -76,8 +68,8 @@ public class TileEntityDakimakura extends TileEntity {
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (packDirName != null & dakiDirName != null) {
-            compound.setString(ItemBlockDakimakura.TAG_DAKI_PACK_NAME, packDirName);
-            compound.setString(ItemBlockDakimakura.TAG_DAKI_DIR_NAME, dakiDirName);
+            compound.setString(DakiNbtSerializer.TAG_DAKI_PACK_NAME, packDirName);
+            compound.setString(DakiNbtSerializer.TAG_DAKI_DIR_NAME, dakiDirName);
         }
         compound.setBoolean(TAG_FLIPPED, flipped);
     }
@@ -100,14 +92,17 @@ public class TileEntityDakimakura extends TileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
+        if (BlockDakimakura.isStanding(getBlockMetadata())) {
+            return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
+        }
         AxisAlignedBB[] rots = {
+                AxisAlignedBB.getBoundingBox(0, 0, -1, 1, 0.28F, 1),
                 AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 0.28F, 2),
                 AxisAlignedBB.getBoundingBox(-1, 0, 0, 1, 0.28F, 1),
-                AxisAlignedBB.getBoundingBox(0, 0, -1, 1, 0.28F, 1),
                 AxisAlignedBB.getBoundingBox(0, 0, 0, 2, 0.28F, 1)
                 };
         
-        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
-        return rots[getBlockMetadata() & 3].offset(xCoord, yCoord, zCoord);
+        ForgeDirection rot = BlockDakimakura.getRotation(getBlockMetadata());
+        return rots[(rot.ordinal() - 2) & 3].offset(xCoord, yCoord, zCoord);
     }
 }

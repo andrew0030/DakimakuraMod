@@ -3,14 +3,19 @@ package moe.plushie.dakimakuramod.common.block;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -19,6 +24,11 @@ public class BlockDakimakura extends AbstractModBlockContainer {
 
     private static ForgeDirection[] ROTATIONS = new ForgeDirection[] {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
     
+    private static final int META_BIT_TOP_BOT = 3;
+    private static final int META_BIT_POS_NEG = 1;
+    private static final int META_BIT_X_Z = 2;
+    private static final int META_BIT_STANDING = 0;
+    
     protected BlockDakimakura() {
         super("dakimakura");
     }
@@ -26,25 +36,94 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase livingBase, ItemStack itemStack) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
+        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
-            ((TileEntityDakimakura)tileEntity).setDaki(itemStack);
+            ((TileEntityDakimakura)tileEntity).setDaki(daki);
             ((TileEntityDakimakura)tileEntity).setFlipped(livingBase.isSneaking());
         }
     }
     
-    public static ForgeDirection getRotation(int meta) {
-        return ROTATIONS[meta & 3];
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
+        ItemStack itemStack = new ItemStack(this, 1, 0);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
+            Daki daki = ((TileEntityDakimakura)tileEntity).getDaki();
+            if (daki != null) {
+                itemStack.setTagCompound(new NBTTagCompound());
+                DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
+            }
+        }
+        return itemStack;
     }
     
-    public ForgeDirection getRotation(IBlockAccess blockAccess, int x, int y, int z) {
-        int meta = blockAccess.getBlockMetadata(x, y, z);
-        return getRotation(meta);
+    private static int getBit(int value, int index) {
+        return (value >> index) & 1;
+    }
+    
+    private static int setBit(int value, int index, boolean on) {
+        if (on) {
+            return value | (1 << index);
+        } else {
+            return value | (0 << index);
+        }
+    }
+    
+    public static int setRotationOnMeta(int meta, ForgeDirection rot) {
+        // Set negative/positive bit.
+        if (rot == ForgeDirection.NORTH | rot == ForgeDirection.WEST) {
+            meta = setBit(meta, META_BIT_POS_NEG, false);
+        } else if (rot == ForgeDirection.SOUTH | rot == ForgeDirection.EAST) {
+            meta = setBit(meta, META_BIT_POS_NEG, true);
+        }
+        
+        // Set x/z bit.
+        if (rot == ForgeDirection.EAST | rot == ForgeDirection.WEST) {
+            meta = setBit(meta, META_BIT_X_Z, true);
+        } else if (rot == ForgeDirection.NORTH | rot == ForgeDirection.SOUTH) {
+            meta = setBit(meta, META_BIT_X_Z, false);
+        }
+        return meta;
+    }
+    
+    public static ForgeDirection getRotation(int meta) {
+        boolean posNeg = getBit(meta, META_BIT_POS_NEG) == 1;
+        boolean xz = getBit(meta, META_BIT_X_Z) == 1;
+        if (posNeg) {
+            if (xz) {
+                return ForgeDirection.EAST;
+            } else {
+                return ForgeDirection.SOUTH;
+            }
+        } else {
+            if (xz) {
+                return ForgeDirection.WEST;
+            } else {
+                return ForgeDirection.NORTH;
+            }
+        }
+    }
+    
+    public static int setStandingOnMeta(int meta, boolean standing) {
+        return setBit(meta, META_BIT_STANDING, standing);
+    }
+    
+    public static boolean isStanding(int meta) {
+        return getBit(meta, META_BIT_STANDING) == 1;
+    }
+    
+    public static int setTopPartOnMeta(int meta, boolean topPart) {
+        return setBit(meta, META_BIT_TOP_BOT, topPart);
+    }
+    
+    public static boolean isTopPart(int meta) {
+        return getBit(meta, META_BIT_TOP_BOT) == 1;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister iconRegister) {}
-    
+
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         setBlockBoundsBasedOnState(world, x, y, z);
@@ -55,6 +134,11 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         ForgeDirection rot = getRotation(meta);
+        boolean standing = isStanding(meta);
+        boolean topPart = isTopPart(meta);
+        
+        
+        
         float w1 = 0.2F;
         float w2 = 0.8F;
         float h1 = 0.01F;
@@ -69,32 +153,75 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         float z1 = d1;
         float z2 = d2;
         
-        switch (rot) {
-        case NORTH:
-            z1 = 1 - d2;
-            z2 = 1 - d1;
-            break;
-        case EAST:
-            x1 = d1;
-            x2 = d2;
-            z1 = w1;
-            z2 = w2;
-            break;
-        case WEST:
-            x1 = 1 - d2;
-            x2 = 1 - d1;
-            z1 = 1 - w2;
-            z2 = 1 - w1;
-            break;
-        default:
-            break;
-        }
+        //DakimakuraMod.logger.info(rot);
         
         
-        if (meta < 4) {
-            setBlockBounds(x1, y1, z1, x2, y2, z2);
+        if (!standing) {
+            switch (rot) {
+            case NORTH:
+                z1 = 1 - d2;
+                z2 = 1 - d1;
+                break;
+            case EAST:
+                x1 = d1;
+                x2 = d2;
+                z1 = w1;
+                z2 = w2;
+                break;
+            case WEST:
+                x1 = 1 - d2;
+                x2 = 1 - d1;
+                z1 = 1 - w2;
+                z2 = 1 - w1;
+                break;
+            default:
+                break;
+            }
         } else {
-            setBlockBounds((x1 - 1F * rot.offsetX), y1, (z1 - 1F * rot.offsetZ), (x2 - 1F * rot.offsetX), y2, (z2 - 1F * rot.offsetZ));
+            
+        }
+
+            
+        if (standing) {
+            y1 = d1;
+            y2 = d2;
+            switch (rot) {
+            case SOUTH:
+                z1 = 1 - h2;
+                z2 = 1 - h1;
+                break;
+            case NORTH:
+                z1 = h1;
+                z2 = h2;
+                break;
+            case EAST:
+                x1 = 1 - h2;
+                x2 = 1 - h1;
+                z1 = w1;
+                z2 = w2;
+                break;
+            case WEST:
+                x1 = h1;
+                x2 = h2;
+                z1 = w1;
+                z2 = w2;
+                break;
+            default:
+                break;
+            }
+        }
+        if (!standing) {
+            if (!topPart) {
+                setBlockBounds(x1, y1, z1, x2, y2, z2);
+            } else {
+                setBlockBounds((x1 - 1F * rot.offsetX), (y1 - 1F * rot.offsetY), (z1 - 1F * rot.offsetZ), (x2 - 1F * rot.offsetX), (y2 - 1F * rot.offsetY), (z2 - 1F * rot.offsetZ));
+            }
+        } else {
+            if (!topPart) {
+                setBlockBounds(x1, y1, z1, x2, y2, z2);
+            } else {
+                setBlockBounds(x1, y1 - 1, z1, x2, y2 - 1, z2);
+            }
         }
     }
     
@@ -102,13 +229,27 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         int meta = world.getBlockMetadata(x, y, z);
         ForgeDirection dir = getRotation(meta);
-        if (meta < 4) {
-            if (world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) != this) {
-                world.setBlockToAir(x, y, z);
+        boolean topPart = isTopPart(meta);
+        boolean standing = isStanding(meta);
+        if (!standing) {
+            if (!topPart) {
+                if (world.getBlock(x + dir.offsetX, y, z + dir.offsetZ) != this) {
+                    world.setBlockToAir(x, y, z);
+                }
+            } else {
+                if (world.getBlock(x - dir.offsetX, y, z - dir.offsetZ) != this) {
+                    world.setBlockToAir(x, y, z);
+                }
             }
         } else {
-            if (world.getBlock(x - dir.offsetX, y - dir.offsetY, z - dir.offsetZ) != this) {
-                world.setBlockToAir(x, y, z);
+            if (!topPart) {
+                if (world.getBlock(x, y + 1, z) != this) {
+                    world.setBlockToAir(x, y, z);
+                }
+            } else {
+                if (world.getBlock(x, y - 1, z) != this) {
+                    world.setBlockToAir(x, y, z);
+                }
             }
         }
     }
