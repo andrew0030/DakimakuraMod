@@ -39,7 +39,7 @@ public class DakiManager {
     }
     
     private void loadPack(File dir) {
-        DakimakuraMod.logger.info("Loading Pack: " + dir.getName());
+        DakimakuraMod.getLogger().info("Loading Pack: " + dir.getName());
         File[] files = dir.listFiles();
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
@@ -49,7 +49,7 @@ public class DakiManager {
     }
     
     private void loadDaki(File packDir, File dakieDir) {
-        DakimakuraMod.logger.info("Loading Dakimakura: " + dakieDir.getName());
+        DakimakuraMod.getLogger().info("Loading Dakimakura: " + dakieDir.getName());
         File dakiFile = new File(dakieDir, "daki-info.json");
         if (dakiFile.exists()) {
             String dakiJson = readStringFromFile(dakiFile);

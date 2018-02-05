@@ -6,7 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 public class CreativeTabDakimakura extends CreativeTabs {
-
+    
     public CreativeTabDakimakura() {
         super(LibModInfo.ID);
     }

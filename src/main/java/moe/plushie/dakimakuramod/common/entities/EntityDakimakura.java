@@ -78,14 +78,14 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     @Override
     public boolean hitByEntity(Entity entity) {
         // TODO Auto-generated method stub
-        DakimakuraMod.logger.info("poo");
+        DakimakuraMod.getLogger().info("poo");
         setDead();
         return false;
     }
     
     @Override
     public boolean interactFirst(EntityPlayer entityPlayer) {
-        DakimakuraMod.logger.info("poo");
+        DakimakuraMod.getLogger().info("poo");
         setDead();
         return false;
     }

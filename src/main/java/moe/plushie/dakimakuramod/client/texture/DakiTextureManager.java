@@ -19,7 +19,7 @@ public class DakiTextureManager {
     public DakiTexture getTextureForDaki(Daki daki) {
         DakiTexture dakiTexture  = textureMap.get(daki);
         if (dakiTexture == null) {
-            DakimakuraMod.logger.info("Creating texture for: " + daki.toString());
+            DakimakuraMod.getLogger().info("Creating texture for: " + daki.toString());
             dakiTexture = new DakiTexture(daki);
             textureMap.put(daki, dakiTexture);
         }

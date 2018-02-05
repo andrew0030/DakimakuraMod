@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public class GuiHandler implements IGuiHandler {
 
     public GuiHandler() {
-        NetworkRegistry.INSTANCE.registerGuiHandler(DakimakuraMod.instance, this);
+        NetworkRegistry.INSTANCE.registerGuiHandler(DakimakuraMod.getInstance(), this);
     }
     
     @Override

@@ -24,7 +24,7 @@ public class SyncHandler {
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.entity instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) event.entity;
-            DakimakuraMod.logger.info(String.format("Sending daki list to %s", player.getCommandSenderName()));
+            DakimakuraMod.getLogger().info(String.format("Sending daki list to %s", player.getCommandSenderName()));
             PacketHandler.NETWORK_WRAPPER.sendTo(new MessageServerSendDakiList(), player);
         }
     }

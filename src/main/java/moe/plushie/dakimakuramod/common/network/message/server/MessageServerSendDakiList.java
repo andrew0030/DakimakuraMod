@@ -25,7 +25,7 @@ public class MessageServerSendDakiList implements IMessage, IMessageHandler<Mess
     public void toBytes(ByteBuf buf) {
         ArrayList<Daki> dakiList = dakiManager.getDakiList();
         buf.writeInt(dakiList.size());
-        DakimakuraMod.logger.info("Sending " + dakiList.size() + " to client.");
+        DakimakuraMod.getLogger().info("Sending " + dakiList.size() + " to client.");
         for (int i = 0; i < dakiList.size(); i++) {
             Daki daki = dakiList.get(i);
             ByteBufUtils.writeUTF8String(buf, daki.getPackDirectoryName() + ":" + daki.getDakiDirectoryName());
@@ -37,7 +37,7 @@ public class MessageServerSendDakiList implements IMessage, IMessageHandler<Mess
     public void fromBytes(ByteBuf buf) {
         dakiList = new ArrayList<Daki>();
         int listSize = buf.readInt();
-        DakimakuraMod.logger.info("Getting " + listSize + " from server.");
+        DakimakuraMod.getLogger().info("Getting " + listSize + " from server.");
         for (int i = 0; i < listSize; i++) {
             String path = ByteBufUtils.readUTF8String(buf);
             String dakiJson = ByteBufUtils.readUTF8String(buf);

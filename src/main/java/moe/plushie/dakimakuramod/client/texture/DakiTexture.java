@@ -45,7 +45,7 @@ public class DakiTexture extends AbstractTexture {
     
     @Override
     public void loadTexture(IResourceManager resourceManager) throws IOException {
-        DakimakuraMod.logger.info("loading raw texture " + daki.toString());
+        DakimakuraMod.getLogger().info("loading raw texture " + daki.toString());
         File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         dir = new File(dir, daki.getPackDirectoryName());
         dir = new File(dir, daki.getDakiDirectoryName());

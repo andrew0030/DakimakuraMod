@@ -41,14 +41,13 @@ public class ItemBlockDakimakura extends ModItemBlock {
     
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        DakimakuraMod.logger.info("pie");
         if (super.onItemUse(itemStack, entityPlayer, world, x, y, z, side, hitX, hitY, hitZ)) {
             int rot = (MathHelper.floor_double((double)(entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
             ForgeDirection[] rots = new ForgeDirection[] {ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
             ForgeDirection dir = rots[rot].getOpposite();
             
             int meta = 0;
-            DakimakuraMod.logger.info("Setting standing as: " + false);
+            DakimakuraMod.getLogger().info("Setting standing as: " + false);
             meta = BlockDakimakura.setRotationOnMeta(meta, dir);
             
             meta = BlockDakimakura.setStandingOnMeta(meta, false);
@@ -65,13 +64,20 @@ public class ItemBlockDakimakura extends ModItemBlock {
             offZ += offset1.offsetZ;
             
             if (offset1 != ForgeDirection.UP) {
-                
+                dir = ForgeDirection.UP;
+                meta = BlockDakimakura.setRotationOnMeta(meta, dir);
+                meta = BlockDakimakura.setStandingOnMeta(meta, true);
+                DakimakuraMod.getLogger().info("Not up or down " + offset1);
+            }
+            // TODO Allow placing on the top of blocks.
+            /*
+            if (offset1 == ForgeDirection.DOWN) {
                 dir = ForgeDirection.UP;
                 meta = BlockDakimakura.setRotationOnMeta(meta, dir);
                 meta = BlockDakimakura.setStandingOnMeta(meta, true);
                 DakimakuraMod.logger.info("Not up or down " + offset1);
             }
-            
+            */
             super.placeBlockAt(itemStack, entityPlayer, world, offX, offY, offZ, side, hitX, hitY, hitZ, meta);
             world.markBlockForUpdate(offX, offY, offZ);
             

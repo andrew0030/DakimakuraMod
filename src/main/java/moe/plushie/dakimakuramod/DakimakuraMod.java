@@ -19,12 +19,12 @@ import moe.plushie.dakimakuramod.proxies.CommonProxy;
 public class DakimakuraMod {
     
     @Instance(LibModInfo.ID)
-    public static DakimakuraMod instance;
+    private static DakimakuraMod instance;
 
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
-    public static CommonProxy proxy;
+    private static CommonProxy proxy;
     
-    public static Logger logger;
+    private static Logger logger;
     
     public static CreativeTabDakimakura creativeTabDakimakura = new CreativeTabDakimakura();
     
@@ -54,5 +54,13 @@ public class DakimakuraMod {
     
     public static CommonProxy getProxy() {
         return proxy;
+    }
+    
+    public static DakimakuraMod getInstance() {
+        return instance;
+    }
+    
+    public static Logger getLogger() {
+        return logger;
     }
 }

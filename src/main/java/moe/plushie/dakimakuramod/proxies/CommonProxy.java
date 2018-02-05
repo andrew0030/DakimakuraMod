@@ -30,7 +30,7 @@ public class CommonProxy {
     }
     
     public void initRenderers() {
-        DakimakuraMod.logger.error("Trying to init renderers on the server side.");
+        DakimakuraMod.getLogger().error("Trying to init renderers on the server side.");
     }
     
     public void postInit(FMLPostInitializationEvent event) {
