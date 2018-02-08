@@ -7,11 +7,11 @@ import net.minecraft.tileentity.TileEntity;
 
 public class ModBlocks {
     
-    public final Block BLOCK_DAKIMAKURA;
+    public static Block blockDakimakura;
     //public final Block BLOCK_DAKI_BED;
     
     public ModBlocks() {
-        BLOCK_DAKIMAKURA = new BlockDakimakura();
+        blockDakimakura = new BlockDakimakura();
         //BLOCK_DAKI_BED = new BlockDakiBed();
     }
     

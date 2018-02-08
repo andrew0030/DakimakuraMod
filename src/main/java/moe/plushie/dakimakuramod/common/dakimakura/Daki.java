@@ -1,5 +1,8 @@
 package moe.plushie.dakimakuramod.common.dakimakura;
 
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
+import net.minecraft.util.StringUtils;
+
 public class Daki implements Comparable<Daki> {
     
     private final String packDirectoryName;
@@ -62,6 +65,30 @@ public class Daki implements Comparable<Daki> {
     
     public void setImageBack(String imageBack) {
         this.imageBack = imageBack;
+    }
+    
+    public String getDisplayName() {
+        if (ConfigHandler.romajiName) {
+            if (!StringUtils.isNullOrEmpty(romajiName)) {
+                return romajiName;
+            } else {
+                return dakiDirectoryName;
+            }
+        }
+        
+        if (!ConfigHandler.romajiName) {
+            if (!StringUtils.isNullOrEmpty(originalName)) {
+                return originalName;
+            } else {
+                if (!StringUtils.isNullOrEmpty(romajiName)) {
+                    return romajiName;
+                } else {
+                    return dakiDirectoryName;
+                }
+            }
+        }
+        
+        return dakiDirectoryName;
     }
     
     @Override

@@ -23,6 +23,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
 
     public ItemBlockDakimakura(Block block) {
         super(block);
+        setMaxStackSize(1);
     }
     
     @SideOnly(Side.CLIENT)
@@ -112,17 +113,23 @@ public class ItemBlockDakimakura extends ModItemBlock {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        super.addInformation(itemStack, player, list, par4);
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
+        super.addInformation(itemStack, player, list, advancedItemTooltips);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (daki != null) {
             list.add("");
-            list.add("---DEBUG---");
-            list.add("PackDirectory: " + daki.getPackDirectoryName());
-            list.add("DakiDirectory: " + daki.getDakiDirectoryName());
-            list.add("Romaji: " + daki.getRomajiName());
-            list.add("Original: " + daki.getOriginalName());
+            if (advancedItemTooltips) {
+                list.add("---DEBUG---");
+                list.add("PackDirectory: " + daki.getPackDirectoryName());
+                list.add("DakiDirectory: " + daki.getDakiDirectoryName());
+                list.add("Romaji: " + daki.getRomajiName());
+                list.add("Original: " + daki.getOriginalName());
+            } else {
+                list.add(daki.getDisplayName());
+            }
+
         } else {
+            list.add("");
             list.add("Blank");
         }
     }

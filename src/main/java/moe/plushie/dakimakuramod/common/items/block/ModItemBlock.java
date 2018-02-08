@@ -23,10 +23,10 @@ public class ModItemBlock extends ItemBlock {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
         String unlocalized;
         String localized;
-
+        
         unlocalized = itemStack.getUnlocalizedName() + ".flavour";
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
@@ -40,6 +40,6 @@ public class ModItemBlock extends ItemBlock {
             }
         }
         
-        super.addInformation(itemStack, player, list, par4);
+        super.addInformation(itemStack, player, list, advancedItemTooltips);
     }
 }
