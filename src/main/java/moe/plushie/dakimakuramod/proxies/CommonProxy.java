@@ -41,7 +41,7 @@ public class CommonProxy {
     }
     
     private void addLootToChests() {
-        ItemStack itemStack = new ItemStack(ModBlocks.blockDakimakura);
+        ItemStack itemStack = new ItemStack(ModItems.dakiDesign);
         WeightedRandomChestContent chestContent = new WeightedRandomChestContent(itemStack, 1, 2, 5);
         ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(chestContent);
         ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(chestContent);
