@@ -27,7 +27,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         ConfigHandler.init(event.getSuggestedConfigurationFile());
         dakimakuraManager = new DakiManager(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
-        dakimakuraManager.loadPacks();
         textureManagerCommon = new DakiTextureManagerCommon();
         modBlocks = new ModBlocks();
         modItems = new ModItems();

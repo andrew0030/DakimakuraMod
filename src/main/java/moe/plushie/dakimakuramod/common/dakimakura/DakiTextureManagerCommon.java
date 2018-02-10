@@ -110,6 +110,7 @@ public class DakiTextureManagerCommon implements Runnable {
                     DakiBufferedImages bufferedImages = dakiImageCache.getIfPresent(waitingClient.getDaki());
                     if (bufferedImages != null) {
                         sendTextureToClient(waitingClient.getPlayerEntity(), waitingClient.getDaki(), bufferedImages);
+                        waitingClients.remove(i);
                     }
                 }
             }
@@ -117,7 +118,7 @@ public class DakiTextureManagerCommon implements Runnable {
     }
     
     private void sendTextureToClient(EntityPlayerMP playerEntity, Daki daki, DakiBufferedImages dakiBufferedImages) {
-        DakimakuraMod.getLogger().info("Sending daki to client " + playerEntity.getDisplayName());
+        DakimakuraMod.getLogger().info("Sending daki to client " + playerEntity.getDisplayName() + " " + daki);
         DakiSendHelper.sendDakiTexturesToClient(playerEntity, daki, dakiBufferedImages);
     }
     

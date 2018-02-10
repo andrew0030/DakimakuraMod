@@ -50,7 +50,7 @@ public class DakimakuraMod {
     @EventHandler
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandDakimakura());
-        proxy.getDakimakuraManager().loadPacks();
+        proxy.getDakimakuraManager().loadPacks(false);
         proxy.getTextureManagerCommon().serverStarted();
     }
     

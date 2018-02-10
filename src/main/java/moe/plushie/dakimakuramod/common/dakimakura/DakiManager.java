@@ -27,7 +27,7 @@ public class DakiManager {
         dakiMap = new HashMap<String, Daki>();
     }
 
-    public void loadPacks() {
+    public void loadPacks(boolean sendToClients) {
         dakiMap.clear();
         File[] files = packFolder.listFiles();
         for (int i = 0; i < files.length; i++) {
@@ -35,7 +35,9 @@ public class DakiManager {
                 loadPack(files[i]);
             }
         }
-        //sendDakiListToClients();
+        if (sendToClients) {
+            sendDakiListToClients();
+        }
     }
     
     private void loadPack(File dir) {
