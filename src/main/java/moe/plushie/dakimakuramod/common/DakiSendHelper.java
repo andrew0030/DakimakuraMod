@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon.DakiBufferedImages;
@@ -56,6 +58,7 @@ public class DakiSendHelper {
         }
     }
     
+    @SideOnly(Side.CLIENT)
     public static void gotDakiTexturePartFromServer(Daki daki, int firstSize, byte[] data) {
         boolean lastPacket = data.length < MAX_PACKET_SIZE;
         byte[] oldSkinData = unfinishedSkins.get(daki);
