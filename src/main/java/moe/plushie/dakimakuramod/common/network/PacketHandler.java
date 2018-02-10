@@ -6,7 +6,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
+import moe.plushie.dakimakuramod.common.network.message.client.MessageClientRequestTextures;
 import moe.plushie.dakimakuramod.common.network.message.server.MessageServerSendDakiList;
+import moe.plushie.dakimakuramod.common.network.message.server.MessageServerSendTextures;
 
 public class PacketHandler {
 
@@ -15,6 +17,8 @@ public class PacketHandler {
     
     public static void init() {
         registerMessage(MessageServerSendDakiList.class, MessageServerSendDakiList.class, Side.CLIENT);
+        registerMessage(MessageClientRequestTextures.class, MessageClientRequestTextures.class, Side.SERVER);
+        registerMessage(MessageServerSendTextures.class, MessageServerSendTextures.class, Side.CLIENT);
     }
     
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {

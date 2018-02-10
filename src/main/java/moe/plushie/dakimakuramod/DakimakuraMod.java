@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import moe.plushie.dakimakuramod.common.command.CommandDakimakura;
 import moe.plushie.dakimakuramod.common.creativetab.CreativeTabDakimakura;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
@@ -50,6 +51,12 @@ public class DakimakuraMod {
     public void serverStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandDakimakura());
         proxy.getDakimakuraManager().loadPacks();
+        proxy.getTextureManagerCommon().serverStarted();
+    }
+    
+    @EventHandler
+    public void serverStop(FMLServerStoppingEvent event) {
+        proxy.getTextureManagerCommon().serverStopped();
     }
     
     public static CommonProxy getProxy() {

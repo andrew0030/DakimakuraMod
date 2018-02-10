@@ -64,7 +64,7 @@ public class ConfigHandler {
     }
     
     private static void loadCategoryClient() {
-        textureMaxSize = config.getInt("textureMaxSize", CATEGORY_CLIENT, 512, 8, Integer.MAX_VALUE,
+        textureMaxSize = config.getInt("textureMaxSize", CATEGORY_CLIENT, 1024, 32, 8192,
                 "Max texture size for the dakis.\n"
                 + "This will be rounded up to the nearest power of 2.\n"
                 + "Will be capped at the GPUs max texture size.");

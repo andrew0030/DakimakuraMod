@@ -1,8 +1,9 @@
 package moe.plushie.dakimakuramod.client.texture;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,8 +14,12 @@ import org.apache.commons.io.IOUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import net.minecraft.client.Minecraft;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon.DakiBufferedImages;
+import moe.plushie.dakimakuramod.common.network.PacketHandler;
+import moe.plushie.dakimakuramod.common.network.message.client.MessageClientRequestTextures;
+import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
@@ -22,7 +27,12 @@ import net.minecraft.client.resources.IResourceManager;
 @SideOnly(Side.CLIENT)
 public class DakiTexture extends AbstractTexture {
 
+    private static long lastLoad;
+    private boolean requested = false;
+    
     private final Daki daki;
+    
+    private DakiBufferedImages bufferedImages;
     
     public DakiTexture(Daki daki) {
         this.daki = daki;
@@ -30,57 +40,104 @@ public class DakiTexture extends AbstractTexture {
     
     public boolean isLoaded() {
         if (glTextureId == -1) {
-            
-            try {
-                loadTexture(Minecraft.getMinecraft().getResourceManager());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (lastLoad + 200 < System.currentTimeMillis()) {
+                if (load()) {
+                    lastLoad = System.currentTimeMillis();
+                } else {
+                    if (!requested) {
+                        if (daki != null) {
+                            requested = true;
+                            PacketHandler.NETWORK_WRAPPER.sendToServer(new MessageClientRequestTextures(daki));
+                        }
+                    }
+                }
             }
-            
             return false;
         }
+        return true;
+    }
+    
+    public void setImage(DakiBufferedImages bufferedImages) {
+        this.bufferedImages = bufferedImages;
+    }  
+    
+    @Override
+    protected void finalize() throws Throwable {
+        deleteGlTexture();
+        super.finalize();
+    }
+    
+    private boolean load() {
+        if (bufferedImages == null) {
+            return false;
+        }
+        //DakimakuraMod.getLogger().info("loading raw texture " + daki.toString());
         
+        deleteGlTexture();
+        InputStream inputstream = null;
+        try {
+            inputstream = new ByteArrayInputStream(bufferedImages.getTextureFront());
+            BufferedImage bufferedimageFront = ImageIO.read(inputstream);
+            inputstream.close();
+            
+            inputstream = new ByteArrayInputStream(bufferedImages.getTextureBack());
+            BufferedImage bufferedimageBack = ImageIO.read(inputstream);
+            inputstream.close();
+            
+            int heightF = bufferedimageFront.getHeight();
+            int heightB = bufferedimageBack.getHeight();
+            
+            int maxTexture = Math.max(heightF, heightB);
+            int textureSize = getMaxTextureSize();
+            textureSize = Math.min(textureSize, getNextPowerOf2(maxTexture));
+            
+            bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize);
+            bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize);
+            
+            BufferedImage bufferedimageFull = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_RGB);
+            
+            Graphics2D g2d = bufferedimageFull.createGraphics();
+            g2d.drawImage(bufferedimageFront, 0, 0, null);
+            g2d.drawImage(bufferedimageBack, textureSize / 2, 0, null);
+            g2d.dispose();
+            
+            bufferedImages = null;
+            
+            DakimakuraMod.getLogger().info("uploading texture " + textureSize + " - " + daki.toString());
+            TextureUtil.uploadTextureImageAllocate(this.getGlTextureId(), bufferedimageFull, false, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+            IOUtils.closeQuietly(inputstream);
+            return false;
+        } finally {
+            IOUtils.closeQuietly(inputstream);
+        }
         return true;
     }
     
     @Override
     public void loadTexture(IResourceManager resourceManager) throws IOException {
-        DakimakuraMod.getLogger().info("loading raw texture " + daki.toString());
-        File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
-        dir = new File(dir, daki.getPackDirectoryName());
-        dir = new File(dir, daki.getDakiDirectoryName());
-        
-        File fileFront = new File(dir, daki.getImageFront());
-        File fileBack = new File(dir, daki.getImageBack());
-        
-        deleteGlTexture();
-        InputStream inputstream = null;
-        try {
-            inputstream = new FileInputStream(fileFront);
-            BufferedImage bufferedimageFront = ImageIO.read(inputstream);
-            inputstream.close();
-            
-            inputstream = new FileInputStream(fileBack);
-            BufferedImage bufferedimageBack = ImageIO.read(inputstream);
-            inputstream.close();
-            
-            BufferedImage bufferedimageFull = new BufferedImage(bufferedimageFront.getWidth() + bufferedimageBack.getWidth(), Math.max(bufferedimageFront.getHeight(), bufferedimageBack.getHeight()), BufferedImage.TYPE_INT_RGB);
-            
-            for (int ix = 0; ix < bufferedimageFront.getWidth(); ix++) {
-                for (int iy = 0; iy < bufferedimageFront.getHeight(); iy++) {
-                    bufferedimageFull.setRGB(ix, iy, bufferedimageFront.getRGB(ix, iy));
-                }
-            }
-            
-            for (int ix = 0; ix < bufferedimageBack.getWidth(); ix++) {
-                for (int iy = 0; iy < bufferedimageBack.getHeight(); iy++) {
-                    bufferedimageFull.setRGB(ix + bufferedimageFront.getWidth(), iy, bufferedimageBack.getRGB(ix, iy));
-                }
-            }
-            
-            TextureUtil.uploadTextureImageAllocate(this.getGlTextureId(), bufferedimageFull, false, false);
-        } finally {
-            IOUtils.closeQuietly(inputstream);
-        }
+
+    }
+    
+    private int getNextPowerOf2(int value) {
+        return (int) Math.pow(2, 32 - Integer.numberOfLeadingZeros(value - 1));
+    }
+    
+    private int getMaxTextureSize() {
+        int maxGpuSize = ((ClientProxy)DakimakuraMod.getProxy()).getMaxGpuTextureSize();
+        int maxConfigSize = ConfigHandler.textureMaxSize;
+        return Math.min(maxGpuSize, maxConfigSize);
+    }
+    
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) { 
+        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
     }
 }

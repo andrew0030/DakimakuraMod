@@ -7,6 +7,7 @@ import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.network.GuiHandler;
@@ -19,6 +20,7 @@ import net.minecraftforge.common.ChestGenHooks;
 public class CommonProxy {
     
     private DakiManager dakimakuraManager;
+    private DakiTextureManagerCommon textureManagerCommon;
     private ModBlocks modBlocks;
     private ModItems modItems;
     
@@ -26,6 +28,7 @@ public class CommonProxy {
         ConfigHandler.init(event.getSuggestedConfigurationFile());
         dakimakuraManager = new DakiManager(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
         dakimakuraManager.loadPacks();
+        textureManagerCommon = new DakiTextureManagerCommon();
         modBlocks = new ModBlocks();
         modItems = new ModItems();
     }
@@ -67,5 +70,9 @@ public class CommonProxy {
     
     public DakiManager getDakimakuraManager() {
         return dakimakuraManager;
+    }
+    
+    public DakiTextureManagerCommon getTextureManagerCommon() {
+        return textureManagerCommon;
     }
 }

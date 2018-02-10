@@ -2,12 +2,16 @@ package moe.plushie.dakimakuramod.client.gui;
 
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.config.GuiButtonExt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.client.gui.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.dakimakuramod.client.texture.DakiTexture;
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
@@ -16,13 +20,16 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
 @SideOnly(Side.CLIENT)
-public class GuiDakiManager extends GuiScreen {
+public class GuiDakiManager extends GuiScreen implements IDropDownListCallback {
     
     protected final int guiWidth;
     protected final int guiHeight;
     
     protected int guiLeft;
     protected int guiTop;
+    
+    private GuiButtonExt buttonReloadTextures;
+    private GuiDropDownList dropDownTextureSize;
     
     public GuiDakiManager() {
         this.guiWidth = 320;
@@ -35,11 +42,25 @@ public class GuiDakiManager extends GuiScreen {
         guiTop = height / 2 - guiHeight / 2;
         
         buttonList.clear();
+        
+        buttonReloadTextures = new GuiButtonExt(0, guiLeft + guiWidth - 105, guiTop + 5, 100, 20, "Reload Textures");
+        buttonList.add(buttonReloadTextures);
+        
+        dropDownTextureSize = new GuiDropDownList(0, guiLeft + guiWidth - 85, guiTop + 30, 80, String.valueOf(ConfigHandler.textureMaxSize), this);
+        int maxGpuTexture = ((ClientProxy)DakimakuraMod.getProxy()).getMaxGpuTextureSize();
+        for (int i = 5; i < 14; i++) {
+            int size= (int) Math.pow(2, i);
+            if (size > maxGpuTexture) {
+                break;
+            }
+            dropDownTextureSize.addListItem(String.valueOf(size));
+        }
+        buttonList.add(dropDownTextureSize);
     }
     
     @Override
     protected void keyTyped(char key, int keycode) {
-        if (keycode == 1 || keycode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
+        if (keycode == Keyboard.KEY_ESCAPE || keycode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
             this.mc.thePlayer.closeScreen();
         }
         super.keyTyped(key, keycode);
@@ -52,7 +73,9 @@ public class GuiDakiManager extends GuiScreen {
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        
+        if (button == buttonReloadTextures) {
+            ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().reloadTextures();
+        }
     }
     
     @Override
@@ -87,5 +110,14 @@ public class GuiDakiManager extends GuiScreen {
                 Gui.func_152125_a(guiLeft + 120, guiTop + 10, 0, 0, 1, 1, 190, 190, 1, 1);
             }
         }
+        
+        //fontRendererObj.drawString("Loaded textures: " + DakimakuraMod.getProxy().getTextureManagerCommon().size(), guiLeft + guiWidth - 110, guiTop + guiHeight - 14, 0xDDDDDD);
+    }
+
+    @Override
+    public void onDropDownListChanged(GuiDropDownList dropDownList) {
+        int size = Integer.parseInt(dropDownList.getListSelectedItem().displayText);
+        ConfigHandler.textureMaxSize = size;
+        ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().reloadTextures();
     }
 }
