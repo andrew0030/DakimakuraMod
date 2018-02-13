@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -18,6 +19,8 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
     }
     
     public void renderTileEntityAt(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTickTime) {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection("dakimakura");
         int meta = tileEntity.getBlockMetadata();
         if (BlockDakimakura.isTopPart(meta)) {
             return;
@@ -52,6 +55,7 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         }
         modelDakimakura.render(tileEntity.getDaki());
         GL11.glPopMatrix();
+        Minecraft.getMinecraft().mcProfiler.endSection();
     }
     
     @Override

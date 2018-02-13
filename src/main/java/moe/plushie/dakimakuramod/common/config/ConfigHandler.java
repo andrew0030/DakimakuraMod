@@ -8,10 +8,10 @@ import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
     
-    public static String CATEGORY_GENERAL = "general";
-    public static String CATEGORY_RECIPE = "recipe";
-    public static String CATEGORY_LOOT = "loot";
-    public static String CATEGORY_CLIENT = "client";
+    private static final String CATEGORY_GENERAL = "general";
+    private static final String CATEGORY_RECIPE = "recipe";
+    private static final String CATEGORY_LOOT = "loot";
+    private static final String CATEGORY_CLIENT = "client";
     
     public static Configuration config;
     
@@ -39,9 +39,8 @@ public class ConfigHandler {
     }
 
     public static void loadConfigFile() {
-        loadCategoryGeneral();
-        loadCategoryRecipe();
-        loadCategoryLoot();
+
+        loadCategoryCommon();
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             loadCategoryClient();
         }
@@ -50,8 +49,9 @@ public class ConfigHandler {
         }
     }
     
-    private static void loadCategoryGeneral() {
-        
+    private static void loadCategoryCommon() {
+        loadCategoryRecipe();
+        loadCategoryLoot();
     }
     
     private static void loadCategoryRecipe() {
@@ -60,7 +60,7 @@ public class ConfigHandler {
     
     private static void loadCategoryLoot() {
         addUnlockToLootChests = config.getBoolean("addUnlockToLootChests", CATEGORY_LOOT, true,
-                "Added the daki pattern items to loot chests around the world.");
+                "Added the daki design items to loot chests around the world.");
     }
     
     private static void loadCategoryClient() {

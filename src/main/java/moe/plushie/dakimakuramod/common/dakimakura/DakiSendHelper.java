@@ -1,4 +1,4 @@
-package moe.plushie.dakimakuramod.common;
+package moe.plushie.dakimakuramod.common.dakimakura;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon.DakiBufferedImages;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
 import moe.plushie.dakimakuramod.common.network.message.server.MessageServerSendTextures;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
@@ -22,11 +20,11 @@ public class DakiSendHelper {
     //private static final int MAX_PACKET_SIZE = 2097050 - (97050 * 3);
     private static final int MAX_PACKET_SIZE = 30000;
     
-    public static void sendDakiTexturesToClient(EntityPlayerMP player, Daki daki, DakiBufferedImages dakiBufferedImages) {
+    public static void sendDakiTexturesToClient(EntityPlayerMP player, Daki daki, DakiImageData imageData) {
         
-        byte[] totalBytes = new byte[dakiBufferedImages.getTextureFront().length + dakiBufferedImages.getTextureBack().length];
-        System.arraycopy(dakiBufferedImages.getTextureFront(), 0, totalBytes, 0, dakiBufferedImages.getTextureFront().length);
-        System.arraycopy(dakiBufferedImages.getTextureBack(), 0, totalBytes, dakiBufferedImages.getTextureFront().length, dakiBufferedImages.getTextureBack().length);
+        byte[] totalBytes = new byte[imageData.getTextureFront().length + imageData.getTextureBack().length];
+        System.arraycopy(imageData.getTextureFront(), 0, totalBytes, 0, imageData.getTextureFront().length);
+        System.arraycopy(imageData.getTextureBack(), 0, totalBytes, imageData.getTextureFront().length, imageData.getTextureBack().length);
         
         ArrayList<MessageServerSendTextures> packetQueue = new ArrayList<MessageServerSendTextures>();
         
@@ -43,7 +41,7 @@ public class DakiSendHelper {
                 messageData = new byte[MAX_PACKET_SIZE];
             }
             System.arraycopy(totalBytes, bytesSent, messageData, 0, messageData.length);
-            MessageServerSendTextures message = new MessageServerSendTextures(daki, dakiBufferedImages.getTextureFront().length, messageData);
+            MessageServerSendTextures message = new MessageServerSendTextures(daki, imageData.getTextureFront().length, messageData);
             packetQueue.add(message);
             bytesLeftToSend -= messageData.length;
             bytesSent += messageData.length;
@@ -84,9 +82,9 @@ public class DakiSendHelper {
             System.arraycopy(newSkinData, 0, data1, 0, data1.length);
             System.arraycopy(newSkinData, data1.length, data2, 0, data2.length);
             
-            DakiBufferedImages bufferedImages = new DakiBufferedImages(daki, data1, data2);
+            DakiImageData imageData = new DakiImageData(data1, data2);
 
-           ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().serverSentTextures(daki, bufferedImages);
+           ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().serverSentTextures(daki, imageData);
         }
     }
 }

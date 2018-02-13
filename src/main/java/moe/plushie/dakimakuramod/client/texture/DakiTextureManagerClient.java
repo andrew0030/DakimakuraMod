@@ -5,7 +5,7 @@ import java.util.HashMap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon.DakiBufferedImages;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
 
 @SideOnly(Side.CLIENT)
 public class DakiTextureManagerClient {
@@ -43,10 +43,10 @@ public class DakiTextureManagerClient {
         }
     }
     
-    public void serverSentTextures(Daki daki, DakiBufferedImages bufferedImages) {
+    public void serverSentTextures(Daki daki, DakiImageData imageData) {
         DakiTexture dakiTexture = textureMap.get(daki);
         if (dakiTexture != null) {
-            dakiTexture.setImage(bufferedImages);
+            dakiTexture.setImage(imageData);
         }
     }
 }

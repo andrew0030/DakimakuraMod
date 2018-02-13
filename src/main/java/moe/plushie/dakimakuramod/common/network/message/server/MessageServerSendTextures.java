@@ -8,8 +8,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.DakiSendHelper;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiSendHelper;
 
 public class MessageServerSendTextures implements IMessage, IMessageHandler<MessageServerSendTextures, IMessage> {
 

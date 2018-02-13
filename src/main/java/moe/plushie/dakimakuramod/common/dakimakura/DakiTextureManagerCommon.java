@@ -1,25 +1,18 @@
 package moe.plushie.dakimakuramod.common.dakimakura;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.io.IOUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.DakiSendHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 
 public class DakiTextureManagerCommon implements Runnable {
     
-    private final Cache<Daki, DakiBufferedImages> dakiImageCache;
+    private final Cache<Daki, DakiImageData> dakiImageCache;
     private final ArrayList<WaitingClient> waitingClients;
     private final ArrayList<Daki> dakiLoadQueue;
     private volatile Thread threadTextureManager = null;
@@ -51,7 +44,6 @@ public class DakiTextureManagerCommon implements Runnable {
             }
             processDakiQueue();
         }
-        DakimakuraMod.getLogger().info("aad.");
         DakimakuraMod.getLogger().info("Stopped texture manager thread.");
     }
     
@@ -68,10 +60,10 @@ public class DakiTextureManagerCommon implements Runnable {
     }
     
     private void loadDakiTextures(Daki daki) {
-        DakiBufferedImages bufferedImages = new DakiBufferedImages(daki);
+        DakiImageData imageData = new DakiImageData(daki);
         
         synchronized (dakiImageCache) {
-            dakiImageCache.put(daki, bufferedImages);
+            dakiImageCache.put(daki, imageData);
         }
         synchronized (dakiLoadQueue) {
             dakiLoadQueue.remove(daki);
@@ -107,9 +99,9 @@ public class DakiTextureManagerCommon implements Runnable {
             synchronized (waitingClients) {
                 for (int i = 0; i < waitingClients.size(); i++) {
                     WaitingClient waitingClient = waitingClients.get(i);
-                    DakiBufferedImages bufferedImages = dakiImageCache.getIfPresent(waitingClient.getDaki());
-                    if (bufferedImages != null) {
-                        sendTextureToClient(waitingClient.getPlayerEntity(), waitingClient.getDaki(), bufferedImages);
+                    DakiImageData imageData = dakiImageCache.getIfPresent(waitingClient.getDaki());
+                    if (imageData != null) {
+                        sendTextureToClient(waitingClient.getPlayerEntity(), waitingClient.getDaki(), imageData);
                         waitingClients.remove(i);
                     }
                 }
@@ -117,9 +109,9 @@ public class DakiTextureManagerCommon implements Runnable {
         }
     }
     
-    private void sendTextureToClient(EntityPlayerMP playerEntity, Daki daki, DakiBufferedImages dakiBufferedImages) {
+    private void sendTextureToClient(EntityPlayerMP playerEntity, Daki daki, DakiImageData imageData) {
         DakimakuraMod.getLogger().info("Sending daki to client " + playerEntity.getDisplayName() + " " + daki);
-        DakiSendHelper.sendDakiTexturesToClient(playerEntity, daki, dakiBufferedImages);
+        DakiSendHelper.sendDakiTexturesToClient(playerEntity, daki, imageData);
     }
     
     public static class WaitingClient {
@@ -138,61 +130,6 @@ public class DakiTextureManagerCommon implements Runnable {
         
         public Daki getDaki() {
             return daki;
-        }
-    }
-    
-    public static class DakiBufferedImages {
-        
-        private Daki daki;
-        private byte[] textureFront;
-        private byte[] textureBack;
-        
-        public DakiBufferedImages(Daki daki) {
-            this.daki = daki;
-            load();
-        }
-        
-        public DakiBufferedImages(Daki daki, byte[] textureFront, byte[] textureBack) {
-            this.daki = daki;
-            this.textureFront = textureFront;
-            this.textureBack = textureBack;
-        }
-        
-        public boolean load() {
-            DakimakuraMod.getLogger().info("Loading daki from disk: " + daki);
-            boolean valid = true;
-            File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
-            
-            dir = new File(dir, daki.getPackDirectoryName());
-            dir = new File(dir, daki.getDakiDirectoryName());
-            
-            File fileFront = new File(dir, daki.getImageFront());
-            File fileBack = new File(dir, daki.getImageBack());
-            
-            InputStream inputstream = null;
-            try {
-                inputstream = new FileInputStream(fileFront);
-                textureFront = IOUtils.toByteArray(inputstream);
-                inputstream.close();
-                
-                inputstream = new FileInputStream(fileBack);
-                textureBack = IOUtils.toByteArray(inputstream);
-                inputstream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                valid = false;
-            } finally {
-                IOUtils.closeQuietly(inputstream);
-            }
-            return valid;
-        }
-        
-        public byte[] getTextureFront() {
-            return textureFront;
-        }
-        
-        public byte[] getTextureBack() {
-            return textureBack;
         }
     }
 }

@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon.DakiBufferedImages;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
 import moe.plushie.dakimakuramod.common.network.message.client.MessageClientRequestTextures;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
@@ -32,7 +32,7 @@ public class DakiTexture extends AbstractTexture {
     
     private final Daki daki;
     
-    private DakiBufferedImages bufferedImages;
+    private DakiImageData imageData;
     
     public DakiTexture(Daki daki) {
         this.daki = daki;
@@ -57,8 +57,8 @@ public class DakiTexture extends AbstractTexture {
         return true;
     }
     
-    public void setImage(DakiBufferedImages bufferedImages) {
-        this.bufferedImages = bufferedImages;
+    public void setImage(DakiImageData imageData) {
+        this.imageData = imageData;
     }  
     
     @Override
@@ -68,7 +68,7 @@ public class DakiTexture extends AbstractTexture {
     }
     
     private boolean load() {
-        if (bufferedImages == null) {
+        if (imageData == null) {
             return false;
         }
         //DakimakuraMod.getLogger().info("loading raw texture " + daki.toString());
@@ -76,11 +76,11 @@ public class DakiTexture extends AbstractTexture {
         deleteGlTexture();
         InputStream inputstream = null;
         try {
-            inputstream = new ByteArrayInputStream(bufferedImages.getTextureFront());
+            inputstream = new ByteArrayInputStream(imageData.getTextureFront());
             BufferedImage bufferedimageFront = ImageIO.read(inputstream);
             inputstream.close();
             
-            inputstream = new ByteArrayInputStream(bufferedImages.getTextureBack());
+            inputstream = new ByteArrayInputStream(imageData.getTextureBack());
             BufferedImage bufferedimageBack = ImageIO.read(inputstream);
             inputstream.close();
             
@@ -101,7 +101,7 @@ public class DakiTexture extends AbstractTexture {
             g2d.drawImage(bufferedimageBack, textureSize / 2, 0, null);
             g2d.dispose();
             
-            bufferedImages = null;
+            imageData = null;
             
             DakimakuraMod.getLogger().info("uploading texture " + textureSize + " - " + daki.toString());
             TextureUtil.uploadTextureImageAllocate(this.getGlTextureId(), bufferedimageFull, false, false);

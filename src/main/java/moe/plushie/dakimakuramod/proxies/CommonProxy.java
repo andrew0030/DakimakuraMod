@@ -6,6 +6,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
+import moe.plushie.dakimakuramod.common.crafting.CraftingManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
@@ -33,6 +34,7 @@ public class CommonProxy {
     }
     
     public void init(FMLInitializationEvent event) {
+        CraftingManager.init();
         modBlocks.registerTileEntities();
         new GuiHandler();
         PacketHandler.init();
