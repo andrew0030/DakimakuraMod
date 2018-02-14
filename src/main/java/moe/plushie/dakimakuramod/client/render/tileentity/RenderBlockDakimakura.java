@@ -19,12 +19,12 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
     }
     
     public void renderTileEntityAt(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTickTime) {
-        Minecraft mc = Minecraft.getMinecraft();
-        mc.mcProfiler.startSection("dakimakura");
         int meta = tileEntity.getBlockMetadata();
         if (BlockDakimakura.isTopPart(meta)) {
             return;
         }
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection("dakimakura");
         ForgeDirection rot = BlockDakimakura.getRotation(meta);
         boolean standing = BlockDakimakura.isStanding(meta);
         
