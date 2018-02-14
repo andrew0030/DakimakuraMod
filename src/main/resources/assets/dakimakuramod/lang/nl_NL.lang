@@ -1,0 +1,15 @@
+# Block names
+tile.dakimakuramod:dakimakura.name=Dakimakura
+
+# Block tooltip
+tile.dakimakuramod:dakimakura.tooltip=Een Knuffelbare Vriend!
+
+# Item Names
+item.dakimakuramod:dakiDesign.name=Dakimakura Uiterlijk
+
+# Item tooltip
+item.dakimakuramod:dakiDesign.tooltip.unlock=Gebruik Rechtermuisknop op dit item om het Dakimakura design te krijgen
+item.dakimakuramod:dakiDesign.tooltip.usage=Combineer dit design met een lege Dakimakura
+
+# Creative tab
+itemGroup.dakimakuramod=Dakimakura Mod

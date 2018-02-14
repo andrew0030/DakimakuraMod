@@ -1,6 +1,5 @@
 package moe.plushie.dakimakuramod.common.crafting;
 
-import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
@@ -96,14 +95,12 @@ public class RecipeDaki implements IRecipe {
         if (dakiDesign == null) {
             return null;
         }
-        DakimakuraMod.getLogger().info(dakiDesign);
-        ItemStack result = stackDaki.copy();
         
+        ItemStack result = stackDaki.copy();
         if (!result.hasTagCompound()) {
             result.setTagCompound(new NBTTagCompound());
         }
         DakiNbtSerializer.serialize(dakiDesign, result.getTagCompound());
-        
         return result;
     }
 
