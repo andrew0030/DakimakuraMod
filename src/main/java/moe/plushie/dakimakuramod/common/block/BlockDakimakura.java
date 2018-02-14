@@ -1,5 +1,7 @@
 package moe.plushie.dakimakuramod.common.block;
 
+import java.util.Random;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -10,6 +12,7 @@ import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +44,34 @@ public class BlockDakimakura extends AbstractModBlockContainer {
             ((TileEntityDakimakura)tileEntity).setDaki(daki);
             ((TileEntityDakimakura)tileEntity).setFlipped(livingBase.isSneaking());
         }
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
+        if (!world.isRemote) {
+            if (!isTopPart(metadata)) {
+                TileEntity te = world.getTileEntity(x, y, z);
+                if (te != null && te instanceof TileEntityDakimakura) {
+                    ItemStack itemStack = new ItemStack(ModBlocks.blockDakimakura);
+                    Daki daki = ((TileEntityDakimakura)te).getDaki();
+                    if (daki != null) {
+                        itemStack.setTagCompound(DakiNbtSerializer.serialize(daki));
+                    }
+                    spawnItemInWorld(world, x + 0.5F, y + 0.5F, z + 0.5F, itemStack);
+                }
+            }
+        }
+        super.breakBlock(world, x, y, z, block, metadata);
+    }
+    
+    private static void spawnItemInWorld(World world, double x, double y, double z, ItemStack itemStack) {
+        EntityItem entityItem = new EntityItem(world, x, y, z, itemStack);
+        world.spawnEntityInWorld(entityItem);
+    }
+    
+    @Override
+    public int quantityDropped(Random random) {
+        return 0;
     }
     
     @Override
@@ -137,8 +168,6 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         boolean standing = isStanding(meta);
         boolean topPart = isTopPart(meta);
         
-        
-        
         float w1 = 0.2F;
         float w2 = 0.8F;
         float h1 = 0.01F;
@@ -152,9 +181,6 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         float y2 = h2;
         float z1 = d1;
         float z2 = d2;
-        
-        //DakimakuraMod.logger.info(rot);
-        
         
         if (!standing) {
             switch (rot) {
@@ -177,11 +203,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
             default:
                 break;
             }
-        } else {
-            
         }
-
-            
         if (standing) {
             y1 = d1;
             y2 = d2;
