@@ -12,7 +12,8 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -25,14 +26,18 @@ public class ModelDakimakura extends ModelBase {
     
     private final IModelCustom DAKIMAKURA_MODEL;
     private final DakiTextureManagerClient dakiTextureManager;
+    private final Profiler profiler;
     private int modelList = -1;
     
     public ModelDakimakura(DakiTextureManagerClient dakiTextureManager) {
         DAKIMAKURA_MODEL = AdvancedModelLoader.loadModel(MODEL_LOCATION);
         this.dakiTextureManager = dakiTextureManager;
+        profiler = Minecraft.getMinecraft().mcProfiler;
     }
     
     public void render(Daki daki) {
+        Minecraft mc = Minecraft.getMinecraft();
+        profiler.startSection("texture");
         if (daki == null) {
             Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);
         } else {
@@ -43,6 +48,7 @@ public class ModelDakimakura extends ModelBase {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);
             }
         }
+        profiler.endSection();
         
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_POLYGON_BIT | GL11.GL_ENABLE_BIT);
@@ -61,7 +67,9 @@ public class ModelDakimakura extends ModelBase {
             DAKIMAKURA_MODEL.renderAll();
             GL11.glEndList();
         }
+        profiler.startSection("model");
         GL11.glCallList(modelList);
+        profiler.endSection();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
