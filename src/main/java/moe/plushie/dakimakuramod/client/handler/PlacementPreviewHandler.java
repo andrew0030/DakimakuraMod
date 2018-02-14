@@ -91,7 +91,7 @@ public class PlacementPreviewHandler {
                 GL11.glTranslatef(0F * scale, 10F * scale, 2F * scale);
             }
             
-            
+            GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
@@ -104,6 +104,7 @@ public class PlacementPreviewHandler {
             GL11.glDepthMask(true);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glDisable(GL11.GL_BLEND);
+            GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
     }
