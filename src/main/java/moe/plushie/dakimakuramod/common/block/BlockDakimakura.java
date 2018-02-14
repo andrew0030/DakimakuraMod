@@ -111,7 +111,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         if (on) {
             return value | (1 << index);
         } else {
-            return value | (0 << index);
+            return value & ~(1 << index);
         }
     }
     
