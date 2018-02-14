@@ -36,7 +36,6 @@ public class ModelDakimakura extends ModelBase {
     }
     
     public void render(Daki daki) {
-        Minecraft mc = Minecraft.getMinecraft();
         profiler.startSection("texture");
         if (daki == null) {
             Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);
@@ -61,13 +60,13 @@ public class ModelDakimakura extends ModelBase {
         GL11.glScalef(-1, 1, 1);
         GL11.glScalef(0.55F, 0.55F, 0.55F);
         GL11.glTranslatef(0, 0.35F, 0);
+        profiler.startSection("model");
         if (modelList == -1) {
             modelList = GLAllocation.generateDisplayLists(1);
             GL11.glNewList(modelList, GL11.GL_COMPILE);
             DAKIMAKURA_MODEL.renderAll();
             GL11.glEndList();
         }
-        profiler.startSection("model");
         GL11.glCallList(modelList);
         profiler.endSection();
         GL11.glPopAttrib();
