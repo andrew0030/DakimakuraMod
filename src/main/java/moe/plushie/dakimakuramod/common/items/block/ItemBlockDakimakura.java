@@ -105,21 +105,18 @@ public class ItemBlockDakimakura extends ModItemBlock {
     
     private void placeDakiAt(World world, EntityPlayer entityPlayer, ItemStack itemStack, int x, int y, int z, ForgeDirection side, ForgeDirection rotation) {
         int meta = 0;
-        
         meta = BlockDakimakura.setRotationOnMeta(meta, rotation);
         meta = BlockDakimakura.setStandingOnMeta(meta, false);
         meta = BlockDakimakura.setTopPartOnMeta(meta, false);
         
-        if (side != ForgeDirection.UP) {
-            rotation = ForgeDirection.UP;
-            meta = BlockDakimakura.setRotationOnMeta(meta, ForgeDirection.UP);
+        if (side != ForgeDirection.UP & side != ForgeDirection.DOWN) {
+            meta = BlockDakimakura.setRotationOnMeta(meta, side.getOpposite());
             meta = BlockDakimakura.setStandingOnMeta(meta, true);
+            rotation = ForgeDirection.UP;
         }
-        
         if (side == ForgeDirection.DOWN) {
-            rotation = ForgeDirection.UP;
-            meta = BlockDakimakura.setRotationOnMeta(meta, ForgeDirection.UP);
             meta = BlockDakimakura.setStandingOnMeta(meta, true);
+            rotation = ForgeDirection.UP;
             y--;
         }
         
@@ -176,7 +173,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
     @SideOnly(Side.CLIENT)
     @Override
     public boolean func_150936_a(World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack) {
-        // TODO Check if entities are in the way.
         Block block = world.getBlock(x, y, z);
         ForgeDirection sideDir = ForgeDirection.getOrientation(side);
         if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) {

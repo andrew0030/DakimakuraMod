@@ -29,10 +29,10 @@ public class BlockDakimakura extends AbstractModBlockContainer {
 
     private static ForgeDirection[] ROTATIONS = new ForgeDirection[] {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
     
-    private static final int META_BIT_TOP_BOT = 3;
+    private static final int META_BIT_STANDING = 0;
     private static final int META_BIT_POS_NEG = 1;
     private static final int META_BIT_X_Z = 2;
-    private static final int META_BIT_STANDING = 0;
+    private static final int META_BIT_TOP_BOT = 3;
     
     protected BlockDakimakura() {
         super("dakimakura", Material.cloth, soundTypeCloth, true);
@@ -129,12 +129,14 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         } else if (rot == ForgeDirection.NORTH | rot == ForgeDirection.SOUTH) {
             meta = setBit(meta, META_BIT_X_Z, false);
         }
+        
         return meta;
     }
     
     public static ForgeDirection getRotation(int meta) {
-        boolean posNeg = getBit(meta, META_BIT_POS_NEG) == 1;
         boolean xz = getBit(meta, META_BIT_X_Z) == 1;
+        boolean posNeg = getBit(meta, META_BIT_POS_NEG) == 1;
+        
         if (posNeg) {
             if (xz) {
                 return ForgeDirection.EAST;
