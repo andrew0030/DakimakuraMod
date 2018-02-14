@@ -25,6 +25,7 @@ public class ModelDakimakura extends ModelBase {
     
     private final IModelCustom DAKIMAKURA_MODEL;
     private final DakiTextureManagerClient dakiTextureManager;
+    private int modelList = -1;
     
     public ModelDakimakura(DakiTextureManagerClient dakiTextureManager) {
         DAKIMAKURA_MODEL = AdvancedModelLoader.loadModel(MODEL_LOCATION);
@@ -49,14 +50,18 @@ public class ModelDakimakura extends ModelBase {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_NORMALIZE);
         
-        Tessellator tess = Tessellator.instance;
         float scale = 1F / 16F;
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glScalef(-1, 1, 1);
         GL11.glScalef(0.55F, 0.55F, 0.55F);
         GL11.glTranslatef(0, 0.35F, 0);
-        DAKIMAKURA_MODEL.renderAll();
-        
+        if (modelList == -1) {
+            modelList = GLAllocation.generateDisplayLists(1);
+            GL11.glNewList(modelList, GL11.GL_COMPILE);
+            DAKIMAKURA_MODEL.renderAll();
+            GL11.glEndList();
+        }
+        GL11.glCallList(modelList);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
