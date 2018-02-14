@@ -10,6 +10,8 @@ import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -33,7 +35,8 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     private static final int META_BIT_STANDING = 0;
     
     protected BlockDakimakura() {
-        super("dakimakura");
+        super("dakimakura", Material.cloth, soundTypeCloth, true);
+        setHardness(2.0F);
     }
     
     @Override
@@ -62,6 +65,18 @@ public class BlockDakimakura extends AbstractModBlockContainer {
             }
         }
         super.breakBlock(world, x, y, z, block, metadata);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+        return true;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
+        return true;
     }
     
     private static void spawnItemInWorld(World world, double x, double y, double z, ItemStack itemStack) {
