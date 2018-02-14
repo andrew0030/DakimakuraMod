@@ -1,8 +1,15 @@
 # Block names
 tile.dakimakuramod:dakimakura.name=Dakimakura
 
-# Block flavour text
-tile.dakimakuramod:dakimakura.flavour=A huggable friend!
+# Block tooltip
+tile.dakimakuramod:dakimakura.tooltip=A huggable friend!
+
+# Item Names
+item.dakimakuramod:dakiDesign.name=Dakimakura Design
+
+# Item tooltip
+item.dakimakuramod:dakiDesign.tooltip.unlock=Right click this item to unlock a dakimakura design.
+item.dakimakuramod:dakiDesign.tooltip.usage=Craft this design with a blank dakimakura.
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod

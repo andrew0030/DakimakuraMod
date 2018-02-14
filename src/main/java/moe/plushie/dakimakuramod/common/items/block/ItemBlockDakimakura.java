@@ -158,7 +158,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
         super.addInformation(itemStack, player, list, advancedItemTooltips);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (daki != null) {
-            list.add("");
             if (advancedItemTooltips) {
                 list.add("---DEBUG---");
                 list.add("PackDirectory: " + daki.getPackDirectoryName());
@@ -170,7 +169,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
             }
 
         } else {
-            list.add("");
             list.add("Blank");
         }
     }

@@ -32,11 +32,10 @@ public abstract class AbstractModItem extends Item {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
         String unlocalized;
         String localized;
-
-        unlocalized = itemStack.getUnlocalizedName() + ".flavour";
+        unlocalized = itemStack.getUnlocalizedName() + ".tooltip";
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
@@ -48,8 +47,7 @@ public abstract class AbstractModItem extends Item {
                 list.add(localized);
             }
         }
-        
-        super.addInformation(itemStack, player, list, par4);
+        super.addInformation(itemStack, player, list, advancedItemTooltips);
     }
 
     @Override

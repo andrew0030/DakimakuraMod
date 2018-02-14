@@ -27,7 +27,7 @@ public class ModItemBlock extends ItemBlock {
         String unlocalized;
         String localized;
         
-        unlocalized = itemStack.getUnlocalizedName() + ".flavour";
+        unlocalized = itemStack.getUnlocalizedName() + ".tooltip";
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
