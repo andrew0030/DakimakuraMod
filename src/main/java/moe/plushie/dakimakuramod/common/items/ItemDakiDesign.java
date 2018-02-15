@@ -74,7 +74,9 @@ public class ItemDakiDesign extends AbstractModItem {
         }
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         ArrayList<Daki> dakiList = dakiManager.getDakiList();
-        
+        if (dakiList.isEmpty()) {
+            return itemStack;
+        }
         int ranValue = world.rand.nextInt(dakiList.size());
         Daki daki = dakiList.get(ranValue);
         if (!itemStack.hasTagCompound()) {
