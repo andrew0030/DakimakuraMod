@@ -22,9 +22,29 @@ public class DakiSendHelper {
     
     public static void sendDakiTexturesToClient(EntityPlayerMP player, Daki daki, DakiImageData imageData) {
         
-        byte[] totalBytes = new byte[imageData.getTextureFront().length + imageData.getTextureBack().length];
-        System.arraycopy(imageData.getTextureFront(), 0, totalBytes, 0, imageData.getTextureFront().length);
-        System.arraycopy(imageData.getTextureBack(), 0, totalBytes, imageData.getTextureFront().length, imageData.getTextureBack().length);
+        int sizeFront = 0;
+        int sizeBack = 0;
+        if (imageData.getTextureFront() != null) {
+            sizeFront = imageData.getTextureFront().length;
+        }
+        if (imageData.getTextureBack() != null) {
+            sizeBack = imageData.getTextureBack().length;
+        }
+        
+        if (sizeFront == 0 & sizeBack == 0) {
+            MessageServerSendTextures message = new MessageServerSendTextures(daki, sizeFront, sizeBack, null);
+            PacketHandler.NETWORK_WRAPPER.sendTo(message, player);
+            return;
+        }
+        
+        // TODO check if both images are 0
+        byte[] totalBytes = new byte[sizeFront + sizeBack];
+        if (sizeFront > 0) {
+            System.arraycopy(imageData.getTextureFront(), 0, totalBytes, 0, sizeFront);
+        }
+        if (sizeBack > 0) {
+            System.arraycopy(imageData.getTextureBack(), 0, totalBytes, sizeFront, sizeBack);
+        }
         
         ArrayList<MessageServerSendTextures> packetQueue = new ArrayList<MessageServerSendTextures>();
         
@@ -41,15 +61,11 @@ public class DakiSendHelper {
                 messageData = new byte[MAX_PACKET_SIZE];
             }
             System.arraycopy(totalBytes, bytesSent, messageData, 0, messageData.length);
-            MessageServerSendTextures message = new MessageServerSendTextures(daki, imageData.getTextureFront().length, messageData);
+            MessageServerSendTextures message = new MessageServerSendTextures(daki, sizeFront, sizeBack, messageData);
             packetQueue.add(message);
             bytesLeftToSend -= messageData.length;
             bytesSent += messageData.length;
         }
-        
-        //DakimakuraMod.getLogger().info("Sending packets " + packetQueue.size() + " total size " + totalBytes.length);
-        //DakimakuraMod.getLogger().info("Front size " +  dakiBufferedImages.getTextureFront().length);
-        //DakimakuraMod.getLogger().info("Back size " +  dakiBufferedImages.getTextureBack().length);
         
         for (int i = 0; i < packetQueue.size(); i++) {
             PacketHandler.NETWORK_WRAPPER.sendTo(packetQueue.get(i), player);
@@ -57,8 +73,12 @@ public class DakiSendHelper {
     }
     
     @SideOnly(Side.CLIENT)
-    public static void gotDakiTexturePartFromServer(Daki daki, int firstSize, byte[] data) {
-        boolean lastPacket = data.length < MAX_PACKET_SIZE;
+    public static void gotDakiTexturePartFromServer(Daki daki, int sizeFront, int sizeBack, byte[] data) {
+        boolean lastPacket = true;
+        if (data != null) {
+            lastPacket = data.length < MAX_PACKET_SIZE;
+        }
+        
         byte[] oldSkinData = unfinishedSkins.get(daki);
         
         byte[] newSkinData = null;
@@ -72,15 +92,21 @@ public class DakiSendHelper {
         if (!lastPacket) {
             unfinishedSkins.put(daki, newSkinData);
         } else {
-            byte[] data1 = new byte[firstSize];
-            byte[] data2 = new byte[newSkinData.length - firstSize];
+            
+            byte[] data1 = null;
+            byte[] data2 = null;
+            if (sizeFront > 0) {
+                data1 = new byte[sizeFront];
+                System.arraycopy(newSkinData, 0, data1, 0, sizeFront);
+            }
+            if (sizeBack > 0) {
+                data2 = new byte[sizeBack];
+                System.arraycopy(newSkinData, sizeFront, data2, 0, sizeBack);
+            }
             
             //DakimakuraMod.getLogger().info("Got packets total size " + newSkinData.length);
             //DakimakuraMod.getLogger().info("Front size " + data1.length);
             //DakimakuraMod.getLogger().info("Back size " + data2.length);
-            
-            System.arraycopy(newSkinData, 0, data1, 0, data1.length);
-            System.arraycopy(newSkinData, data1.length, data2, 0, data2.length);
             
             DakiImageData imageData = new DakiImageData(data1, data2);
 

@@ -8,11 +8,11 @@ public class Daki implements Comparable<Daki> {
     private final String packDirectoryName;
     private final String dakiDirectoryName;
     
-    private String romajiName;
-    private String originalName;
-    private String author;
-    private String imageFront;
-    private String imageBack;
+    private String romajiName = "";
+    private String originalName = "";
+    private String author = "";
+    private String imageFront = "";
+    private String imageBack = "";
     
     public Daki(String packDirectoryName, String dakiDirectoryName) {
         this.packDirectoryName = packDirectoryName;

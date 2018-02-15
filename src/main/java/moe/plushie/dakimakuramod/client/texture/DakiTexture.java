@@ -76,11 +76,19 @@ public class DakiTexture extends AbstractTexture {
         deleteGlTexture();
         InputStream inputstream = null;
         try {
-            inputstream = new ByteArrayInputStream(imageData.getTextureFront());
+            if (imageData.getTextureFront() != null) {
+                inputstream = new ByteArrayInputStream(imageData.getTextureFront());
+            } else {
+                inputstream = getMissingTexture();
+            }
             BufferedImage bufferedimageFront = ImageIO.read(inputstream);
             inputstream.close();
             
-            inputstream = new ByteArrayInputStream(imageData.getTextureBack());
+            if (imageData.getTextureBack() != null) {
+                inputstream = new ByteArrayInputStream(imageData.getTextureBack());
+            } else {
+                inputstream = getMissingTexture();
+            }
             BufferedImage bufferedimageBack = ImageIO.read(inputstream);
             inputstream.close();
             
@@ -105,7 +113,7 @@ public class DakiTexture extends AbstractTexture {
             
             DakimakuraMod.getLogger().info("uploading texture " + textureSize + " - " + daki.toString());
             TextureUtil.uploadTextureImageAllocate(this.getGlTextureId(), bufferedimageFull, false, false);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             IOUtils.closeQuietly(inputstream);
             return false;
@@ -113,6 +121,10 @@ public class DakiTexture extends AbstractTexture {
             IOUtils.closeQuietly(inputstream);
         }
         return true;
+    }
+    
+    private InputStream getMissingTexture() {
+        return DakiTexture.class.getClassLoader().getResourceAsStream("assets/dakimakuramod/textures/models/missing.png");
     }
     
     @Override

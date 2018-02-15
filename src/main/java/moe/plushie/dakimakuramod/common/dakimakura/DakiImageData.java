@@ -2,7 +2,6 @@ package moe.plushie.dakimakuramod.common.dakimakura;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
@@ -23,9 +22,8 @@ public class DakiImageData {
         this.textureBack = textureBack;
     }
     
-    public boolean load(Daki daki) {
+    public void load(Daki daki) {
         DakimakuraMod.getLogger().info("Loading daki from disk: " + daki);
-        boolean valid = true;
         File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         
         dir = new File(dir, daki.getPackDirectoryName());
@@ -36,20 +34,21 @@ public class DakiImageData {
         
         InputStream inputstream = null;
         try {
-            inputstream = new FileInputStream(fileFront);
-            textureFront = IOUtils.toByteArray(inputstream);
-            inputstream.close();
-            
-            inputstream = new FileInputStream(fileBack);
-            textureBack = IOUtils.toByteArray(inputstream);
-            inputstream.close();
-        } catch (IOException e) {
+            if (fileFront.exists()) {
+                inputstream = new FileInputStream(fileFront);
+                textureFront = IOUtils.toByteArray(inputstream);
+                inputstream.close();
+            }
+            if (fileBack.exists()) {
+                inputstream = new FileInputStream(fileBack);
+                textureBack = IOUtils.toByteArray(inputstream);
+                inputstream.close();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            valid = false;
         } finally {
             IOUtils.closeQuietly(inputstream);
         }
-        return valid;
     }
     
     public byte[] getTextureFront() {
