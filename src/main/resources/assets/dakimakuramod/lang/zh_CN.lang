@@ -1,0 +1,15 @@
+# Block names
+tile.dakimakuramod:dakimakura.name=抱枕
+
+# Block tooltip
+tile.dakimakuramod:dakimakura.tooltip=你可爱的朋友！
+
+# Item Names
+item.dakimakuramod:dakiDesign.name=抱枕设计图
+
+# Item tooltip
+item.dakimakuramod:dakiDesign.tooltip.unlock=右键点击随机获得抱枕设计图。
+item.dakimakuramod:dakiDesign.tooltip.usage=和一个空白的抱枕合成完成可爱的抱枕！
+
+# Creative tab
+itemGroup.dakimakuramod=抱枕模组
