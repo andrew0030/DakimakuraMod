@@ -77,6 +77,18 @@ public class DakiTextureManagerCommon implements Runnable {
         }
     }
     
+    public void clear() {
+        synchronized (dakiImageCache) {
+            dakiImageCache.asMap().clear();
+        }
+        synchronized (dakiLoadQueue) {
+            dakiLoadQueue.clear();
+        }
+        synchronized (waitingClients) {
+            waitingClients.clear();
+        }
+    }
+    
     public void onClientRequestTexture(EntityPlayerMP playerEntity, Daki daki) {
         synchronized (dakiImageCache) {
             if (dakiImageCache.asMap().containsKey(daki)) {
