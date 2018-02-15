@@ -20,7 +20,8 @@ public class ConfigHandler {
     
     
     // Recipes
-    
+    public static boolean enableRecipe;
+    public static boolean useAltRecipe;
     
     // Loot
     public static boolean addUnlockToLootChests;
@@ -55,7 +56,11 @@ public class ConfigHandler {
     }
     
     private static void loadCategoryRecipe() {
+        enableRecipe = config.getBoolean("enableRecipe", CATEGORY_RECIPE, true,
+                "Enable the crafting recipe for dakimakuras.");
         
+        useAltRecipe = config.getBoolean("useAltRecipe", CATEGORY_RECIPE, false,
+                "Changes the crafting recipe from 6 wool to 3 wool and 6 string.");
     }
     
     private static void loadCategoryLoot() {
