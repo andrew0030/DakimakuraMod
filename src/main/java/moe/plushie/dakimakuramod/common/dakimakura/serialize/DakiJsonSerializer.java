@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 
 public final class DakiJsonSerializer {
@@ -24,8 +25,14 @@ public final class DakiJsonSerializer {
         if (jsonString == null) {
             return null;
         }
-        JsonParser parser = new JsonParser();
-        return deserialize(parser.parse(jsonString), packDirectoryName, dakiDirectoryName); 
+        try {
+            JsonParser parser = new JsonParser();
+            return deserialize(parser.parse(jsonString), packDirectoryName, dakiDirectoryName); 
+        } catch (Exception e) {
+            DakimakuraMod.getLogger().error("Error loadingt daki " + packDirectoryName + " " + dakiDirectoryName);
+            DakimakuraMod.getLogger().error(e.getLocalizedMessage());
+            return null;
+        }
     }
     
     public static Daki deserialize(JsonElement json, String packDirectoryName, String dakiDirectoryName) {
