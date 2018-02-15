@@ -13,6 +13,7 @@ public class Daki implements Comparable<Daki> {
     private String author = "";
     private String imageFront = "";
     private String imageBack = "";
+    private String flavourText = "";
     
     public Daki(String packDirectoryName, String dakiDirectoryName) {
         this.packDirectoryName = packDirectoryName;
@@ -65,6 +66,14 @@ public class Daki implements Comparable<Daki> {
     
     public void setImageBack(String imageBack) {
         this.imageBack = imageBack;
+    }
+    
+    public String getFlavourText() {
+        return flavourText;
+    }
+    
+    public void setFlavourText(String flavourText) {
+        this.flavourText = flavourText;
     }
     
     public String getDisplayName() {

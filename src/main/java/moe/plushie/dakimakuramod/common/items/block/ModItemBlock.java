@@ -24,11 +24,8 @@ public class ModItemBlock extends ItemBlock {
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
-        String unlocalized;
-        String localized;
-        
-        unlocalized = itemStack.getUnlocalizedName() + ".tooltip";
-        localized = StatCollector.translateToLocal(unlocalized);
+        String unlocalized = itemStack.getUnlocalizedName() + ".tooltip";
+        String localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");
@@ -39,7 +36,6 @@ public class ModItemBlock extends ItemBlock {
                 list.add(localized);
             }
         }
-        
         super.addInformation(itemStack, player, list, advancedItemTooltips);
     }
 }

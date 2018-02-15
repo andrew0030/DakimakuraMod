@@ -18,6 +18,7 @@ public final class DakiJsonSerializer {
         jsonObject.addProperty("author", src.getAuthor());
         jsonObject.addProperty("image-front", src.getImageFront());
         jsonObject.addProperty("image-back", src.getImageBack());
+        jsonObject.addProperty("flavour-text", src.getFlavourText());
         return jsonObject;
     }
     
@@ -43,6 +44,7 @@ public final class DakiJsonSerializer {
             JsonElement authorElement = jsonObject.get("author");
             JsonElement imageFrontElement = jsonObject.get("image-front");
             JsonElement imageBackElement = jsonObject.get("image-back");
+            JsonElement flavourTextElement = jsonObject.get("flavour-text");
             Daki dakimakura = new Daki(packDirectoryName, dakiDirectoryName);
             if (authorElement != null) {
                 dakimakura.setAuthor(authorElement.getAsString());
@@ -62,6 +64,9 @@ public final class DakiJsonSerializer {
                 dakimakura.setImageBack(imageBackElement.getAsString());
             } else {
                 dakimakura.setImageFront("back.png");
+            }
+            if (flavourTextElement != null) {
+                dakimakura.setFlavourText(flavourTextElement.getAsString());
             }
             return dakimakura;
         } catch (Exception e) {

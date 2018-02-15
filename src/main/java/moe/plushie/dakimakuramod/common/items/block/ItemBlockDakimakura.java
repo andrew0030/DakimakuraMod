@@ -18,6 +18,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -161,10 +163,17 @@ public class ItemBlockDakimakura extends ModItemBlock {
                 list.add("DakiDirectory: " + daki.getDakiDirectoryName());
                 list.add("Romaji: " + daki.getRomajiName());
                 list.add("Original: " + daki.getOriginalName());
+                list.add("FlavourText: " + daki.getFlavourText());
             } else {
-                list.add(daki.getDisplayName());
+                String textPack = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.pack");
+                String textName = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.name");
+                list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
+                list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
+                if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
+                    String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
+                    list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
+                }
             }
-
         } else {
             list.add("Blank");
         }
