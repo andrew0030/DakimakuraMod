@@ -96,7 +96,6 @@ public class ItemDakiDesign extends AbstractModItem {
         } else {
             addTooltip(itemStack, player, list, advancedItemTooltips, "usage");
             if (advancedItemTooltips) {
-                list.add("---DEBUG---");
                 list.add("PackDirectory: " + daki.getPackDirectoryName());
                 list.add("DakiDirectory: " + daki.getDakiDirectoryName());
                 list.add("Romaji: " + daki.getRomajiName());

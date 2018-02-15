@@ -55,7 +55,7 @@ public class PlacementPreviewHandler {
             ForgeDirection[] rots = new ForgeDirection[] {ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
             ForgeDirection rotation = rots[rot].getOpposite();
             boolean standing = false;
-            if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) {
+            if ((block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) | block == Blocks.tallgrass) {
                 sideDir = ForgeDirection.UP;
             } else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, y)) {
                 x += sideDir.offsetX;

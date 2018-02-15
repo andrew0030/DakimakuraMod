@@ -46,8 +46,9 @@ public class ItemBlockDakimakura extends ModItemBlock {
     public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         Block block = world.getBlock(x, y, z);
         ForgeDirection sideDir = ForgeDirection.getOrientation(side);
-        if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) {
+        if ((block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) | block == Blocks.tallgrass) {
             sideDir = ForgeDirection.UP;
+            side = 1;
         } else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, y)) {
             x += sideDir.offsetX;
             y += sideDir.offsetY;
@@ -156,7 +157,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (daki != null) {
             if (advancedItemTooltips) {
-                list.add("---DEBUG---");
                 list.add("PackDirectory: " + daki.getPackDirectoryName());
                 list.add("DakiDirectory: " + daki.getDakiDirectoryName());
                 list.add("Romaji: " + daki.getRomajiName());
@@ -177,6 +177,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         ForgeDirection sideDir = ForgeDirection.getOrientation(side);
         if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) {
             sideDir = ForgeDirection.UP;
+            side = 0;
         } else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, y)) {
             x += sideDir.offsetX;
             y += sideDir.offsetY;
