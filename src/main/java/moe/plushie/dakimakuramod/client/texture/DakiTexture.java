@@ -45,11 +45,17 @@ public class DakiTexture extends AbstractTexture {
                     lastLoad = System.currentTimeMillis();
                 } else {
                     if (!requested) {
-                        if (daki != null) {
-                            requested = true;
-                            PacketHandler.NETWORK_WRAPPER.sendToServer(new MessageClientRequestTextures(daki));
+                        DakiTextureManagerClient textureManager = ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager();
+                        int requests = textureManager.getTextureRequests().get();
+                        if (requests < 2) {
+                            textureManager.getTextureRequests().incrementAndGet();
+                            if (daki != null) {
+                                requested = true;
+                                PacketHandler.NETWORK_WRAPPER.sendToServer(new MessageClientRequestTextures(daki));
+                            }
                         }
                     }
+                    
                 }
             }
             return false;

@@ -6,14 +6,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
+import scala.actors.threadpool.AtomicInteger;
 
 @SideOnly(Side.CLIENT)
 public class DakiTextureManagerClient {
     
     private final HashMap<Daki, DakiTexture> textureMap;
+    private final AtomicInteger textureRequests;
     
     public DakiTextureManagerClient() {
         textureMap = new HashMap<Daki, DakiTexture>();
+        textureRequests = new AtomicInteger(0);
     }
     
     public DakiTexture getTextureForDaki(Daki daki) {
@@ -21,7 +24,6 @@ public class DakiTextureManagerClient {
         synchronized (textureMap) {
             dakiTexture = textureMap.get(daki);
             if (dakiTexture == null) {
-                //DakimakuraMod.getLogger().info("Creating texture for: " + daki.toString());
                 dakiTexture = new DakiTexture(daki);
                 textureMap.put(daki, dakiTexture);
             }
@@ -43,7 +45,12 @@ public class DakiTextureManagerClient {
         }
     }
     
+    public AtomicInteger getTextureRequests() {
+        return textureRequests;
+    }
+    
     public void serverSentTextures(Daki daki, DakiImageData imageData) {
+        textureRequests.decrementAndGet();
         DakiTexture dakiTexture = textureMap.get(daki);
         if (dakiTexture != null) {
             dakiTexture.setImage(imageData);
