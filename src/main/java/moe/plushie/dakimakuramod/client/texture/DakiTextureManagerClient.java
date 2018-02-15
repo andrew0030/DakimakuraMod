@@ -1,12 +1,12 @@
 package moe.plushie.dakimakuramod.client.texture;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
-import scala.actors.threadpool.AtomicInteger;
 
 @SideOnly(Side.CLIENT)
 public class DakiTextureManagerClient {
