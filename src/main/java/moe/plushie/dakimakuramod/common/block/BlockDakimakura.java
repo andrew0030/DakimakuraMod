@@ -45,7 +45,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
             ((TileEntityDakimakura)tileEntity).setDaki(daki);
-            ((TileEntityDakimakura)tileEntity).setFlipped(livingBase.isSneaking());
+            ((TileEntityDakimakura)tileEntity).setFlipped(ItemBlockDakimakura.isFlipped(itemStack));
         }
     }
     

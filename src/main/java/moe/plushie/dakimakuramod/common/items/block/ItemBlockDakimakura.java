@@ -25,6 +25,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemBlockDakimakura extends ModItemBlock {
 
+    private static final String TAG_FLIPPED = "flipped";
+    
     public ItemBlockDakimakura(Block block) {
         super(block);
         setMaxStackSize(1);
@@ -42,6 +44,36 @@ public class ItemBlockDakimakura extends ModItemBlock {
             DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
             list.add(itemStack);
         }
+    }
+    
+    public static boolean isFlipped(ItemStack itemStack) {
+        if (itemStack == null) {
+            return false;
+        }
+        if (!itemStack.hasTagCompound()) {
+            return false;
+        }
+        return itemStack.getTagCompound().getBoolean(TAG_FLIPPED);
+    }
+    
+    private static ItemStack setFlipped(ItemStack itemStack, boolean flipped) {
+        if (itemStack == null) {
+            return null;
+        }
+        if (!itemStack.hasTagCompound()) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        itemStack.getTagCompound().setBoolean(TAG_FLIPPED, flipped);
+        return itemStack;
+    }
+    
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (entityPlayer.isSneaking()) {
+            boolean flipped = isFlipped(itemStack);
+            itemStack = setFlipped(itemStack, !flipped);
+        }
+        return itemStack;
     }
     
     @Override
@@ -164,11 +196,14 @@ public class ItemBlockDakimakura extends ModItemBlock {
                 list.add("Romaji: " + daki.getRomajiName());
                 list.add("Original: " + daki.getOriginalName());
                 list.add("FlavourText: " + daki.getFlavourText());
+                list.add("Flipped: " + isFlipped(itemStack));
             } else {
                 String textPack = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.pack");
                 String textName = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.name");
                 list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
                 list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
+                String textFlip = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flip");
+                list.add(StatCollector.translateToLocal(textFlip));
                 if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
                     String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
                     list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));

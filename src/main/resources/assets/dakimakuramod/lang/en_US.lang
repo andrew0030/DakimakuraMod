@@ -31,6 +31,7 @@ tile.dakimakuramod:dakimakura.tooltip=A huggable friend!
 tile.dakimakuramod:dakimakura.tooltip.pack=§7Pack: §f%s
 tile.dakimakuramod:dakimakura.tooltip.name=§7Name: §f%s
 tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
+tile.dakimakuramod:dakimakura.tooltip.flip=Sneak and §aRight click§7 in the air to flip.
 
 # Item Names
 item.dakimakuramod:dakiDesign.name=Dakimakura Design
