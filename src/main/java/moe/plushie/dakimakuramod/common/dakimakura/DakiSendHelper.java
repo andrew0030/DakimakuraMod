@@ -108,9 +108,9 @@ public class DakiSendHelper {
             //DakimakuraMod.getLogger().info("Front size " + data1.length);
             //DakimakuraMod.getLogger().info("Back size " + data2.length);
             
-            DakiImageData imageData = new DakiImageData(data1, data2);
+            DakiImageData imageData = new DakiImageData(daki, data1, data2);
 
-           ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().serverSentTextures(daki, imageData);
+           ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().serverSentTextures(imageData);
         }
     }
 }

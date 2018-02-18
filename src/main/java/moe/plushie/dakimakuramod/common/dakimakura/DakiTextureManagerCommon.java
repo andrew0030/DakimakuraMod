@@ -9,7 +9,6 @@ import com.google.common.cache.CacheBuilder;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-
 public class DakiTextureManagerCommon implements Runnable {
     
     private final Cache<Daki, DakiImageData> dakiImageCache;

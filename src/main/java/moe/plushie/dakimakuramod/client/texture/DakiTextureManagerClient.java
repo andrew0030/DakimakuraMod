@@ -1,8 +1,17 @@
 package moe.plushie.dakimakuramod.client.texture;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.Type;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
@@ -13,10 +22,13 @@ public class DakiTextureManagerClient {
     
     private final HashMap<Daki, DakiTexture> textureMap;
     private final AtomicInteger textureRequests;
+    private final CompletionService<DakiImageData> textureCompletion;
     
     public DakiTextureManagerClient() {
         textureMap = new HashMap<Daki, DakiTexture>();
         textureRequests = new AtomicInteger(0);
+        textureCompletion = new ExecutorCompletionService<DakiImageData>(Executors.newFixedThreadPool(1));
+        FMLCommonHandler.instance().bus().register(this);
     }
     
     public DakiTexture getTextureForDaki(Daki daki) {
@@ -29,6 +41,28 @@ public class DakiTextureManagerClient {
             }
         }
         return dakiTexture;
+    }
+    
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
+            Future<DakiImageData> futureDakiImageData = textureCompletion.poll();
+            if (futureDakiImageData != null) {
+                try {
+                    DakiImageData dakiImageData = futureDakiImageData.get();
+                    if (dakiImageData != null) {
+                        synchronized (textureMap) {
+                            DakiTexture dakiTexture = textureMap.get(dakiImageData.getDaki());
+                            if (dakiTexture != null) {
+                                dakiTexture.setBufferedImageFull(dakiImageData.getBufferedImageFull());
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     
     public void reloadTextures() {
@@ -49,11 +83,8 @@ public class DakiTextureManagerClient {
         return textureRequests;
     }
     
-    public void serverSentTextures(Daki daki, DakiImageData imageData) {
+    public void serverSentTextures(DakiImageData imageData) {
         textureRequests.decrementAndGet();
-        DakiTexture dakiTexture = textureMap.get(daki);
-        if (dakiTexture != null) {
-            dakiTexture.setImage(imageData);
-        }
+        textureCompletion.submit(imageData);
     }
 }
