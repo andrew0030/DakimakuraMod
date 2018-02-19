@@ -40,6 +40,30 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int size, float hitX, float hitY, float hitZ) {
+        if (entityPlayer.isSneaking()) {
+            int meta = world.getBlockMetadata(x, y, z);
+            if (isTopPart(meta)) {
+                if (isStanding(meta)) {
+                    y -= 1;
+                } else {
+                    ForgeDirection rot = getRotation(meta);
+                    x -= rot.offsetX;
+                    z -= rot.offsetZ;
+                }
+            }
+            if (!world.isRemote) {
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
+                if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
+                    ((TileEntityDakimakura)tileEntity).flip();
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase livingBase, ItemStack itemStack) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());

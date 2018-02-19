@@ -50,6 +50,10 @@ public class TileEntityDakimakura extends TileEntity {
         return flipped;
     }
     
+    public void flip() {
+        setFlipped(!flipped);
+    }
+    
     @Override
     public boolean canUpdate() {
         return false;
