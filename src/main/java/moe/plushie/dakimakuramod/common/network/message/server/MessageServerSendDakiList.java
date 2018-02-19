@@ -48,7 +48,7 @@ public class MessageServerSendDakiList implements IMessage, IMessageHandler<Mess
 
     @Override
     public IMessage onMessage(MessageServerSendDakiList message, MessageContext ctx) {
-        dakiManager.setDakiList(message.dakiList);
+        DakimakuraMod.getProxy().setDakiList(message.dakiList);
         return null;
     }
 }

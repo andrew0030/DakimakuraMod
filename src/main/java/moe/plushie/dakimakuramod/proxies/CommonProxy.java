@@ -1,5 +1,7 @@
 package moe.plushie.dakimakuramod.proxies;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -7,6 +9,7 @@ import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.crafting.CraftingManager;
+import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
@@ -75,5 +78,9 @@ public class CommonProxy {
     
     public DakiTextureManagerCommon getTextureManagerCommon() {
         return textureManagerCommon;
+    }
+
+    public void setDakiList(ArrayList<Daki> dakiList) {
+        dakimakuraManager.setDakiList(dakiList);
     }
 }

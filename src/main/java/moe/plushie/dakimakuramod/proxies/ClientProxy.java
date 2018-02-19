@@ -1,5 +1,7 @@
 package moe.plushie.dakimakuramod.proxies;
 
+import java.util.ArrayList;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -12,6 +14,7 @@ import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
 import moe.plushie.dakimakuramod.client.render.tileentity.RenderBlockDakimakura;
 import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
+import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -41,6 +44,12 @@ public class ClientProxy extends CommonProxy {
             return Minecraft.getMinecraft().getIntegratedServer();
         }
         return super.getServer();
+    }
+    
+    @Override
+    public void setDakiList(ArrayList<Daki> dakiList) {
+        super.setDakiList(dakiList);
+        dakiTextureManager.reloadTextures();
     }
     
     public DakiTextureManagerClient getDakiTextureManager() {
