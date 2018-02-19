@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -87,7 +88,11 @@ public class TileEntityDakimakura extends TileEntity {
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
-    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return ConfigHandler.dakiRenderDist;
+    }
     
     @SideOnly(Side.CLIENT)
     @Override
