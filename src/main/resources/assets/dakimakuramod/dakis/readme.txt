@@ -28,12 +28,13 @@ A pack-info.json file can be created inside the pack directory to display more i
 	"name":"Pack Name",
 	"author":"Author Name",
 	"credits":["Person 1", "Person 2"]
+	"version":"1.0",
+	"website":"https://github.com/RiskyKen/DakimakuraMod"
 }
 
 A daki-info.json file can be created inside each dakimakura directory. (all elements are optional)
 {
-	"romaji-name": "Chii",
-	"original-name": "ちぃ",
+	"name": "Dakimakura Name",
 	"author": "Author Name",
 	"image-front": "front.png",
 	"image-back": "back.png",
