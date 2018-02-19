@@ -36,7 +36,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     
     protected BlockDakimakura() {
         super("dakimakura", Material.cloth, soundTypeCloth, true);
-        setHardness(2.0F);
+        setHardness(1.0F);
     }
     
     @Override
