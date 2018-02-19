@@ -46,6 +46,22 @@ public class ItemDakiDesign extends AbstractModItem {
         }
     }
     
+    @Override
+    public ItemStack getContainerItem(ItemStack itemStack) {
+        return itemStack.copy();
+    }
+    
+    @Override
+    public boolean hasContainerItem(ItemStack itemStack) {
+        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+        return daki != null;
+    }
+    
+    @Override
+    public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
+        return false;
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIconIndex(ItemStack itemStack) {
