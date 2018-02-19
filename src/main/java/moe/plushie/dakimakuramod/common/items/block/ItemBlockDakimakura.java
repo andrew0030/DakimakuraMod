@@ -193,8 +193,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
             if (advancedItemTooltips) {
                 list.add("PackDirectory: " + daki.getPackDirectoryName());
                 list.add("DakiDirectory: " + daki.getDakiDirectoryName());
-                list.add("Romaji: " + daki.getRomajiName());
-                list.add("Original: " + daki.getOriginalName());
+                list.add("Name: " + daki.getName());
                 list.add("FlavourText: " + daki.getFlavourText());
                 list.add("Flipped: " + isFlipped(itemStack));
             } else {

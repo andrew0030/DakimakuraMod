@@ -100,8 +100,7 @@ public class ItemDakiDesign extends AbstractModItem {
             if (advancedItemTooltips) {
                 list.add("PackDirectory: " + daki.getPackDirectoryName());
                 list.add("DakiDirectory: " + daki.getDakiDirectoryName());
-                list.add("Romaji: " + daki.getRomajiName());
-                list.add("Original: " + daki.getOriginalName());
+                list.add("Name: " + daki.getName());
                 list.add("FlavourText: " + daki.getFlavourText());
             } else {
                 String textPack = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack");

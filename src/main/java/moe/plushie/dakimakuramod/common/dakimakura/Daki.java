@@ -1,6 +1,5 @@
 package moe.plushie.dakimakuramod.common.dakimakura;
 
-import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import net.minecraft.util.StringUtils;
 
 public class Daki implements Comparable<Daki> {
@@ -8,8 +7,7 @@ public class Daki implements Comparable<Daki> {
     private final String packDirectoryName;
     private final String dakiDirectoryName;
     
-    private String romajiName = "";
-    private String originalName = "";
+    private String name = "";
     private String author = "";
     private String imageFront = "";
     private String imageBack = "";
@@ -27,21 +25,13 @@ public class Daki implements Comparable<Daki> {
     public void setAuthor(String author) {
         this.author = author;
     }
-
-    public String getRomajiName() {
-        return romajiName;
+    
+    public String getName() {
+        return name;
     }
-
-    public void setRomajiName(String romajiName) {
-        this.romajiName = romajiName;
-    }
-
-    public String getOriginalName() {
-        return originalName;
-    }
-
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
+    
+    public void setName(String name) {
+        this.name = name;
     }
     
     public String getPackDirectoryName() {
@@ -77,27 +67,11 @@ public class Daki implements Comparable<Daki> {
     }
     
     public String getDisplayName() {
-        if (ConfigHandler.romajiName) {
-            if (!StringUtils.isNullOrEmpty(romajiName)) {
-                return romajiName;
-            } else {
-                return dakiDirectoryName;
-            }
+        if (!StringUtils.isNullOrEmpty(name)) {
+            return name;
+        } else {
+            return dakiDirectoryName;
         }
-        
-        if (!ConfigHandler.romajiName) {
-            if (!StringUtils.isNullOrEmpty(originalName)) {
-                return originalName;
-            } else {
-                if (!StringUtils.isNullOrEmpty(romajiName)) {
-                    return romajiName;
-                } else {
-                    return dakiDirectoryName;
-                }
-            }
-        }
-        
-        return dakiDirectoryName;
     }
     
     @Override

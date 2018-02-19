@@ -29,7 +29,6 @@ public class ConfigHandler {
     // Client
     public static int textureMaxSize;
     public static int dakiRenderDist;
-    public static boolean romajiName;
     
     public static void init(File file) {
         if (config == null) {
@@ -76,8 +75,5 @@ public class ConfigHandler {
         dakiRenderDist = config.getInt("dakiRenderDist", CATEGORY_CLIENT, 64, 32, 256,
                 "The maximum distance away in blocks dakis will render.");
         dakiRenderDist = dakiRenderDist * dakiRenderDist;
-        
-        romajiName = config.getBoolean("romajiName", CATEGORY_CLIENT, true,
-                "If true daki names will be displayed in romaji, false they will display their original name.");
     }
 }
