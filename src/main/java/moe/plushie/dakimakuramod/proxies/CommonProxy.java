@@ -10,6 +10,7 @@ import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.crafting.CraftingManager;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiExtractor;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
@@ -66,6 +67,7 @@ public class CommonProxy {
     }
     
     public void postInit(FMLPostInitializationEvent event) {
+        DakiExtractor.extractDakis();
     }
     
     public MinecraftServer getServer() {
