@@ -43,7 +43,11 @@ public class Daki implements Comparable<Daki> {
     }
     
     public String getImageFront() {
-        return imageFront;
+        if (StringUtils.isNullOrEmpty(imageFront)) {
+            return "front.png";
+        } else {
+            return imageFront;
+        }
     }
     
     public void setImageFront(String imageFront) {
@@ -51,7 +55,11 @@ public class Daki implements Comparable<Daki> {
     }
     
     public String getImageBack() {
-        return imageBack;
+        if (StringUtils.isNullOrEmpty(imageBack)) {
+            return "back.png";
+        } else {
+            return imageBack;
+        }
     }
     
     public void setImageBack(String imageBack) {

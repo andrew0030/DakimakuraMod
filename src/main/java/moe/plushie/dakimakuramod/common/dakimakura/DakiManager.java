@@ -58,18 +58,16 @@ public class DakiManager {
             if (!StringUtils.isNullOrEmpty(dakiJson)) {
                 Daki dakimakura = DakiJsonSerializer.deserialize(dakiJson, packDir.getName(), dakieDir.getName());
                 if (dakimakura != null) {
-                    addDakiToMap(packDir.getName(), dakieDir.getName(), dakimakura);
+                    addDakiToMap(dakimakura);
                 }
             }
+        } else {
+            addDakiToMap(new Daki(packDir.getName(), dakieDir.getName()));
         }
     }
     
     private void addDakiToMap(Daki daki) {
         dakiMap.put(daki.getPackDirectoryName() + ":" + daki.getDakiDirectoryName(), daki);
-    }
-    
-    private void addDakiToMap(String packDirName, String dakiDirName, Daki daki) {
-        dakiMap.put(packDirName + ":" + dakiDirName, daki);
     }
     
     public Daki getDakiFromMap(String packDirName, String dakiDirName) {
