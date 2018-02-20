@@ -1,15 +1,44 @@
+# The following codes can be added to the start of text to style it.
+# §0 Black
+# §1 Dark Blue
+# §2 Dark Green
+# §3 Dark Aqua
+# §4 Dark Red
+# §5 Dark Purple
+# §6 Gold
+# §7 Gray
+# §8 Dark Gray
+# §9 Blue
+# §a Green
+# §b Aqua
+# §c Red
+# §d Light Purple
+# §e Yellow
+# §f White
+# §l Bold
+# §m Strikethrough
+# §n Underline
+# §o Italic
+# §r Reset 
+#
+# A new line can be inserted with %n. Please add/remove new lines to fit the localisations you are writing.
+
 # Block names
 tile.dakimakuramod:dakimakura.name=抱枕
 
 # Block tooltip
-tile.dakimakuramod:dakimakura.tooltip=你可爱的朋友！
+tile.dakimakuramod:dakimakura.tooltip=要抱着才能睡觉
+tile.dakimakuramod:dakimakura.tooltip.pack=§7包名: §f%s
+tile.dakimakuramod:dakimakura.tooltip.name=§7名字: §f%s
+tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
+tile.dakimakuramod:dakimakura.tooltip.flip=§a潜行§7 + §a鼠标右击空气§7 翻转抱枕.
 
 # Item Names
-item.dakimakuramod:dakiDesign.name=抱枕设计图
+item.dakimakuramod:dakiDesign.name=抱枕的设计图
 
 # Item tooltip
-item.dakimakuramod:dakiDesign.tooltip.unlock=右键点击随机获得抱枕设计图。
-item.dakimakuramod:dakiDesign.tooltip.usage=和一个空白的抱枕合成完成可爱的抱枕！
+item.dakimakuramod:dakiDesign.tooltip.unlock=§a右击鼠标§7 随机获得一个有图案的抱枕设计图.
+item.dakimakuramod:dakiDesign.tooltip.usage=可与一个空白抱枕合成为一个有图案的抱枕.
 
 # Creative tab
 itemGroup.dakimakuramod=抱枕模组
