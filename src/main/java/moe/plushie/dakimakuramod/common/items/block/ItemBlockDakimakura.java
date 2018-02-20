@@ -9,6 +9,7 @@ import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
+import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -97,7 +98,11 @@ public class ItemBlockDakimakura extends ModItemBlock {
             ForgeDirection[] rots = new ForgeDirection[] {ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
             ForgeDirection rotation = rots[rot].getOpposite();
             if (canPlaceDakiAt(world, entityPlayer, itemStack, x, y, z, sideDir, rotation)) {
-                placeDakiAt(world, entityPlayer, itemStack, x, y, z, sideDir, rotation);
+                if (block.isBed(world, x, y, z, entityPlayer)) {
+                    placeAsEntity(world, entityPlayer, itemStack, x, y, z, sideDir, rotation);
+                } else {
+                    placeDakiAt(world, entityPlayer, itemStack, x, y, z, sideDir, rotation);
+                }
                 return true;
             } else {
                 return false;
@@ -105,6 +110,15 @@ public class ItemBlockDakimakura extends ModItemBlock {
         } else {
             return false;
         }
+    }
+    
+    private void placeAsEntity(World world, EntityPlayer entityPlayer, ItemStack itemStack, int x, int y, int z, ForgeDirection side, ForgeDirection rotation) {
+        if (world.isRemote) {
+            return;
+        }
+        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+        EntityDakimakura entityDakimakura = new EntityDakimakura(world, x, y, z, daki, isFlipped(itemStack), rotation);
+        world.spawnEntityInWorld(entityDakimakura);
     }
     
     private boolean canPlaceDakiAt(World world, EntityPlayer entityPlayer, ItemStack itemStack, int x, int y, int z, ForgeDirection side, ForgeDirection rotation) {

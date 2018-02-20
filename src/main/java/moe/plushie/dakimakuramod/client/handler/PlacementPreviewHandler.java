@@ -83,6 +83,10 @@ public class PlacementPreviewHandler {
             if (rotation == ForgeDirection.EAST) {
                 GL11.glRotatef(90, 0, 1, 0);
             }
+            if (block.isBed(world, x, y, z, entityPlayer) & side == 1) {
+                GL11.glTranslatef(0F * scale, -7F * scale, 0);
+            }
+            
             GL11.glTranslatef(0F * scale, 0F * scale, 4F * scale);
             
             if (!standing) {

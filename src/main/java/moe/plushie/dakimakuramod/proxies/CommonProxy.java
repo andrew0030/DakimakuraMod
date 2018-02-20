@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
@@ -13,6 +14,7 @@ import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiExtractor;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
+import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.network.GuiHandler;
@@ -35,6 +37,7 @@ public class CommonProxy {
         textureManagerCommon = new DakiTextureManagerCommon();
         modBlocks = new ModBlocks();
         modItems = new ModItems();
+        EntityRegistry.registerModEntity(EntityDakimakura.class, "entityDakimakura", 1, DakimakuraMod.getInstance(), 64, 100, false);
     }
     
     public void init(FMLInitializationEvent event) {
