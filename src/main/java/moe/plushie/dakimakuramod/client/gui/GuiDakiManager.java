@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.config.GuiButtonExt;
+import cpw.mods.fml.client.config.GuiSlider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
@@ -28,6 +29,7 @@ public class GuiDakiManager extends GuiScreen implements IDropDownListCallback {
     protected int guiLeft;
     protected int guiTop;
     
+    private GuiSlider guiSlider;
     private GuiButtonExt buttonReloadTextures;
     private GuiDropDownList dropDownTextureSize;
     
@@ -42,6 +44,9 @@ public class GuiDakiManager extends GuiScreen implements IDropDownListCallback {
         guiTop = height / 2 - guiHeight / 2;
         
         buttonList.clear();
+        
+        guiSlider = new GuiSlider(0, guiLeft, guiTop, 40, guiHeight, "pre", "suf", 0, 100, 0, true, false, null);
+        //buttonList.add(guiSlider);
         
         buttonReloadTextures = new GuiButtonExt(0, guiLeft + guiWidth - 105, guiTop + 5, 100, 20, "Reload Textures");
         buttonList.add(buttonReloadTextures);
@@ -81,15 +86,27 @@ public class GuiDakiManager extends GuiScreen implements IDropDownListCallback {
     @Override
     public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
         drawGradientRect(this.guiLeft, this.guiTop, this.guiLeft + this.guiWidth, this.guiTop + guiHeight, 0xC0101010, 0xD0101010);
+        drawHorizontalLine(guiLeft, guiLeft + guiWidth, guiTop, 0xFFFFFFFF);
+        drawHorizontalLine(guiLeft, guiLeft + guiWidth, guiTop + guiHeight - 1, 0xFFFFFFFF);
+        drawVerticalLine(guiLeft, guiTop + guiHeight - 1, guiTop, 0xFFFFFFFF);
+        drawVerticalLine(guiLeft + guiWidth, guiTop + guiHeight - 1, guiTop, 0xFFFFFFFF);
+        
         super.drawScreen(mouseX, mouseY, p_73863_3_);
+        
+        
         fontRendererObj.drawString("Not Finished!", guiLeft + 5, guiTop + 5, 0xDDDDDD);
         Daki hoverDaki = null;
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         ArrayList<Daki> dakiList = dakiManager.getDakiList();
         for (int i = 0; i < dakiList.size(); i++) {
+            int itemX = guiLeft + 5;
+            int itemY = guiTop + 20 + i * 12;
+            if (itemY >= guiTop + guiHeight  - 5) {
+                break;
+            }
             Daki daki = dakiList.get(i);
             int colour = 0xCCCCCC;
-            if (mouseX >= guiLeft + 5 & mouseX < guiLeft + 110 & mouseY >= guiTop + 20 + i * 12 & mouseY < guiTop + 28 + i * 12) {
+            if (mouseX >= itemX & mouseX < itemX + 110 & mouseY >= itemY & mouseY < itemY + 8) {
                 colour = 0xFFFFFF;
                 hoverDaki = daki;
             }
@@ -97,9 +114,9 @@ public class GuiDakiManager extends GuiScreen implements IDropDownListCallback {
             if (dakiTexture.isLoaded()) {
                 GL11.glColor4f(1, 1, 1, 1);
                 GL11.glBindTexture(GL11.GL_TEXTURE_2D, dakiTexture.getGlTextureId());
-                Gui.func_152125_a(guiLeft + 5, guiTop + 20 + i * 12, 0, 0, 1, 1, 10, 10, 1, 1);
+                Gui.func_152125_a(itemX, itemY, 0, 0, 1, 1, 10, 10, 1, 1);
             }
-            fontRendererObj.drawString(daki.getDakiDirectoryName(), guiLeft + 18, guiTop + 20 + i * 12, colour, true);
+            fontRendererObj.drawString(daki.getDakiDirectoryName(), itemX + 12, itemY, colour, true);
         }
         
         if (hoverDaki != null) {
@@ -107,7 +124,7 @@ public class GuiDakiManager extends GuiScreen implements IDropDownListCallback {
             if (dakiTexture.isLoaded()) {
                 GL11.glColor4f(1, 1, 1, 1);
                 GL11.glBindTexture(GL11.GL_TEXTURE_2D, dakiTexture.getGlTextureId());
-                Gui.func_152125_a(guiLeft + 120, guiTop + 10, 0, 0, 1, 1, 190, 190, 1, 1);
+                Gui.func_152125_a(guiLeft + 125, guiTop + 45, 0, 0, 1, 1, 190, 190, 1, 1);
             }
         }
         
