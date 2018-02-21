@@ -98,7 +98,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
             ForgeDirection[] rots = new ForgeDirection[] {ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH, ForgeDirection.WEST};
             ForgeDirection rotation = rots[rot].getOpposite();
             if (canPlaceDakiAt(world, entityPlayer, itemStack, x, y, z, sideDir, rotation)) {
-                if (block.isBed(world, x, y, z, entityPlayer)) {
+                if (block.isBed(world, x, y, z, entityPlayer) & side == 1) {
                     placeAsEntity(world, entityPlayer, itemStack, x, y, z, sideDir, rotation);
                 } else {
                     placeDakiAt(world, entityPlayer, itemStack, x, y, z, sideDir, rotation);
@@ -116,7 +116,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (world.isRemote) {
             return;
         }
-        DakimakuraMod.getLogger().info("plaing entity");
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         EntityDakimakura entityDakimakura = new EntityDakimakura(world);
         entityDakimakura.setPosition(x, y, z);
