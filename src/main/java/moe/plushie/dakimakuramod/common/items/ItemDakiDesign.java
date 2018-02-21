@@ -109,25 +109,18 @@ public class ItemDakiDesign extends AbstractModItem {
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
         super.addInformation(itemStack, player, list, advancedItemTooltips);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
-        if (daki == null) {
-            addTooltip(itemStack, player, list, advancedItemTooltips, "unlock");
-        } else {
+        if (daki != null) {
             addTooltip(itemStack, player, list, advancedItemTooltips, "usage");
-            if (advancedItemTooltips) {
-                list.add("PackDirectory: " + daki.getPackDirectoryName());
-                list.add("DakiDirectory: " + daki.getDakiDirectoryName());
-                list.add("Name: " + daki.getName());
-                list.add("FlavourText: " + daki.getFlavourText());
-            } else {
-                String textPack = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack");
-                String textName = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name");
-                list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
-                list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
-                if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
-                    String textFlavour = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.flavour");
-                    list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
-                }
+            String textPack = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack");
+            String textName = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name");
+            list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
+            list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
+            if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
+                String textFlavour = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.flavour");
+                list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
             }
+        } else {
+            addTooltip(itemStack, player, list, advancedItemTooltips, "unlock");
         }
     }
     

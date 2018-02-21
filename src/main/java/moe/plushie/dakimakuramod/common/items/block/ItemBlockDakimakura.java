@@ -210,23 +210,15 @@ public class ItemBlockDakimakura extends ModItemBlock {
         super.addInformation(itemStack, player, list, advancedItemTooltips);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (daki != null) {
-            if (advancedItemTooltips) {
-                list.add("PackDirectory: " + daki.getPackDirectoryName());
-                list.add("DakiDirectory: " + daki.getDakiDirectoryName());
-                list.add("Name: " + daki.getName());
-                list.add("FlavourText: " + daki.getFlavourText());
-                list.add("Flipped: " + isFlipped(itemStack));
-            } else {
-                String textPack = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.pack");
-                String textName = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.name");
-                list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
-                list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
-                String textFlip = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flip");
-                list.add(StatCollector.translateToLocal(textFlip));
-                if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
-                    String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
-                    list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
-                }
+            String textPack = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.pack");
+            String textName = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.name");
+            String textFlip = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flip");
+            list.add(StatCollector.translateToLocal(textFlip));
+            list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
+            list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
+            if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
+                String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
+                list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
             }
         } else {
             list.add("Blank");
