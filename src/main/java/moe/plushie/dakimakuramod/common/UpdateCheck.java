@@ -84,7 +84,7 @@ public class UpdateCheck implements Runnable {
 	    DakimakuraMod.getLogger().info("Starting Update Check");
 		String localVersion = LibModInfo.VERSION;
 		
-		localVersion = "0.5";
+		//localVersion = "0.5";
 		if(localVersion.equals("@VERSION@")) {
 		    return;
 		}
