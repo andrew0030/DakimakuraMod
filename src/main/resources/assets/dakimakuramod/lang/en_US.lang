@@ -33,7 +33,7 @@ tile.dakimakuramod:dakimakura.tooltip.name=§7Name: §f%s
 tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=Sneak and §aright click§7 in the air to flip.
 
-# Item Names
+# Item names
 item.dakimakuramod:dakiDesign.name=Dakimakura Design
 
 # Item tooltip
@@ -42,3 +42,8 @@ item.dakimakuramod:dakiDesign.tooltip.usage=Craft this design with a blank dakim
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
+
+# Chat messages
+chat.dakimakuramod:updateAvailable=Dakimakura Mod update %s is available.
+chat.dakimakuramod:updateDownload=[Download]
+chat.dakimakuramod:updateDownloadRollover=Click to open the download page.

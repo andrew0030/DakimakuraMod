@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
@@ -15,6 +16,7 @@ import moe.plushie.dakimakuramod.client.render.entity.RenderEntityDakimakura;
 import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
 import moe.plushie.dakimakuramod.client.render.tileentity.RenderBlockDakimakura;
 import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
+import moe.plushie.dakimakuramod.common.UpdateCheck;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
@@ -29,6 +31,12 @@ public class ClientProxy extends CommonProxy {
     
     private DakiTextureManagerClient dakiTextureManager;
     private int maxGpuTextureSize;
+    
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        new UpdateCheck();
+    }
     
     @Override
     public void initRenderers() {

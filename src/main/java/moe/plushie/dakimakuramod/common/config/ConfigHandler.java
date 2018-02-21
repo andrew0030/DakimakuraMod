@@ -29,6 +29,7 @@ public class ConfigHandler {
     // Client
     public static int textureMaxSize;
     public static int dakiRenderDist;
+    public static boolean checkForUpdates;
     
     public static void init(File file) {
         if (config == null) {
@@ -75,5 +76,8 @@ public class ConfigHandler {
         dakiRenderDist = config.getInt("dakiRenderDist", CATEGORY_CLIENT, 64, 32, 256,
                 "The maximum distance away in blocks dakis will render.");
         dakiRenderDist = dakiRenderDist * dakiRenderDist;
+        
+        checkForUpdates = config.getBoolean("checkForUpdates", CATEGORY_CLIENT, true,
+                "Should the mod check for newer versions?");
     }
 }
