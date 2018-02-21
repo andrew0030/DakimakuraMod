@@ -6,10 +6,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
+import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -23,16 +27,14 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     
     private String packDirName;
     private String dakiDirName;
-    private boolean flipped;
     private ForgeDirection rotation;
     
-    public EntityDakimakura(World world, int x, int y, int z, Daki daki, boolean flipped, ForgeDirection rotation) {
+    public EntityDakimakura(World world) {
         super(world);
-        setDaki(daki);
-        this.flipped = flipped;
-        this.rotation = rotation;
-        setPosition(x, y, z);
-        setSize(1.0F, 1.0F);
+        dataWatcher.addObject(2, Byte.valueOf((byte)0));
+        noClip = true;
+        width = 4;
+        height = 1;
     }
     
     public void setDaki(Daki daki) {
@@ -45,28 +47,32 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         }
     }
     
-    public EntityDakimakura(World world) {
-        super(world);
-        noClip = true;
-        width = 4;
-        height = 1;
-    }
-    
     @Override
     public void onUpdate() {
-        int x = MathHelper.floor_double(posX);
-        int y = MathHelper.floor_double(posY) - 1;
-        int z = MathHelper.floor_double(posZ);
-        Block block = worldObj.getBlock(x, y, z);
-        if (!block.isBed(worldObj, x, y, z, null)) {
-            setDead();
+        if (!worldObj.isRemote) {
+            int x = MathHelper.floor_double(posX);
+            int y = MathHelper.floor_double(posY) - 1;
+            int z = MathHelper.floor_double(posZ);
+            Block block = worldObj.getBlock(x, y, z);
+            if (!block.isBed(worldObj, x, y, z, null)) {
+                dropAsItem();
+                setDead();
+            }
         }
     }
     
-    @Override
-    public boolean isInRangeToRenderDist(double p_70112_1_) {
-        // TODO Auto-generated method stub
-        return super.isInRangeToRenderDist(p_70112_1_);
+    public void dropAsItem() {
+        Daki daki = getDaki();
+        ItemStack itemStack = new ItemStack(ModBlocks.blockDakimakura);
+        if (daki != null) {
+            itemStack.setTagCompound(new NBTTagCompound());
+            DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
+            if (isFlipped()) {
+                ItemBlockDakimakura.setFlipped(itemStack, true);
+            }
+        }
+        EntityItem entityItem = new EntityItem(worldObj, posX + 0.5F, posY + 0.5F, posZ + 0.5F, itemStack);
+        worldObj.spawnEntityInWorld(entityItem);
     }
     
     @SideOnly(Side.CLIENT)
@@ -89,7 +95,7 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         if (rotation != null) {
             compound.setInteger(TAG_ROTATION, rotation.ordinal());
         }
-        compound.setBoolean(TAG_FLIPPED, flipped);
+        compound.setBoolean(TAG_FLIPPED, isFlipped());
     }
     
     @Override
@@ -101,11 +107,14 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         if (compound.hasKey(TAG_ROTATION, NBT.TAG_INT)) {
             rotation = ForgeDirection.getOrientation(compound.getInteger(TAG_ROTATION));
         }
-        flipped = compound.getBoolean(TAG_FLIPPED);
+        setFlipped(compound.getBoolean(TAG_FLIPPED));
     }
 
     @Override
     public void writeSpawnData(ByteBuf buf) {
+        buf.writeDouble(posX);
+        buf.writeDouble(posY);
+        buf.writeDouble(posZ);
         if (packDirName != null & dakiDirName != null) {
             buf.writeBoolean(true);
             ByteBufUtils.writeUTF8String(buf, packDirName);
@@ -119,11 +128,13 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         } else {
             buf.writeBoolean(false);
         }
-        buf.writeBoolean(flipped);
     }
 
     @Override
     public void readSpawnData(ByteBuf buf) {
+        posX = buf.readDouble();
+        posY = buf.readDouble();
+        posZ = buf.readDouble();
         if (buf.readBoolean()) {
             packDirName = ByteBufUtils.readUTF8String(buf);
             dakiDirName = ByteBufUtils.readUTF8String(buf);
@@ -131,7 +142,6 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         if (buf.readBoolean()) {
             rotation = ForgeDirection.getOrientation(buf.readInt());
         }
-        flipped = buf.readBoolean();
     }
     
     public Daki getDaki() {
@@ -139,10 +149,38 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     }
     
     public boolean isFlipped() {
-        return flipped;
+        return dataWatcher.getWatchableObjectByte(2) == 1;
+    }
+    
+    public void setFlipped(boolean flipped) {
+        if (flipped) {
+            dataWatcher.updateObject(2, (byte)1);
+        } else {
+            dataWatcher.updateObject(2, (byte)0);
+        }
+    }
+    
+    public void flip() {
+        setFlipped(!isFlipped());
+    }
+    
+    public void setRotation(ForgeDirection rotation) {
+        this.rotation = rotation;
     }
     
     public ForgeDirection getRotation() {
         return rotation;
+    }
+    
+    public boolean isDakiOverBlock(int x, int y, int z) {
+        if (MathHelper.floor_double(posX) == x & MathHelper.floor_double(posY) == y + 1 & MathHelper.floor_double(posZ) == z) {
+            return true;
+        }
+        x -= rotation.offsetX;
+        z -= rotation.offsetZ;
+        if (MathHelper.floor_double(posX) == x & MathHelper.floor_double(posY) == y + 1 & MathHelper.floor_double(posZ) == z) {
+            return true;
+        }
+        return false;
     }
 }

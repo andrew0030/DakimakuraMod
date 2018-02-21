@@ -15,6 +15,7 @@ import moe.plushie.dakimakuramod.common.dakimakura.DakiExtractor;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
+import moe.plushie.dakimakuramod.common.handler.BedHandler;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.network.GuiHandler;
@@ -46,6 +47,7 @@ public class CommonProxy {
         new GuiHandler();
         PacketHandler.init();
         SyncHandler.init();
+        new BedHandler();
         if (ConfigHandler.addUnlockToLootChests) {
             addLootToChests();
         }

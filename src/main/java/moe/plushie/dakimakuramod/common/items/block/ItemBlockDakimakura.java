@@ -57,7 +57,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         return itemStack.getTagCompound().getBoolean(TAG_FLIPPED);
     }
     
-    private static ItemStack setFlipped(ItemStack itemStack, boolean flipped) {
+    public static ItemStack setFlipped(ItemStack itemStack, boolean flipped) {
         if (itemStack == null) {
             return null;
         }
@@ -116,9 +116,16 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (world.isRemote) {
             return;
         }
+        DakimakuraMod.getLogger().info("plaing entity");
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
-        EntityDakimakura entityDakimakura = new EntityDakimakura(world, x, y, z, daki, isFlipped(itemStack), rotation);
+        EntityDakimakura entityDakimakura = new EntityDakimakura(world);
+        entityDakimakura.setPosition(x, y, z);
+        entityDakimakura.setDaki(daki);
+        entityDakimakura.setFlipped(isFlipped(itemStack));
+        entityDakimakura.setRotation(rotation);
         world.spawnEntityInWorld(entityDakimakura);
+        world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), this.field_150939_a.stepSound.func_150496_b(), (this.field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, this.field_150939_a.stepSound.getPitch() * 0.8F);
+        --itemStack.stackSize;
     }
     
     private boolean canPlaceDakiAt(World world, EntityPlayer entityPlayer, ItemStack itemStack, int x, int y, int z, ForgeDirection side, ForgeDirection rotation) {
