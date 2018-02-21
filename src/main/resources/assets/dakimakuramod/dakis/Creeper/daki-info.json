@@ -2,5 +2,6 @@
 	"name":"Creeper",
 	"author":"RiskyKen",
 	"image-front":"front.png",
-	"image-back":"back.png"
+	"image-back":"back.png",
+	"flavour-text": "Steve-sssempai"
 }
