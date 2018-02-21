@@ -42,3 +42,8 @@ item.dakimakuramod:dakiDesign.tooltip.usage=Совместите этот диз
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
+
+# Chat messages
+chat.dakimakuramod:updateAvailable=Доступно обновление %s для мода Dakimakura Mod.
+chat.dakimakuramod:updateDownload=[Загрузить]
+chat.dakimakuramod:updateDownloadRollover=нажмите чтобы перейти на страницу загрузки.
