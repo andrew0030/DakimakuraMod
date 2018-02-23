@@ -21,7 +21,8 @@ import net.minecraftforge.client.model.IModelCustom;
 @SideOnly(Side.CLIENT)
 public class ModelDakimakura extends ModelBase {
     
-    private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/daki-new-uv.obj");
+    //private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/daki-new-uv.obj");
+    private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/bolster-new-uv.obj");
     private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(LibModInfo.ID, "textures/models/blank.png");
     
     private final IModelCustom DAKIMAKURA_MODEL;
