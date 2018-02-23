@@ -28,8 +28,8 @@ tile.dakimakuramod:dakimakura.name=抱枕
 
 # Block tooltip
 tile.dakimakuramod:dakimakura.tooltip=要抱着才能睡觉
-tile.dakimakuramod:dakimakura.tooltip.pack=§7包名: §f%s
-tile.dakimakuramod:dakimakura.tooltip.name=§7名字: §f%s
+tile.dakimakuramod:dakimakura.tooltip.pack=§7抱枕包名: §f%s
+tile.dakimakuramod:dakimakura.tooltip.name=§7作者名字: §f%s
 tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=§a潜行§7 + §a鼠标右击空气§7 翻转抱枕.
 
@@ -42,3 +42,8 @@ item.dakimakuramod:dakiDesign.tooltip.usage=可与一个空白抱枕合成为一
 
 # Creative tab
 itemGroup.dakimakuramod=抱枕模组
+
+# Chat messages
+chat.dakimakuramod:updateAvailable=抱枕模组最新版 %s 已经推出.
+chat.dakimakuramod:updateDownload=[下载]
+chat.dakimakuramod:updateDownloadRollover=点击打开下载页.
