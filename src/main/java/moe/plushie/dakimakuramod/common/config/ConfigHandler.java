@@ -8,7 +8,6 @@ import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
     
-    private static final String CATEGORY_GENERAL = "general";
     private static final String CATEGORY_RECIPE = "recipe";
     private static final String CATEGORY_LOOT = "loot";
     private static final String CATEGORY_CLIENT = "client";
@@ -25,6 +24,8 @@ public class ConfigHandler {
     
     // Loot
     public static boolean addUnlockToLootChests;
+    public static float mobDropChance;
+    public static float mobDropLootingBonus;
     
     // Client
     public static int textureMaxSize;
@@ -63,8 +64,16 @@ public class ConfigHandler {
     }
     
     private static void loadCategoryLoot() {
-        addUnlockToLootChests = config.getBoolean("addUnlockToLootChests", CATEGORY_LOOT, true,
+        addUnlockToLootChests = config.getBoolean("addUnlockToLootChests", CATEGORY_LOOT, false,
                 "Added the daki design items to loot chests around the world.");
+        
+        mobDropChance = config.getFloat("mobDropChance", CATEGORY_LOOT, 1F, 0F, 100F,
+                "Percentage chance of mobs dropping a daki design. 0 disables mob drops.");
+        
+        mobDropLootingBonus = config.getFloat("mobDropLootingBonus", CATEGORY_LOOT, 1F, 0F, 100F,
+                "Extra bonus percentage chance of mobs dropping a daki design for each level of looting.\n"
+                + "mobDropChance + (mobDropLootingBonus * lootingLevel)");
+        
     }
     
     private static void loadCategoryClient() {
