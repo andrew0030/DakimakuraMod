@@ -89,6 +89,11 @@ public class UpdateCheck implements Runnable {
 		    return;
 		}
 		
+        if (localVersion.contains("-")) {
+            String[] lvSplit = localVersion.split("-");
+            localVersion = lvSplit[1];
+        }
+        
 		String downloadData = "";
 		HttpURLConnection conn = null;
 		try {
