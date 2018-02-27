@@ -22,6 +22,7 @@ public final class DakiExtractor {
             "Chicken",
             "Cow",
             "Cow2",
+            "Creeper",
             "Enderman",
             "Ghast",
             "Horse",
