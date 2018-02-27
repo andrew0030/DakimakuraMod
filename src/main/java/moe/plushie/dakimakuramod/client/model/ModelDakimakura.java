@@ -21,7 +21,6 @@ import net.minecraftforge.client.model.IModelCustom;
 @SideOnly(Side.CLIENT)
 public class ModelDakimakura extends ModelBase {
     
-    //private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/daki-new-uv.obj");
     private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/bolster-new-uv.obj");
     private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(LibModInfo.ID, "textures/models/blank.png");
     
@@ -48,20 +47,16 @@ public class ModelDakimakura extends ModelBase {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);
             }
         }
-        profiler.endSection();
-        
+        profiler.endStartSection("model");
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_POLYGON_BIT | GL11.GL_ENABLE_BIT);
         GL11.glCullFace(GL11.GL_FRONT);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_NORMALIZE);
-        
-        float scale = 1F / 16F;
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glScalef(-1, 1, 1);
         GL11.glScalef(0.55F, 0.55F, 0.55F);
         GL11.glTranslatef(0, 0.35F, 0);
-        profiler.startSection("model");
         if (modelList == -1) {
             modelList = GLAllocation.generateDisplayLists(1);
             GL11.glNewList(modelList, GL11.GL_COMPILE);
@@ -69,8 +64,8 @@ public class ModelDakimakura extends ModelBase {
             GL11.glEndList();
         }
         GL11.glCallList(modelList);
-        profiler.endSection();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
+        profiler.endSection();
     }
 }

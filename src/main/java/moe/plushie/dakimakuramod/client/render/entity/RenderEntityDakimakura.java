@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +23,8 @@ public class RenderEntityDakimakura extends Render {
     
     @Override
     public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection("dakimakura");
         float scale = 0.0625F;
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
@@ -43,6 +46,7 @@ public class RenderEntityDakimakura extends Render {
         }
         modelDakimakura.render(((EntityDakimakura)entity).getDaki());
         GL11.glPopMatrix();
+        Minecraft.getMinecraft().mcProfiler.endSection();
     }
 
     @Override

@@ -49,7 +49,6 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
             GL11.glTranslatef(0F * scale, 10F * scale, 2F * scale);
         }
         
-        
         if (tileEntity.isFlipped()) {
             GL11.glRotatef(180, 0, 1, 0);
         }
