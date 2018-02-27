@@ -13,31 +13,79 @@ public final class DakiExtractor {
     
     private static final String DAKI_ASSETS_LOCATION = "assets/dakimakuramod/dakis/";
     
+    private static final String DAKI_PACK_ANDREWS = "Andrew's Vanilla Mobs";
+    private static final String[] DAKI_PACK_ANDREWS_LIST = new String[] {
+            "Alex",
+            "Bat",
+            "Blaze",
+            "CaveSpider",
+            "Chicken",
+            "Cow",
+            "Cow2",
+            "Enderman",
+            "Ghast",
+            "Horse",
+            "IronGolem",
+            "Magmacube",
+            "MooshroomCow",
+            "MooshroomCow2",
+            "Ocelot",
+            "Pig",
+            "Sheep",
+            "Sheep2",
+            "Silverfish",
+            "Skeleton",
+            "Slime",
+            "Snowman",
+            "Spider",
+            "Squid",
+            "Steve",
+            "Villager",
+            "Witch",
+            "WitherSkeleton",
+            "Wolf",
+            "Zombie",
+            "ZombiePigman"
+        };
+    
+    private static final String DAKI_PACK_OFFICIAL = "Official Pack";
+    private static final String[] DAKI_PACK_OFFICIAL_LIST = new String[] {
+            "Creeper"
+        };
+    
     private DakiExtractor() {}
     
     public static void extractDakis() {
         File packFolder = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         extractResource("readme.txt", new File(packFolder, "readme.txt"), false);
-        packFolder = new File(packFolder, "Official Pack");
+        extractDakiPack(packFolder, DAKI_PACK_ANDREWS, DAKI_PACK_ANDREWS_LIST);
+        extractDakiPack(packFolder, DAKI_PACK_OFFICIAL, DAKI_PACK_OFFICIAL_LIST);
+    }
+    
+    private static void extractDakiPack(File packFolder, String packName, String[] packFiles) {
+        packFolder = new File(packFolder, packName);
         if (!packFolder.exists()) {
             if (!packFolder.mkdir()) {
                 DakimakuraMod.getLogger().error("Failed to make pack folder.");
+                return;
             }
         }
-        
-        extractDaki(packFolder, "Creeper");
+        extractResource(packName + "/pack-info.json", new File(packFolder, "pack-info.json"), false);
+        for (int i = 0; i < packFiles.length; i++) {
+            extractDaki(packFolder, packName, packFiles[i]);
+        }
     }
     
-    private static void extractDaki(File packFolder, String name) {
-        extractDaki(packFolder, name, "daki-info.json", "front.png", "back.png");
+    private static void extractDaki(File packFolder, String packName, String name) {
+        extractDaki(packFolder, packName, name, "daki-info.json", "front.png", "back.png");
     }
     
-    private static void extractDaki(File packFolder, String name, String... files) {
+    private static void extractDaki(File packFolder, String packName, String name, String... files) {
         File dakiFolder = new File(packFolder, name);
         if (!dakiFolder.exists()) {
             dakiFolder.mkdir();
             for (int i = 0; i < files.length; i++) {
-                extractResource(name + "/" + files[i], new File(dakiFolder, files[i]), true);
+                extractResource(packName + "/" + name + "/" + files[i], new File(dakiFolder, files[i]), false);
             }
         }
     }
