@@ -49,18 +49,12 @@ public final class DakiExtractor {
             "ZombiePigman"
         };
     
-    private static final String DAKI_PACK_OFFICIAL = "Official Pack";
-    private static final String[] DAKI_PACK_OFFICIAL_LIST = new String[] {
-            "Creeper"
-        };
-    
     private DakiExtractor() {}
     
     public static void extractDakis() {
         File packFolder = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         extractResource("readme.txt", new File(packFolder, "readme.txt"), false);
         extractDakiPack(packFolder, DAKI_PACK_ANDREWS, DAKI_PACK_ANDREWS_LIST);
-        extractDakiPack(packFolder, DAKI_PACK_OFFICIAL, DAKI_PACK_OFFICIAL_LIST);
     }
     
     private static void extractDakiPack(File packFolder, String packName, String[] packFiles) {
