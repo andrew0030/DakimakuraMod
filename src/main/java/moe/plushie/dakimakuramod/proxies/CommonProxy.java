@@ -19,7 +19,6 @@ import moe.plushie.dakimakuramod.common.handler.BedHandler;
 import moe.plushie.dakimakuramod.common.handler.MobLootHandler;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
-import moe.plushie.dakimakuramod.common.network.GuiHandler;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -45,7 +44,6 @@ public class CommonProxy {
     public void init(FMLInitializationEvent event) {
         CraftingManager.init();
         modBlocks.registerTileEntities();
-        new GuiHandler();
         PacketHandler.init();
         SyncHandler.init();
         new MobLootHandler();

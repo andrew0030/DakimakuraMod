@@ -15,7 +15,6 @@ public class CommandDakimakura extends CommandBase {
 
     public CommandDakimakura() {
         subCommands = new ArrayList<AbstractCommand>();
-        //subCommands.add(new CommandManager());
         subCommands.add(new CommandReload());
     }
     
