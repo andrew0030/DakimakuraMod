@@ -27,8 +27,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDakimakura extends AbstractModBlockContainer {
 
-    private static ForgeDirection[] ROTATIONS = new ForgeDirection[] {ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.NORTH, ForgeDirection.EAST};
-    
     private static final int META_BIT_STANDING = 0;
     private static final int META_BIT_POS_NEG = 1;
     private static final int META_BIT_X_Z = 2;
