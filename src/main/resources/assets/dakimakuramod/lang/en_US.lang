@@ -55,6 +55,9 @@ config.dakimakuramod:enableRecipe.tooltip=Enable the crafting recipe for dakimak
 config.dakimakuramod:useAltRecipe=Use alternative crafting recipe.
 config.dakimakuramod:useAltRecipe.tooltip=Changes the crafting recipe from 6 wool to 3 wool and 6 string.
 
+config.dakimakuramod:enableRecycleRecipe=Enable recycle recipe.
+config.dakimakuramod:enableRecycleRecipe.tooltip=Allow getting a new dakimakura design by crafting 2 unwanted designs together.
+
 config.dakimakuramod:addUnlockToLootChests=Add designs to loot chests.
 config.dakimakuramod:addUnlockToLootChests.tooltip=Add the dakimakura design items to loot chests around the world.
 

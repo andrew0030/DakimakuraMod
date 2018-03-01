@@ -17,6 +17,11 @@ public final class CraftingManager {
         RecipeSorter.INSTANCE.register("dakimakuramod:shapeless", RecipeDaki.class, Category.SHAPELESS, "after:minecraft:shapeless");
         GameRegistry.addRecipe(new RecipeDaki());
         
+        if (ConfigHandler.enableRecycleRecipe) {
+            RecipeSorter.INSTANCE.register("dakimakuramod:shapeless", RecipeDakiRecycle.class, Category.SHAPELESS, "after:minecraft:shapeless");
+            GameRegistry.addRecipe(new RecipeDakiRecycle());
+        }
+        
         if (ConfigHandler.enableRecipe) {
             if (!ConfigHandler.useAltRecipe) {
                 addShapedRecipe(new ItemStack(ModBlocks.blockDakimakura, 1, 0), new Object[] {

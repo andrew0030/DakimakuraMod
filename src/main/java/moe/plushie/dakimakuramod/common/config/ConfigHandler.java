@@ -25,6 +25,7 @@ public class ConfigHandler {
     // Recipes
     public static boolean enableRecipe;
     public static boolean useAltRecipe;
+    public static boolean enableRecycleRecipe;
     
     // Loot
     public static boolean addUnlockToLootChests;
@@ -74,6 +75,10 @@ public class ConfigHandler {
         useAltRecipe = config.getBoolean("useAltRecipe", CATEGORY_RECIPE, false,
                 "Changes the crafting recipe from 6 wool to 3 wool and 6 string.",
                 LANG_KEY_PREFIX + "useAltRecipe");
+        
+        enableRecycleRecipe = config.getBoolean("enableRecycleRecipe", CATEGORY_RECIPE, true,
+                "Allow getting a new dakimakura design by crafting 2 unwanted designs together.",
+                LANG_KEY_PREFIX + "enableRecycleRecipe");
     }
     
     private void loadCategoryLoot() {

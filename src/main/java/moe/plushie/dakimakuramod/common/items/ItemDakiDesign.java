@@ -48,13 +48,22 @@ public class ItemDakiDesign extends AbstractModItem {
     
     @Override
     public ItemStack getContainerItem(ItemStack itemStack) {
-        return itemStack.copy();
+        ItemStack containerItem = super.getContainerItem(itemStack);
+        if (containerItem != null) {
+            return itemStack.copy();
+        } else {
+            return null;
+        }
     }
     
     @Override
     public boolean hasContainerItem(ItemStack itemStack) {
-        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
-        return daki != null;
+        if (getContainerItem() != null) {
+            Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+            return daki != null;
+        } else {
+            return false;
+        }
     }
     
     @Override

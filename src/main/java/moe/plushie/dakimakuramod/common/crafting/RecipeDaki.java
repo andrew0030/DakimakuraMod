@@ -101,6 +101,9 @@ public class RecipeDaki implements IRecipe {
             result.setTagCompound(new NBTTagCompound());
         }
         DakiNbtSerializer.serialize(dakiDesign, result.getTagCompound());
+        
+        ModItems.dakiDesign.setContainerItem(ModItems.dakiDesign);
+        
         return result;
     }
 
@@ -113,5 +116,4 @@ public class RecipeDaki implements IRecipe {
     public ItemStack getRecipeOutput() {
         return null;
     }
-    
 }
