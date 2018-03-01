@@ -16,7 +16,7 @@ import moe.plushie.dakimakuramod.common.creativetab.CreativeTabDakimakura;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.CommonProxy;
 
-@Mod(modid = LibModInfo.ID, version = LibModInfo.VERSION)
+@Mod(modid = LibModInfo.ID, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS)
 public class DakimakuraMod {
     
     @Instance(LibModInfo.ID)

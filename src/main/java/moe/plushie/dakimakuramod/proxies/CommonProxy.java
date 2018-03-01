@@ -27,13 +27,14 @@ import net.minecraftforge.common.ChestGenHooks;
 
 public class CommonProxy {
     
+    private ConfigHandler configHandler;
     private DakiManager dakimakuraManager;
     private DakiTextureManagerCommon textureManagerCommon;
     private ModBlocks modBlocks;
     private ModItems modItems;
     
     public void preInit(FMLPreInitializationEvent event) {
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
+        configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
         dakimakuraManager = new DakiManager(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
         textureManagerCommon = new DakiTextureManagerCommon();
         modBlocks = new ModBlocks();

@@ -47,3 +47,28 @@ itemGroup.dakimakuramod=Dakimakura Mod
 chat.dakimakuramod:updateAvailable=Dakimakura Mod update %s is available.
 chat.dakimakuramod:updateDownload=[Download]
 chat.dakimakuramod:updateDownloadRollover=Click to open the download page.
+
+# Config
+config.dakimakuramod:enableRecipe=Enable crafting recipe.
+config.dakimakuramod:enableRecipe.tooltip=Enable the crafting recipe for dakimakuras.
+
+config.dakimakuramod:useAltRecipe=Use alternative crafting recipe.
+config.dakimakuramod:useAltRecipe.tooltip=Changes the crafting recipe from 6 wool to 3 wool and 6 string.
+
+config.dakimakuramod:addUnlockToLootChests=Add designs to loot chests.
+config.dakimakuramod:addUnlockToLootChests.tooltip=Add the dakimakura design items to loot chests around the world.
+
+config.dakimakuramod:mobDropChance=Mod drop chance.
+config.dakimakuramod:mobDropChance.tooltip=Percentage chance of mobs dropping a dakimakura design. 0 disables mob drops.
+
+config.dakimakuramod:mobDropLootingBonus=Mob drop looting bonus.
+config.dakimakuramod:mobDropLootingBonus.tooltip=Extra bonus percentage chance of mobs dropping a dakimakura design for each level of looting.\nmobDropChance + (mobDropLootingBonus * lootingLevel)
+
+config.dakimakuramod:textureMaxSize=Max texture size.
+config.dakimakuramod:textureMaxSize.tooltip=Max texture size for dakimakuras.\nThis will be rounded up to the nearest power of 2.\nWill be capped at the GPUs max texture size.
+
+config.dakimakuramod:dakiRenderDist=Max render distance.
+config.dakimakuramod:dakiRenderDist.tooltip=The maximum distance away in blocks dakimakuras will render.
+
+config.dakimakuramod:checkForUpdates=Check for updates?
+config.dakimakuramod:checkForUpdates.tooltip=Should the mod check for newer versions?
