@@ -47,3 +47,28 @@ itemGroup.dakimakuramod=抱枕模组
 chat.dakimakuramod:updateAvailable=抱枕模组最新版 %s 已经推出.
 chat.dakimakuramod:updateDownload=[下载]
 chat.dakimakuramod:updateDownloadRollover=点击打开下载页.
+
+# Config
+config.dakimakuramod:enableRecipe=允许玩家合成.
+config.dakimakuramod:enableRecipe.tooltip=允许抱枕的合成表.
+
+config.dakimakuramod:useAltRecipe=当合成冲突时使用备用合成表.
+config.dakimakuramod:useAltRecipe.tooltip=抱枕的合成表6个羊毛变为3个羊毛和6跟线.
+
+config.dakimakuramod:addUnlockToLootChests=设置设计图出现在奖励箱里.
+config.dakimakuramod:addUnlockToLootChests.tooltip=将抱枕设计图添加到世界随机刷出的箱子中.
+
+config.dakimakuramod:mobDropChance=生物死亡基础掉落几率设置.
+config.dakimakuramod:mobDropChance.tooltip=设置抱枕设计图在生物死亡时的掉落几率，设置0为不掉落.
+
+config.dakimakuramod:mobDropLootingBonus=生物死亡额外掉落率设置.
+config.dakimakuramod:mobDropLootingBonus.tooltip=升物死亡额外掉落一个抱枕设计图几率等级.\nmobDropChance + (mobDropLootingBonus * lootingLevel)\n生物死亡基础掉落几率 + (生物掉落额外几率 X 稀有度等级)
+
+config.dakimakuramod:textureMaxSize=最大贴图尺寸.
+config.dakimakuramod:textureMaxSize.tooltip=抱枕贴图尺寸.\n这个值将被四舍五入到最合适比例 2.\n将限制在GPU最大纹理尺寸.
+
+config.dakimakuramod:dakiRenderDist=最大渲染距离.
+config.dakimakuramod:dakiRenderDist.tooltip=多少方块距离可以显示出抱枕.
+
+config.dakimakuramod:checkForUpdates=是否显示检查更新?
+config.dakimakuramod:checkForUpdates.tooltip=是否打开检测新版本?
