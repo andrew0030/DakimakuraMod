@@ -6,7 +6,6 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
@@ -19,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 
 public class ItemDakiDesign extends AbstractModItem {
@@ -120,14 +118,7 @@ public class ItemDakiDesign extends AbstractModItem {
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (daki != null) {
             addTooltip(itemStack, player, list, advancedItemTooltips, "usage");
-            String textPack = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack");
-            String textName = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name");
-            list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
-            list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
-            if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
-                String textFlavour = StatCollector.translateToLocal(ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.flavour");
-                list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
-            }
+            daki.addInformation(itemStack, player, list, advancedItemTooltips);
         } else {
             addTooltip(itemStack, player, list, advancedItemTooltips, "unlock");
         }

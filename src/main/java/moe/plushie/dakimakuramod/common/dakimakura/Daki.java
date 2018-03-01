@@ -1,5 +1,14 @@
 package moe.plushie.dakimakuramod.common.dakimakura;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.block.ModBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 
 public class Daki implements Comparable<Daki> {
@@ -122,5 +131,20 @@ public class Daki implements Comparable<Daki> {
     @Override
     public String toString() {
         return "Daki [packDirectoryName=" + packDirectoryName + ", dakiDirectoryName=" + dakiDirectoryName + "]";
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
+        DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
+        int index = dakiManager.getDakiIndexInPack(this) + 1;
+        int total = dakiManager.getNumberOfDakisInPack(packDirectoryName);
+        String textPack = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack";
+        String textName = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name";
+        list.add(StatCollector.translateToLocalFormatted(textPack, getPackDirectoryName(), index, total));
+        list.add(StatCollector.translateToLocalFormatted(textName, getDisplayName()));
+        if (!StringUtils.isNullOrEmpty(getFlavourText())) {
+            String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
+            list.add(StatCollector.translateToLocalFormatted(textFlavour, getFlavourText()));
+        }
     }
 }

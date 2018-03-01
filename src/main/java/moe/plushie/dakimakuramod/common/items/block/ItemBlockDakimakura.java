@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.StringUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -210,16 +209,9 @@ public class ItemBlockDakimakura extends ModItemBlock {
         super.addInformation(itemStack, player, list, advancedItemTooltips);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (daki != null) {
-            String textPack = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.pack");
-            String textName = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.name");
             String textFlip = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flip");
             list.add(StatCollector.translateToLocal(textFlip));
-            list.add(StatCollector.translateToLocalFormatted(textPack, daki.getPackDirectoryName()));
-            list.add(StatCollector.translateToLocalFormatted(textName, daki.getDisplayName()));
-            if (!StringUtils.isNullOrEmpty(daki.getFlavourText())) {
-                String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
-                list.add(StatCollector.translateToLocalFormatted(textFlavour, daki.getFlavourText()));
-            }
+            daki.addInformation(itemStack, player, list, advancedItemTooltips);
         } else {
             list.add("Blank");
         }

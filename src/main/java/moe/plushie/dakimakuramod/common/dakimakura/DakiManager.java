@@ -112,6 +112,31 @@ public class DakiManager {
         }
     }
     
+    public int getNumberOfDakisInPack(String packName) {
+        return getDakisInPack(packName).size();
+    }
+    
+    public ArrayList<Daki> getDakisInPack(String packName) {
+        ArrayList<Daki> packList = new ArrayList<Daki>();
+        ArrayList<Daki> dakimakuraList = getDakiList();
+        for (int i = 0; i < dakimakuraList.size(); i++) {
+            if (dakimakuraList.get(i).getPackDirectoryName().equals(packName)) {
+                packList.add(dakimakuraList.get(i));
+            }
+        }
+        return packList;
+    }
+    
+    public int getDakiIndexInPack(Daki daki) {
+        ArrayList<Daki> packList = getDakisInPack(daki.getPackDirectoryName());
+        for (int i = 0; i < packList.size(); i++) {
+            if (daki.equals(packList.get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
     public File getPackFolder() {
         return packFolder;
     }
