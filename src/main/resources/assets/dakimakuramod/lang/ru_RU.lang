@@ -49,11 +49,14 @@ chat.dakimakuramod:updateDownload=[Загрузить]
 chat.dakimakuramod:updateDownloadRollover=Нажмите чтобы перейти на страницу загрузки.
 
 # Config
-config.dakimakuramod:enableRecipe=Дакимакуры можно крафтить.
+config.dakimakuramod:enableRecipe=Позволить крафтить дакимакуры.
 config.dakimakuramod:enableRecipe.tooltip=Позволяет крафтить дакимакуры ан верстаке.
 
 config.dakimakuramod:useAltRecipe=Альтернативный рецепт
 config.dakimakuramod:useAltRecipe.tooltip=Менят рецепт с 6ти блоков шерсти на 3 блока шерсти и 6 ниток
+
+config.dakimakuramod:enableRecycleRecipe=Позволить перерабатывать дизайны.
+config.dakimakuramod:enableRecycleRecipe.tooltip=Позволяет превратить два дизайна в случайный новый.
 
 config.dakimakuramod:addUnlockToLootChests=Генерировть дизайны в сундуках.
 config.dakimakuramod:addUnlockToLootChests.tooltip=Позволить дизайнам появлятся в сундуках сокровищниц.
