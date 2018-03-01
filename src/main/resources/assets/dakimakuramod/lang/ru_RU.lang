@@ -46,4 +46,29 @@ itemGroup.dakimakuramod=Dakimakura Mod
 # Chat messages
 chat.dakimakuramod:updateAvailable=Доступно обновление %s для мода Dakimakura Mod.
 chat.dakimakuramod:updateDownload=[Загрузить]
-chat.dakimakuramod:updateDownloadRollover=нажмите чтобы перейти на страницу загрузки.
+chat.dakimakuramod:updateDownloadRollover=Нажмите чтобы перейти на страницу загрузки.
+
+# Config
+config.dakimakuramod:enableRecipe=Дакимакуры можно крафтить.
+config.dakimakuramod:enableRecipe.tooltip=Позволяет крафтить дакимакуры ан верстаке.
+
+config.dakimakuramod:useAltRecipe=Альтернативный рецепт
+config.dakimakuramod:useAltRecipe.tooltip=Менят рецепт с 6ти блоков шерсти на 3 блока шерсти и 6 ниток
+
+config.dakimakuramod:addUnlockToLootChests=Генерировть дизайны в сундуках.
+config.dakimakuramod:addUnlockToLootChests.tooltip=Позволить дизайнам появлятся в сундуках сокровищниц.
+
+config.dakimakuramod:mobDropChance=Шанс выпадения из мобов.
+config.dakimakuramod:mobDropChance.tooltip=Шанс в процентах на выпадение дизайна дакимакуры из мобов. 0 отключает эту возможность.
+
+config.dakimakuramod:mobDropLootingBonus=Бонус при Добыче
+config.dakimakuramod:mobDropLootingBonus.tooltip=Дополнительные проценты при использовании зачарования Добычи.\n<Базовый шанс> + (<Бонусные проценты> * <Уровень Добычи>)
+
+config.dakimakuramod:textureMaxSize=Максимальный размер текстуры
+config.dakimakuramod:textureMaxSize.tooltip=Максимальный размер текстуры дакимакур.\nОкругляется до ближайшей степени 2.\nНе может привысить максимальный размер текстуры вашего GPU
+
+config.dakimakuramod:dakiRenderDist=Максимальная дальность прорисовки.
+config.dakimakuramod:dakiRenderDist.tooltip=Максимальная длинна блоков на которой дакимакуры будут отрисовываться.
+
+config.dakimakuramod:checkForUpdates=Проверять наличие обновлений?
+config.dakimakuramod:checkForUpdates.tooltip=Позволить моду проверять наличие новых версий?\n(Рекомендуется включить)
