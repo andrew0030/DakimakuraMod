@@ -55,6 +55,9 @@ config.dakimakuramod:enableRecipe.tooltip=允许抱枕的合成表.
 config.dakimakuramod:useAltRecipe=当合成冲突时使用备用合成表.
 config.dakimakuramod:useAltRecipe.tooltip=抱枕的合成表6个羊毛变为3个羊毛和6跟线.
 
+config.dakimakuramod:enableRecycleRecipe=允许设计图二次合成.
+config.dakimakuramod:enableRecycleRecipe.tooltip=可以使用两个已经鉴定过的抱枕设计图合成为一个新的未鉴定的抱枕设计图.
+
 config.dakimakuramod:addUnlockToLootChests=设置设计图出现在奖励箱里.
 config.dakimakuramod:addUnlockToLootChests.tooltip=将抱枕设计图添加到世界随机刷出的箱子中.
 
