@@ -1,14 +1,20 @@
 package moe.plushie.dakimakuramod.common.tileentities;
 
+import java.util.List;
+
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,6 +46,7 @@ public class TileEntityDakimakura extends TileEntity {
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
         markDirty();
+        syncWithClients();
         //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
@@ -74,22 +81,28 @@ public class TileEntityDakimakura extends TileEntity {
     
     @Override
     public NBTTagCompound getUpdateTag() {
-        // TODO Auto-generated method stub
-        return super.getUpdateTag();
+        NBTTagCompound compound = super.getUpdateTag();
+        writeToNBT(compound);
+        return compound;
     }
     
     public Packet getDescriptionPacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), 5, compound);
+
+        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
     }
-/*
+    
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), getUpdateTag());
     }
-    */
+    
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        NBTTagCompound compound = packet.getNbtCompound();
+        readFromNBT(compound);
+        super.onDataPacket(net, packet);
+    }
+    
     @SideOnly(Side.CLIENT)
     @Override
     public double getMaxRenderDistanceSquared() {
@@ -114,5 +127,24 @@ public class TileEntityDakimakura extends TileEntity {
         ForgeDirection rot = BlockDakimakura.getRotation(getBlockMetadata());
         return rots[(rot.ordinal() - 2) & 3].offset(xCoord, yCoord, zCoord);
         */
+    }
+    
+    public void syncWithClients() {
+        if (!worldObj.isRemote) {
+            syncWithNearbyPlayers(this);
+        }
+    }
+    
+    public static void syncWithNearbyPlayers(TileEntity tileEntity) {
+        World world = tileEntity.getWorld();
+        List<EntityPlayer> players = world.playerEntities;
+        for (EntityPlayer player : players) {
+            if (player instanceof EntityPlayerMP) {
+                EntityPlayerMP mp = (EntityPlayerMP)player;
+                if (tileEntity.getDistanceSq(mp.posX, mp.posY, mp.posZ) < 64) {
+                    mp.connection.sendPacket(tileEntity.getUpdatePacket());
+                }
+            }
+        }
     }
 }

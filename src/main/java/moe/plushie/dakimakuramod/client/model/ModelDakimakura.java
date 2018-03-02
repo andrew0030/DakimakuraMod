@@ -10,6 +10,10 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,7 +43,7 @@ public class ModelDakimakura extends ModelBase {
         } else {
             DakiTexture dakiTexture = ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().getTextureForDaki(daki);
             if (dakiTexture.isLoaded()) {
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, dakiTexture.getGlTextureId());
+                GlStateManager.bindTexture(dakiTexture.getGlTextureId());
             } else {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);
             }
@@ -54,6 +58,50 @@ public class ModelDakimakura extends ModelBase {
         GL11.glScalef(-1, 1, 1);
         GL11.glScalef(0.55F, 0.55F, 0.55F);
         GL11.glTranslatef(0, 0.35F, 0);
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer buff = tess.getBuffer();
+        
+        buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        
+        //Front
+        buff.pos(-0.5F, 1.5F, -0.2F);
+        buff.tex(0, 0);
+        buff.endVertex();
+        
+        buff.pos(0.5F, 1.5F, -0.2F);
+        buff.tex(0.5F, 0);
+        buff.endVertex();
+        
+        buff.pos(0.5F, -1.5F, -0.2F);
+        buff.tex(0.5F, 1);
+        buff.endVertex();
+        
+        buff.pos(-0.5F, -1.5F, -0.2F);
+        buff.tex(0, 1);
+        buff.endVertex();
+        
+
+        //Back
+        buff.pos(-0.5F, -1.5F, 0);
+        buff.tex(0.5F, 1);
+        buff.endVertex();
+        
+        buff.pos(0.5F, -1.5F, 0);
+        buff.tex(1, 1);
+        buff.endVertex();
+        
+
+        buff.pos(0.5F, 1.5F, 0);
+        buff.tex(1, 0);
+        buff.endVertex();
+        
+        buff.pos(-0.5F, 1.5F, 0);
+        buff.tex(0.5F, 0);
+        buff.endVertex();
+
+        
+        tess.draw();
+        
         /*
         if (modelList == -1) {
             modelList = GLAllocation.generateDisplayLists(1);

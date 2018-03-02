@@ -34,6 +34,7 @@ public class DakimakuraMod {
         logger = event.getModLog();
         logger.info(String.format("Loading %s version %s", LibModInfo.NAME, LibModInfo.VERSION));
         proxy.preInit(event);
+        proxy.preInitRenderers();
     }
     
     @EventHandler

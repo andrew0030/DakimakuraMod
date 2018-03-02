@@ -12,14 +12,18 @@ import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
 import moe.plushie.dakimakuramod.common.UpdateCheck;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
@@ -38,7 +42,22 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         new UpdateCheck();
+    }
+    
+    @Override
+    public void preInitRenderers() {
         ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.blockDakimakura), 0, TileEntityDakimakura.class);
+        ModelLoader.setCustomMeshDefinition(ModItems.dakiDesign, new ItemMeshDefinition() {
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound());
+                if (daki == null) {
+                    return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
+                } else {
+                    return new ModelResourceLocation(stack.getItem().getRegistryName() + "Unlock", "inventory");
+                }
+            }
+        });
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.blockDakimakura), 0, new ModelResourceLocation(LibModInfo.ID + ":tile.dakimakura", "inventory"));
     }
     
@@ -53,8 +72,8 @@ public class ClientProxy extends CommonProxy {
         maxGpuTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
         DakimakuraMod.getLogger().info(String.format("Max GPU texture size: %d.", maxGpuTextureSize));
         new PlacementPreviewHandler(modelDakimakura);
-        
-        registerRender(ModItems.dakiDesign);
+        ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "Unlock", "inventory"));
+        //registerRender(ModItems.dakiDesign);
     }
     
     @Override

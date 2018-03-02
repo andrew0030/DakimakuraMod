@@ -52,6 +52,9 @@ public class CommonProxy {
         }
     }
     
+    public void preInitRenderers() {
+    }
+    
     private void addLootToChests() {
         ItemStack itemStack = new ItemStack(ModItems.dakiDesign);
         /*
@@ -69,7 +72,6 @@ public class CommonProxy {
     }
     
     public void initRenderers() {
-        DakimakuraMod.getLogger().error("Trying to init renderers on the server side.");
     }
     
     public void postInit(FMLPostInitializationEvent event) {
