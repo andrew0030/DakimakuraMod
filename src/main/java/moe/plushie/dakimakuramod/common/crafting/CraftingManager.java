@@ -1,11 +1,11 @@
 package moe.plushie.dakimakuramod.common.crafting;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -28,15 +28,15 @@ public final class CraftingManager {
                         "ww",
                         "ww",
                         "ww",
-                        'w', new ItemStack(Blocks.wool, 1, 0)
+                        'w', new ItemStack(Blocks.WOOL, 1, 0)
                         });
             } else {
                 addShapedRecipe(new ItemStack(ModBlocks.blockDakimakura, 1, 0), new Object[] {
                         "sws",
                         "sws",
                         "sws",
-                        'w', new ItemStack(Blocks.wool, 1, 0),
-                        's', new ItemStack(Items.string, 1, 0)
+                        'w', new ItemStack(Blocks.WOOL, 1, 0),
+                        's', new ItemStack(Items.STRING, 1, 0)
                         });
             }
         }

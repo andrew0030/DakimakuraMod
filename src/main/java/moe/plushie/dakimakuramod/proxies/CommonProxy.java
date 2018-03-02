@@ -2,10 +2,6 @@ package moe.plushie.dakimakuramod.proxies;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
@@ -22,8 +18,10 @@ import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class CommonProxy {
     
@@ -56,6 +54,7 @@ public class CommonProxy {
     
     private void addLootToChests() {
         ItemStack itemStack = new ItemStack(ModItems.dakiDesign);
+        /*
         WeightedRandomChestContent chestContent = new WeightedRandomChestContent(itemStack, 1, 2, 5);
         ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(chestContent);
         ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(chestContent);
@@ -66,6 +65,7 @@ public class CommonProxy {
         ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(chestContent);
         ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(chestContent);
         ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(chestContent);
+        */
     }
     
     public void initRenderers() {
@@ -77,7 +77,8 @@ public class CommonProxy {
     }
     
     public MinecraftServer getServer() {
-        return MinecraftServer.getServer();
+        return null;
+        //return MinecraftServer.getServer();
     }
     
     public DakiManager getDakimakuraManager() {

@@ -1,20 +1,17 @@
 package moe.plushie.dakimakuramod.common.tileentities;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityDakimakura extends TileEntity {
     
@@ -33,7 +30,7 @@ public class TileEntityDakimakura extends TileEntity {
             dakiDirName = null;
         }
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public Daki getDaki() {
@@ -43,7 +40,7 @@ public class TileEntityDakimakura extends TileEntity {
     public void setFlipped(boolean flipped) {
         this.flipped = flipped;
         markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public boolean isFlipped() {
@@ -52,11 +49,6 @@ public class TileEntityDakimakura extends TileEntity {
     
     public void flip() {
         setFlipped(!flipped);
-    }
-    
-    @Override
-    public boolean canUpdate() {
-        return false;
     }
     
     @Override
@@ -70,28 +62,34 @@ public class TileEntityDakimakura extends TileEntity {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         if (packDirName != null & dakiDirName != null) {
             compound.setString(DakiNbtSerializer.TAG_DAKI_PACK_NAME, packDirName);
             compound.setString(DakiNbtSerializer.TAG_DAKI_DIR_NAME, dakiDirName);
         }
         compound.setBoolean(TAG_FLIPPED, flipped);
+        return compound;
     }
     
     @Override
+    public NBTTagCompound getUpdateTag() {
+        // TODO Auto-generated method stub
+        return super.getUpdateTag();
+    }
+    
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
+        return new SPacketUpdateTileEntity(getPos(), 5, compound);
     }
-
+/*
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         readFromNBT(packet.func_148857_g());
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
-    
+    */
     @SideOnly(Side.CLIENT)
     @Override
     public double getMaxRenderDistanceSquared() {
@@ -101,6 +99,8 @@ public class TileEntityDakimakura extends TileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
+        return super.getRenderBoundingBox();
+        /*
         if (BlockDakimakura.isStanding(getBlockMetadata())) {
             return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
         }
@@ -113,5 +113,6 @@ public class TileEntityDakimakura extends TileEntity {
         
         ForgeDirection rot = BlockDakimakura.getRotation(getBlockMetadata());
         return rots[(rot.ordinal() - 2) & 3].offset(xCoord, yCoord, zCoord);
+        */
     }
 }

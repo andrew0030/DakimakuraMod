@@ -1,16 +1,9 @@
 package moe.plushie.dakimakuramod.common.handler;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import moe.plushie.dakimakuramod.common.config.ConfigHandler;
-import moe.plushie.dakimakuramod.common.items.ModItems;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class MobLootHandler {
     
@@ -20,6 +13,7 @@ public class MobLootHandler {
     
     @SubscribeEvent(priority=EventPriority.LOW)
     public void onLivingDropsEvent(LivingDropsEvent event) {
+        /*
         if (event.entity instanceof EntityMob) {
             EntityLivingBase entity = event.entityLiving;
             World world = entity.worldObj;
@@ -36,5 +30,6 @@ public class MobLootHandler {
                 }
             }
         }
+        */
     }
 }

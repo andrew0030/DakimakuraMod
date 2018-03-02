@@ -5,9 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 public class CommandDakimakura extends CommandBase {
     
@@ -52,6 +53,12 @@ public class CommandDakimakura extends CommandBase {
     }
     
     @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        // TODO Auto-generated method stub
+        return super.getTabCompletionOptions(server, sender, args, pos);
+    }
+    /*
+    @Override
     public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
         if (currentCommand.length == 1) {
             return getListOfStringsMatchingLastWord(currentCommand, getSubCommandNames());
@@ -85,5 +92,11 @@ public class CommandDakimakura extends CommandBase {
     
     private String[] getPlayers() {
         return MinecraftServer.getServer().getAllUsernames();
+    }
+*/
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        // TODO Auto-generated method stub
+        
     }
 }

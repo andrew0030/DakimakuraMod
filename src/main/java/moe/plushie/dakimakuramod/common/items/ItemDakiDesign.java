@@ -3,27 +3,24 @@ package moe.plushie.dakimakuramod.common.items;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
-import moe.plushie.dakimakuramod.common.lib.LibModInfo;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDakiDesign extends AbstractModItem {
-    
-    @SideOnly(Side.CLIENT)
-    private IIcon unlockedIcon;
     
     public ItemDakiDesign() {
         super("dakiDesign");
@@ -63,52 +60,28 @@ public class ItemDakiDesign extends AbstractModItem {
             return false;
         }
     }
-    
+    /*
     @Override
     public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
         return false;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIconIndex(ItemStack itemStack) {
-        return getIcon(itemStack, 0);
-    }
+    }*/
     
     @Override
-    public IIcon getIcon(ItemStack itemStack, int pass) {
-        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
-        if (daki == null) {
-            return itemIcon;
-        } else {
-            return unlockedIcon;
-        }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(LibModInfo.ID + ":" + "daki-design");
-        unlockedIcon = register.registerIcon(LibModInfo.ID + ":" + "daki-design-unlock");
-    }
-    
-    @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-        if (world.isRemote) {
-            return itemStack;
-        }
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer playerIn, EnumHand hand) {
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         ArrayList<Daki> dakiList = dakiManager.getDakiList();
         if (dakiList.isEmpty()) {
-            return itemStack;
+            return new ActionResult(EnumActionResult.PASS, itemStack);
         }
-        int ranValue = world.rand.nextInt(dakiList.size());
-        Daki daki = dakiList.get(ranValue);
-        if (!itemStack.hasTagCompound()) {
-            itemStack.setTagCompound(new NBTTagCompound());
+        if (!world.isRemote) {
+            int ranValue = world.rand.nextInt(dakiList.size());
+            Daki daki = dakiList.get(ranValue);
+            if (!itemStack.hasTagCompound()) {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
+            DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
         }
-        DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-        return itemStack;
+        return new ActionResult(EnumActionResult.SUCCESS, itemStack);
     }
     
     @SideOnly(Side.CLIENT)
@@ -126,7 +99,7 @@ public class ItemDakiDesign extends AbstractModItem {
     
     private void addTooltip(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips, String tooltipName) {
         String unlocalized = itemStack.getUnlocalizedName() + ".tooltip." + tooltipName;
-        String localized = StatCollector.translateToLocal(unlocalized);
+        String localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
                 String[] split = localized.split("%n");

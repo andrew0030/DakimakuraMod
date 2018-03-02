@@ -1,19 +1,11 @@
 package moe.plushie.dakimakuramod.client.render.item;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
-import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderItemDakimakura implements IItemRenderer {
-
+public class RenderItemDakimakura /*implements IItemRenderer*/ {
+/*
     private final ModelDakimakura modelDakimakura;
     
     public RenderItemDakimakura(ModelDakimakura modelDakimakura) {
@@ -64,5 +56,5 @@ public class RenderItemDakimakura implements IItemRenderer {
 
         modelDakimakura.render(daki);
         GL11.glPopMatrix();
-    }
+    }*/
 }

@@ -8,23 +8,23 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.Type;
-import cpw.mods.fml.relauncher.Side;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class UpdateCheck implements Runnable {
 
@@ -57,15 +57,15 @@ public class UpdateCheck implements Runnable {
     }
     
     public void onPlayerTickEndEvent() {
-        EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         if (!shownUpdateInfo && updateFound) {
             shownUpdateInfo = true;
-            ChatComponentTranslation updateMessage = new ChatComponentTranslation("chat.dakimakuramod:updateAvailable", remoteModVersion);
-            ChatComponentTranslation updateURL = new ChatComponentTranslation("chat.dakimakuramod:updateDownload");
-            updateURL.getChatStyle().setUnderlined(true);
-            updateURL.getChatStyle().setColor(EnumChatFormatting.BLUE);
-            updateURL.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentTranslation("chat.dakimakuramod:updateDownloadRollover")));
-            updateURL.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadUrl));
+            TextComponentTranslation updateMessage = new TextComponentTranslation("chat.dakimakuramod:updateAvailable", remoteModVersion);
+            TextComponentTranslation updateURL = new TextComponentTranslation("chat.dakimakuramod:updateDownload");
+            updateURL.getStyle().setUnderlined(true);
+            updateURL.getStyle().setColor(TextFormatting.BLUE);
+            updateURL.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.dakimakuramod:updateDownloadRollover")));
+            updateURL.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, downloadUrl));
             updateMessage.appendText(" ");
             updateMessage.appendSibling(updateURL);
             player.addChatMessage(updateMessage);

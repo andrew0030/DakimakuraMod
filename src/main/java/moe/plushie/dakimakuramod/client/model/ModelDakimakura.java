@@ -2,8 +2,6 @@ package moe.plushie.dakimakuramod.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.client.texture.DakiTexture;
 import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
@@ -12,11 +10,10 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelDakimakura extends ModelBase {
@@ -24,13 +21,13 @@ public class ModelDakimakura extends ModelBase {
     private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/bolster-new-uv.obj");
     private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(LibModInfo.ID, "textures/models/blank.png");
     
-    private final IModelCustom DAKIMAKURA_MODEL;
+    //private final IModelCustom DAKIMAKURA_MODEL;
     private final DakiTextureManagerClient dakiTextureManager;
     private final Profiler profiler;
     private int modelList = -1;
     
     public ModelDakimakura(DakiTextureManagerClient dakiTextureManager) {
-        DAKIMAKURA_MODEL = AdvancedModelLoader.loadModel(MODEL_LOCATION);
+        //DAKIMAKURA_MODEL = AdvancedModelLoader.loadModel(MODEL_LOCATION);
         this.dakiTextureManager = dakiTextureManager;
         profiler = Minecraft.getMinecraft().mcProfiler;
     }
@@ -57,12 +54,14 @@ public class ModelDakimakura extends ModelBase {
         GL11.glScalef(-1, 1, 1);
         GL11.glScalef(0.55F, 0.55F, 0.55F);
         GL11.glTranslatef(0, 0.35F, 0);
+        /*
         if (modelList == -1) {
             modelList = GLAllocation.generateDisplayLists(1);
             GL11.glNewList(modelList, GL11.GL_COMPILE);
             DAKIMAKURA_MODEL.renderAll();
             GL11.glEndList();
         }
+        */
         GL11.glCallList(modelList);
         GL11.glPopAttrib();
         GL11.glPopMatrix();

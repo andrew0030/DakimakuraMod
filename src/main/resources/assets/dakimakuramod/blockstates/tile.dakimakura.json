@@ -1,0 +1,31 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "all": "blocks/stone"
+    },
+    "model": "cube_all"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}],
+    "flipped": {
+      "true": {},
+      "false": {}
+    },
+    "rotation": {
+      "north": {},
+      "east": {},
+      "south": {},
+      "west": {}
+    },
+    "standing": {
+      "true": {},
+      "false": {}
+    },
+    "top": {
+      "true": {},
+      "false": {}
+    }
+  }
+}

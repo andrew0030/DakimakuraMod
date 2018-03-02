@@ -1,24 +1,14 @@
 package moe.plushie.dakimakuramod.client.handler;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
-import moe.plushie.dakimakuramod.common.block.ModBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PlacementPreviewHandler {
@@ -32,13 +22,15 @@ public class PlacementPreviewHandler {
     
     @SubscribeEvent
     public void onDrawBlockHighlightEvent(DrawBlockHighlightEvent event) {
-        EntityPlayer entityPlayer = event.player;
-        World world = event.player.worldObj;
-        MovingObjectPosition target = event.target;
-        if (target != null && target.typeOfHit != MovingObjectType.BLOCK) {
+        EntityPlayer entityPlayer = event.getPlayer();
+        World world = event.getPlayer().getEntityWorld();
+        RayTraceResult target = event.getTarget();
+        if (target != null && target.typeOfHit != RayTraceResult.Type.BLOCK) {
             return;
         }
-        float partialTicks = event.partialTicks;
+        float partialTicks = event.getPartialTicks();
+        
+        /*
         int x = target.blockX;
         int y = target.blockY;
         int z = target.blockZ;
@@ -111,5 +103,6 @@ public class PlacementPreviewHandler {
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
+        */
     }
 }

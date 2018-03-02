@@ -1,14 +1,10 @@
 package moe.plushie.dakimakuramod.client.render.tileentity;
 
-import org.lwjgl.opengl.GL11;
-
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
 
@@ -18,14 +14,18 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         this.modelDakimakura = modelDakimakura;
     }
     
-    public void renderTileEntityAt(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTickTime) {
-        int meta = tileEntity.getBlockMetadata();
-        if (BlockDakimakura.isTopPart(meta)) {
-            return;
+    public void renderTileEntityAt(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTickTime, int destroyStage) {
+        if (tileEntity != null) {
+            int meta = tileEntity.getBlockMetadata();
+            if (BlockDakimakura.isTopPart(meta)) {
+                return;
+            }
         }
+        
+        /*
         Minecraft mc = Minecraft.getMinecraft();
         mc.mcProfiler.startSection("dakimakura");
-        ForgeDirection rot = BlockDakimakura.getRotation(meta);
+        EnumFacing rot = BlockDakimakura.getRotation(meta);
         boolean standing = BlockDakimakura.isStanding(meta);
         
         float scale = 0.0625F;
@@ -51,14 +51,24 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         
         if (tileEntity.isFlipped()) {
             GL11.glRotatef(180, 0, 1, 0);
+        }*/
+        
+        if (tileEntity != null) {
+            modelDakimakura.render(tileEntity.getDaki());
+        } else {
+            modelDakimakura.render(null);
         }
-        modelDakimakura.render(tileEntity.getDaki());
+        
+        
+        
+        /*
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
+        */
     }
-    
+
     @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTickTime) {
-        renderTileEntityAt((TileEntityDakimakura)tileEntity, x, y, z, partialTickTime);
+    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
+        renderTileEntityAt((TileEntityDakimakura)tileEntity, x, y, z, partialTicks, destroyStage);
     }
 }

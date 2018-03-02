@@ -1,26 +1,29 @@
 package moe.plushie.dakimakuramod.client.render.entity;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderEntityDakimakura extends Render {
+public class RenderEntityDakimakura extends Render<EntityDakimakura> {
+    
+    
+    protected RenderEntityDakimakura(RenderManager renderManager) {
+        super(renderManager);
+        // TODO Auto-generated constructor stub
+    }
 
+    /*
     private final ModelDakimakura modelDakimakura;
     
     public RenderEntityDakimakura(ModelDakimakura modelDakimakura) {
         this.modelDakimakura = modelDakimakura;
     }
-    
+    */
+    /*
     @Override
     public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
         Minecraft mc = Minecraft.getMinecraft();
@@ -48,9 +51,11 @@ public class RenderEntityDakimakura extends Render {
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
     }
+*/
 
     @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
+    protected ResourceLocation getEntityTexture(EntityDakimakura entity) {
+        // TODO Auto-generated method stub
         return null;
     }
 }

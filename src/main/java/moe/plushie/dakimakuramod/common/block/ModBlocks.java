@@ -1,6 +1,6 @@
 package moe.plushie.dakimakuramod.common.block;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;

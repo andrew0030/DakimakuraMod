@@ -2,20 +2,18 @@ package moe.plushie.dakimakuramod.common.items;
 
 import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class AbstractModItem extends Item {
 
-    private int sortPriority = 0;
-    
     public AbstractModItem(String name) {
         this(name, true);
     }
@@ -36,6 +34,7 @@ public abstract class AbstractModItem extends Item {
         String unlocalized;
         String localized;
         unlocalized = itemStack.getUnlocalizedName() + ".tooltip";
+        /*
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
@@ -47,15 +46,18 @@ public abstract class AbstractModItem extends Item {
                 list.add(localized);
             }
         }
+        */
         super.addInformation(itemStack, player, list, advancedItemTooltips);
     }
-
+    
     @Override
     public Item setUnlocalizedName(String name) {
-        GameRegistry.registerItem(this, name);
-        return super.setUnlocalizedName(name);
+        super.setUnlocalizedName(name);
+        //setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + name));
+        GameRegistry.register(this, new ResourceLocation(LibModInfo.ID, "item." + name));
+        return this;
     }
-
+    
     @Override
     public String getUnlocalizedName() {
         return getModdedUnlocalizedName(super.getUnlocalizedName());
@@ -82,10 +84,5 @@ public abstract class AbstractModItem extends Item {
         } else {
             return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
         }
-    }
-    
-    public AbstractModItem setSortPriority(int sortPriority) {
-        this.sortPriority = sortPriority;
-        return this;
     }
 }

@@ -1,17 +1,8 @@
 package moe.plushie.dakimakuramod.common.handler;
 
-import java.util.ArrayList;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BedHandler {
     
@@ -21,6 +12,7 @@ public class BedHandler {
     
     @SubscribeEvent
     public void onPlayerInteract(PlayerInteractEvent event) {
+        /*
         if (event.action == Action.RIGHT_CLICK_AIR) {
             return;
         }
@@ -64,5 +56,6 @@ public class BedHandler {
         if (flipped) {
             event.setCanceled(true);
         }
+        */
     }
 }

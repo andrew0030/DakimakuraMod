@@ -2,28 +2,36 @@ package moe.plushie.dakimakuramod.common.block;
 
 import java.util.Random;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDakimakura extends AbstractModBlockContainer {
 
@@ -32,26 +40,71 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     private static final int META_BIT_X_Z = 2;
     private static final int META_BIT_TOP_BOT = 3;
     
+    public static final PropertyBool PROPERTY_STANDING = PropertyBool.create("standing");
+    public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("rotation", EnumFacing.Plane.HORIZONTAL);
+    public static final PropertyBool PROPERTY_TOP = PropertyBool.create("top");
+    public static final PropertyBool PROPERTY_FLIPPED = PropertyBool.create("flipped");
+    
     protected BlockDakimakura() {
-        super("dakimakura", Material.cloth, soundTypeCloth, true);
+        super("dakimakura", Material.CLOTH, SoundType.CLOTH, true);
         setHardness(1.0F);
+        setDefaultState(this.blockState.getBaseState().withProperty(PROPERTY_DIRECTION, EnumFacing.EAST).withProperty(PROPERTY_STANDING, false).withProperty(PROPERTY_TOP, false));
     }
     
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int size, float hitX, float hitY, float hitZ) {
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {PROPERTY_DIRECTION, PROPERTY_STANDING, PROPERTY_TOP, PROPERTY_FLIPPED});
+    }
+    
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        boolean standing = state.getValue(PROPERTY_STANDING);
+        EnumFacing rotation = state.getValue(PROPERTY_DIRECTION);
+        boolean topPart = state.getValue(PROPERTY_TOP);
+        int meta = 0;
+        meta = setStandingOnMeta(meta, standing);
+        meta = setRotationOnMeta(meta, rotation);
+        meta = setTopPartOnMeta(meta, topPart);
+        return meta;
+    }
+    
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        boolean standing = isStanding(meta);
+        EnumFacing rotation = getRotation(meta);
+        boolean topPart = isTopPart(meta);
+        IBlockState result = this.getBlockState().getBaseState();
+        result = result.withProperty(PROPERTY_STANDING, standing);
+        result = result.withProperty(PROPERTY_DIRECTION, rotation);
+        result = result.withProperty(PROPERTY_TOP, topPart);
+        return result;
+    }
+    
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
+        if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
+            state = state.withProperty(PROPERTY_FLIPPED, ((TileEntityDakimakura)tileEntity).isFlipped());
+        }
+        return state;
+    }
+    
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (entityPlayer.isSneaking()) {
-            int meta = world.getBlockMetadata(x, y, z);
-            if (isTopPart(meta)) {
-                if (isStanding(meta)) {
-                    y -= 1;
+            if (state.getValue(PROPERTY_TOP)) {
+                if (state.getValue(PROPERTY_STANDING)) {
+                    pos = pos.offset(EnumFacing.DOWN);
+                    //y -= 1;
                 } else {
-                    ForgeDirection rot = getRotation(meta);
-                    x -= rot.offsetX;
-                    z -= rot.offsetZ;
+                    EnumFacing rot = state.getValue(PROPERTY_DIRECTION);
+                    pos = pos.offset(rot);
+                    //x -= rot.offsetX;
+                    //z -= rot.offsetZ;
                 }
             }
             if (!world.isRemote) {
-                TileEntity tileEntity = world.getTileEntity(x, y, z);
+                TileEntity tileEntity = world.getTileEntity(pos);
                 if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
                     ((TileEntityDakimakura)tileEntity).flip();
                 }
@@ -62,8 +115,8 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase livingBase, ItemStack itemStack) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack) {
+        TileEntity tileEntity = world.getTileEntity(pos);
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
             ((TileEntityDakimakura)tileEntity).setDaki(daki);
@@ -72,32 +125,32 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            if (!isTopPart(metadata)) {
-                TileEntity te = world.getTileEntity(x, y, z);
+            if (!state.getValue(PROPERTY_TOP)) {
+                TileEntity te = world.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityDakimakura) {
                     ItemStack itemStack = new ItemStack(ModBlocks.blockDakimakura);
                     Daki daki = ((TileEntityDakimakura)te).getDaki();
                     if (daki != null) {
                         itemStack.setTagCompound(DakiNbtSerializer.serialize(daki));
                     }
-                    spawnItemInWorld(world, x + 0.5F, y + 0.5F, z + 0.5F, itemStack);
+                    spawnItemInWorld(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, itemStack);
                 }
             }
         }
-        super.breakBlock(world, x, y, z, block, metadata);
+        super.breakBlock(world, pos, state);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer) {
+    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean addHitEffects(World worldObj, MovingObjectPosition target, EffectRenderer effectRenderer) {
+    public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
     }
     
@@ -112,9 +165,9 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         ItemStack itemStack = new ItemStack(this, 1, 0);
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
             Daki daki = ((TileEntityDakimakura)tileEntity).getDaki();
             if (daki != null) {
@@ -137,39 +190,39 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         }
     }
     
-    public static int setRotationOnMeta(int meta, ForgeDirection rot) {
+    public static int setRotationOnMeta(int meta, EnumFacing rot) {
         // Set negative/positive bit.
-        if (rot == ForgeDirection.NORTH | rot == ForgeDirection.WEST) {
+        if (rot == EnumFacing.NORTH | rot == EnumFacing.WEST) {
             meta = setBit(meta, META_BIT_POS_NEG, false);
-        } else if (rot == ForgeDirection.SOUTH | rot == ForgeDirection.EAST) {
+        } else if (rot == EnumFacing.SOUTH | rot == EnumFacing.EAST) {
             meta = setBit(meta, META_BIT_POS_NEG, true);
         }
         
         // Set x/z bit.
-        if (rot == ForgeDirection.EAST | rot == ForgeDirection.WEST) {
+        if (rot == EnumFacing.EAST | rot == EnumFacing.WEST) {
             meta = setBit(meta, META_BIT_X_Z, true);
-        } else if (rot == ForgeDirection.NORTH | rot == ForgeDirection.SOUTH) {
+        } else if (rot == EnumFacing.NORTH | rot == EnumFacing.SOUTH) {
             meta = setBit(meta, META_BIT_X_Z, false);
         }
         
         return meta;
     }
     
-    public static ForgeDirection getRotation(int meta) {
+    public static EnumFacing getRotation(int meta) {
         boolean xz = getBit(meta, META_BIT_X_Z) == 1;
         boolean posNeg = getBit(meta, META_BIT_POS_NEG) == 1;
         
         if (posNeg) {
             if (xz) {
-                return ForgeDirection.EAST;
+                return EnumFacing.EAST;
             } else {
-                return ForgeDirection.SOUTH;
+                return EnumFacing.SOUTH;
             }
         } else {
             if (xz) {
-                return ForgeDirection.WEST;
+                return EnumFacing.WEST;
             } else {
-                return ForgeDirection.NORTH;
+                return EnumFacing.NORTH;
             }
         }
     }
@@ -190,22 +243,33 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         return getBit(meta, META_BIT_TOP_BOT) == 1;
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public void registerBlockIcons(IIconRegister iconRegister) {}
-
-    @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
     }
     
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
-        int meta = blockAccess.getBlockMetadata(x, y, z);
-        ForgeDirection rot = getRotation(meta);
-        boolean standing = isStanding(meta);
-        boolean topPart = isTopPart(meta);
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+        return blockState.getBoundingBox(worldIn, pos);
+    }
+    
+    @Override
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
+        IBlockState blockState = worldIn.getBlockState(pos);
+        boolean standing = blockState.getValue(PROPERTY_STANDING);
+        EnumFacing rot = blockState.getValue(PROPERTY_DIRECTION);
+        boolean topPart = blockState.getValue(PROPERTY_TOP);
         
         float w1 = 0.2F;
         float w2 = 0.8F;
@@ -273,71 +337,55 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         }
         if (!standing) {
             if (!topPart) {
-                setBlockBounds(x1, y1, z1, x2, y2, z2);
+                return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).offset(pos);
+                //setBlockBounds(x1, y1, z1, x2, y2, z2);
             } else {
-                setBlockBounds((x1 - 1F * rot.offsetX), (y1 - 1F * rot.offsetY), (z1 - 1F * rot.offsetZ), (x2 - 1F * rot.offsetX), (y2 - 1F * rot.offsetY), (z2 - 1F * rot.offsetZ));
+                return new AxisAlignedBB((x1 - 1F * rot.getFrontOffsetX()), (y1 - 1F * rot.getFrontOffsetY()), (z1 - 1F * rot.getFrontOffsetZ()), (x2 - 1F * rot.getFrontOffsetX()), (y2 - 1F * rot.getFrontOffsetY()), (z2 - 1F * rot.getFrontOffsetZ())).offset(pos);
+                //setBlockBounds((x1 - 1F * rot.getFrontOffsetX()), (y1 - 1F * rot.getFrontOffsetY()), (z1 - 1F * rot.getFrontOffsetZ()), (x2 - 1F * rot.getFrontOffsetX()), (y2 - 1F * rot.getFrontOffsetY()), (z2 - 1F * rot.getFrontOffsetZ()));
             }
         } else {
             if (!topPart) {
-                setBlockBounds(x1, y1, z1, x2, y2, z2);
+                return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).offset(pos);
+                //setBlockBounds(x1, y1, z1, x2, y2, z2);
             } else {
-                setBlockBounds(x1, y1 - 1, z1, x2, y2 - 1, z2);
+                return new AxisAlignedBB(x1, y1 - 1, z1, x2, y2 - 1, z2).offset(pos);
+                //setBlockBounds(x1, y1 - 1, z1, x2, y2 - 1, z2);
             }
         }
     }
     
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        int meta = world.getBlockMetadata(x, y, z);
-        ForgeDirection dir = getRotation(meta);
-        boolean topPart = isTopPart(meta);
-        boolean standing = isStanding(meta);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
+        IBlockState blockState = world.getBlockState(pos);
+        boolean standing = blockState.getValue(PROPERTY_STANDING);
+        EnumFacing rotation = blockState.getValue(PROPERTY_DIRECTION);
+        boolean topPart = blockState.getValue(PROPERTY_TOP);
+        
         if (!standing) {
             if (!topPart) {
-                if (world.getBlock(x + dir.offsetX, y, z + dir.offsetZ) != this) {
-                    world.setBlockToAir(x, y, z);
+                if (world.getBlockState(pos.offset(rotation)).getBlock() != this) {
+                    world.setBlockToAir(pos);
                 }
             } else {
-                if (world.getBlock(x - dir.offsetX, y, z - dir.offsetZ) != this) {
-                    world.setBlockToAir(x, y, z);
+                if (world.getBlockState(pos.offset(rotation.getOpposite())).getBlock() != this) {
+                    world.setBlockToAir(pos);
                 }
             }
         } else {
             if (!topPart) {
-                if (world.getBlock(x, y + 1, z) != this) {
-                    world.setBlockToAir(x, y, z);
+                if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() != this) {
+                    world.setBlockToAir(pos);
                 }
             } else {
-                if (world.getBlock(x, y - 1, z) != this) {
-                    world.setBlockToAir(x, y, z);
+                if (world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() != this) {
+                    world.setBlockToAir(pos);
                 }
             }
         }
     }
     
-    @Override
-    public Block setBlockName(String name) {
-        GameRegistry.registerBlock(this, ItemBlockDakimakura.class, "block." + name);
-        return super.setBlockName(name);
-    }
-
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntityDakimakura();
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
-    
-    @Override
-    public int getRenderType() {
-        return -1;
     }
 }

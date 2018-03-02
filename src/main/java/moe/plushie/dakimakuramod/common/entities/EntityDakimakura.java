@@ -1,24 +1,20 @@
 package moe.plushie.dakimakuramod.common.entities;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.block.ItemBlockDakimakura;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnData {
 
@@ -27,11 +23,11 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     
     private String packDirName;
     private String dakiDirName;
-    private ForgeDirection rotation;
+    private Rotation rotation;
     
     public EntityDakimakura(World world) {
         super(world);
-        dataWatcher.addObject(2, Byte.valueOf((byte)0));
+        //dataManager.addObject(2, Byte.valueOf((byte)0));
         noClip = true;
         width = 4;
         height = 1;
@@ -53,11 +49,13 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
             int x = MathHelper.floor_double(posX);
             int y = MathHelper.floor_double(posY) - 1;
             int z = MathHelper.floor_double(posZ);
+            /*
             Block block = worldObj.getBlock(x, y, z);
             if (!block.isBed(worldObj, x, y, z, null)) {
                 dropAsItem();
                 setDead();
             }
+            */
         }
     }
     
@@ -74,18 +72,18 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         EntityItem entityItem = new EntityItem(worldObj, posX + 0.5F, posY + 0.5F, posZ + 0.5F, itemStack);
         worldObj.spawnEntityInWorld(entityItem);
     }
-    
+    /*
     @SideOnly(Side.CLIENT)
     @Override
     public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int p_70056_9_) {
         setPosition(x, y, z);
         setRotation(yaw, pitch);
     }
-
+*/
     @Override
     protected void entityInit() {
     }
-    
+    /*
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
         if (packDirName != null & dakiDirName != null) {
@@ -97,7 +95,8 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         }
         compound.setBoolean(TAG_FLIPPED, isFlipped());
     }
-    
+    */
+    /*
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
         if (compound.hasKey(DakiNbtSerializer.TAG_DAKI_PACK_NAME, NBT.TAG_STRING) & compound.hasKey(DakiNbtSerializer.TAG_DAKI_DIR_NAME, NBT.TAG_STRING)) {
@@ -109,7 +108,7 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         }
         setFlipped(compound.getBoolean(TAG_FLIPPED));
     }
-
+*/
     @Override
     public void writeSpawnData(ByteBuf buf) {
         buf.writeDouble(posX);
@@ -140,7 +139,7 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
             dakiDirName = ByteBufUtils.readUTF8String(buf);
         }
         if (buf.readBoolean()) {
-            rotation = ForgeDirection.getOrientation(buf.readInt());
+            //rotation = ForgeDirection.getOrientation(buf.readInt());
         }
     }
     
@@ -149,14 +148,15 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     }
     
     public boolean isFlipped() {
-        return dataWatcher.getWatchableObjectByte(2) == 1;
+        return false;
+        //return dataManager.getWatchableObjectByte(2) == 1;
     }
     
     public void setFlipped(boolean flipped) {
         if (flipped) {
-            dataWatcher.updateObject(2, (byte)1);
+            //dataWatcher.updateObject(2, (byte)1);
         } else {
-            dataWatcher.updateObject(2, (byte)0);
+            //dataWatcher.updateObject(2, (byte)0);
         }
     }
     
@@ -164,15 +164,16 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         setFlipped(!isFlipped());
     }
     
-    public void setRotation(ForgeDirection rotation) {
+    public void setRotation(Rotation rotation) {
         this.rotation = rotation;
     }
     
-    public ForgeDirection getRotation() {
+    public Rotation getRotation() {
         return rotation;
     }
     
     public boolean isDakiOverBlock(int x, int y, int z) {
+        /*
         if (MathHelper.floor_double(posX) == x & MathHelper.floor_double(posY) == y + 1 & MathHelper.floor_double(posZ) == z) {
             return true;
         }
@@ -181,6 +182,19 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         if (MathHelper.floor_double(posX) == x & MathHelper.floor_double(posY) == y + 1 & MathHelper.floor_double(posZ) == z) {
             return true;
         }
+        */
         return false;
+    }
+
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound compound) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound compound) {
+        // TODO Auto-generated method stub
+        
     }
 }
