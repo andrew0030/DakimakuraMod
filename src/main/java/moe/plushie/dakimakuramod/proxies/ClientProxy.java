@@ -14,7 +14,6 @@ import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.ModItems;
-import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -58,7 +57,17 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         });
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.blockDakimakura), 0, new ModelResourceLocation(LibModInfo.ID + ":tile.dakimakura", "inventory"));
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.blockDakimakura), new ItemMeshDefinition() {
+            
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound());
+                RenderBlockDakimakura.lastItemDaki = daki;
+                return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
+            }
+        });
+        
+        //ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.blockDakimakura), 0, new ModelResourceLocation(LibModInfo.ID + ":tile.dakimakura", "inventory"));
     }
     
     @Override
