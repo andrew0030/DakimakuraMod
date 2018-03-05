@@ -10,7 +10,9 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -25,13 +27,13 @@ public class ModelDakimakura extends ModelBase {
     private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/bolster-new-uv.obj");
     private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(LibModInfo.ID, "textures/models/blank.png");
     
-    //private final IModelCustom DAKIMAKURA_MODEL;
+    private final ObjModel DAKIMAKURA_MODEL;
     private final DakiTextureManagerClient dakiTextureManager;
     private final Profiler profiler;
     private int modelList = -1;
     
     public ModelDakimakura(DakiTextureManagerClient dakiTextureManager) {
-        //DAKIMAKURA_MODEL = AdvancedModelLoader.loadModel(MODEL_LOCATION);
+        DAKIMAKURA_MODEL = ObjModel.loadModel(MODEL_LOCATION); 
         this.dakiTextureManager = dakiTextureManager;
         profiler = Minecraft.getMinecraft().mcProfiler;
     }
@@ -49,15 +51,40 @@ public class ModelDakimakura extends ModelBase {
             }
         }
         profiler.endStartSection("model");
-        GL11.glPushMatrix();
-        GL11.glPushAttrib(GL11.GL_POLYGON_BIT | GL11.GL_ENABLE_BIT);
-        GL11.glCullFace(GL11.GL_FRONT);
+        GlStateManager.resetColor();
+        GlStateManager.pushMatrix();
+        GL11.glPushAttrib(GL11.GL_POLYGON_BIT | GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT);
+        GlStateManager.cullFace(CullFace.BACK);
+        GlStateManager.enableCull();
+        GlStateManager.enableNormalize();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.scale(0.55F, 0.55F, 0.55F);
+        GlStateManager.translate(0, 0.35F, 0);
+        GlStateManager.scale(-1, -1, 1);
+        GlStateManager.enableLighting();
+        
+        //State manager is shit. 
+        GL11.glCullFace(GL11.GL_BACK);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_NORMALIZE);
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glScalef(-1, 1, 1);
-        GL11.glScalef(0.55F, 0.55F, 0.55F);
-        GL11.glTranslatef(0, 0.35F, 0);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        
+        //drawDebugRender();
+        if (modelList == -1) {
+            modelList = GLAllocation.generateDisplayLists(1);
+            GL11.glNewList(modelList, GL11.GL_COMPILE);
+            DAKIMAKURA_MODEL.render();
+            GL11.glEndList();
+        }
+        GlStateManager.callList(modelList);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+        profiler.endSection();
+    }
+    
+    private void drawDebugRender() {
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buff = tess.getBuffer();
         
@@ -101,18 +128,5 @@ public class ModelDakimakura extends ModelBase {
 
         
         tess.draw();
-        
-        /*
-        if (modelList == -1) {
-            modelList = GLAllocation.generateDisplayLists(1);
-            GL11.glNewList(modelList, GL11.GL_COMPILE);
-            DAKIMAKURA_MODEL.renderAll();
-            GL11.glEndList();
-        }
-        */
-        GL11.glCallList(modelList);
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
-        profiler.endSection();
     }
 }
