@@ -9,7 +9,6 @@ import moe.plushie.dakimakuramod.client.handler.PlacementPreviewHandler;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.client.render.tileentity.RenderBlockDakimakura;
 import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
-import moe.plushie.dakimakuramod.common.UpdateCheck;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
@@ -40,7 +39,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
-        new UpdateCheck();
     }
     
     @Override

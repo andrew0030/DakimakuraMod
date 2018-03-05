@@ -5,6 +5,7 @@ public class LibModInfo {
     public static final String NAME = "Dakimakura Mod";
     public static final String VERSION = "@VERSION@";
     public static final String CHANNEL = "dakimod";
+    public static final String UPDATE_URL = "http://plushie.moe/app_update/minecraft_mods/dakimakuramod/update.json";
     
     public static final String PROXY_CLIENT_CLASS = "moe.plushie.dakimakuramod.proxies.ClientProxy";
     public static final String PROXY_COMMNON_CLASS = "moe.plushie.dakimakuramod.proxies.CommonProxy";
