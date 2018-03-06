@@ -143,7 +143,7 @@ public class Daki implements Comparable<Daki> {
         list.add(StatCollector.translateToLocalFormatted(textPack, getPackDirectoryName(), index, total));
         list.add(StatCollector.translateToLocalFormatted(textName, getDisplayName()));
         if (!StringUtils.isNullOrEmpty(getFlavourText())) {
-            String textFlavour = StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.flavour");
+            String textFlavour = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.flavour";
             list.add(StatCollector.translateToLocalFormatted(textFlavour, getFlavourText()));
         }
     }
