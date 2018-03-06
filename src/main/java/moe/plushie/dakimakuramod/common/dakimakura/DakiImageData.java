@@ -2,6 +2,8 @@ package moe.plushie.dakimakuramod.common.dakimakura;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -110,6 +112,11 @@ public class DakiImageData implements Callable<DakiImageData> {
             
             bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize);
             bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize);
+            
+            AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+            tx.translate(-bufferedimageBack.getWidth(null), 0);
+            AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+            bufferedimageBack = op.filter(bufferedimageBack, null);
             
             bufferedImageFull = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_RGB);
             
