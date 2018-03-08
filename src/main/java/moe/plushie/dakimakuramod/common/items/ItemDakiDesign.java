@@ -14,6 +14,7 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +29,7 @@ public class ItemDakiDesign extends AbstractModItem {
     
     public ItemDakiDesign() {
         super("dakiDesign");
-        setMaxStackSize(1);
+        setMaxStackSize(16);
     }
     
     @SideOnly(Side.CLIENT)
@@ -110,11 +111,21 @@ public class ItemDakiDesign extends AbstractModItem {
         Random random = new Random(System.nanoTime());
         int ranValue = random.nextInt(dakiList.size());
         Daki daki = dakiList.get(ranValue);
+        giveDesignToPlayer(world, entityPlayer, daki);
+        itemStack.stackSize--;
+        return itemStack;
+    }
+    
+    private void giveDesignToPlayer(World world, EntityPlayer entityPlayer, Daki daki) {
+        ItemStack itemStack = new ItemStack(ModItems.dakiDesign);
         if (!itemStack.hasTagCompound()) {
             itemStack.setTagCompound(new NBTTagCompound());
         }
         DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-        return itemStack;
+        InventoryPlayer inv = entityPlayer.inventory;
+        if (!inv.addItemStackToInventory(itemStack)) {
+            entityPlayer.entityDropItem(itemStack, entityPlayer.getEyeHeight());
+        }
     }
     
     @SideOnly(Side.CLIENT)
