@@ -98,6 +98,10 @@ public class ItemDakiDesign extends AbstractModItem {
             return itemStack;
         }
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
+        Daki checkDaki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+        if (checkDaki != null) {
+            return itemStack;
+        }
         ArrayList<Daki> dakiList = dakiManager.getDakiList();
         if (dakiList.isEmpty()) {
             return itemStack;
