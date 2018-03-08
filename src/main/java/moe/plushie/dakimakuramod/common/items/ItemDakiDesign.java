@@ -2,6 +2,7 @@ package moe.plushie.dakimakuramod.common.items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -106,7 +107,8 @@ public class ItemDakiDesign extends AbstractModItem {
         if (dakiList.isEmpty()) {
             return itemStack;
         }
-        int ranValue = world.rand.nextInt(dakiList.size());
+        Random random = new Random(System.nanoTime());
+        int ranValue = random.nextInt(dakiList.size());
         Daki daki = dakiList.get(ranValue);
         if (!itemStack.hasTagCompound()) {
             itemStack.setTagCompound(new NBTTagCompound());
