@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class ObjModel {
-
+    
     private Vector3d[] v;
     private Vector2f[] vt;
     private Vector3f[] vn;
@@ -49,7 +49,7 @@ public class ObjModel {
                 Vector3f vn1 = vn[face.vn1 - 1];
                 Vector3f vn2 = vn[face.vn2 - 1];
                 Vector3f vn3 = vn[face.vn3 - 1];
-
+                
                 tess.getBuffer().pos(v1.x, v1.y, v1.z);
                 tess.getBuffer().tex(vt1.x, vt1.y);
                 tess.getBuffer().normal(vn1.x, vn1.y, vn1.z);
@@ -68,7 +68,6 @@ public class ObjModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
         tess.draw();
     }
     
@@ -144,7 +143,7 @@ public class ObjModel {
         public int vn2;
         public int vn3;
         
-        //f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
+        // f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
         
         public Face(String v1, String v2, String v3) {
             String[] s1 = v1.split("/");
@@ -162,18 +161,6 @@ public class ObjModel {
             this.v3 = Integer.parseInt(s3[0]);
             this.vt3 = Integer.parseInt(s3[1]);
             this.vn3 = Integer.parseInt(s3[2]);
-        }
-        
-        public Face(int v1, int vt1, int vn1, int v2, int vt2, int vn2, int v3, int vt3, int vn3) {
-            this.v1 = v1;
-            this.v2 = v2;
-            this.v3 = v3;
-            this.vt1 = vt1;
-            this.vt2 = vt2;
-            this.vt3 = vt3;
-            this.vn1 = vn1;
-            this.vn2 = vn2;
-            this.vn3 = vn3;
         }
     }
 }

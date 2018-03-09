@@ -26,11 +26,11 @@ public class Daki implements Comparable<Daki> {
         this.packDirectoryName = packDirectoryName;
         this.dakiDirectoryName = dakiDirectoryName;
     }
-
+    
     public String getAuthor() {
         return author;
     }
-
+    
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -99,7 +99,7 @@ public class Daki implements Comparable<Daki> {
         result = prime * result + ((packDirectoryName == null) ? 0 : packDirectoryName.hashCode());
         return result;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -121,13 +121,13 @@ public class Daki implements Comparable<Daki> {
             return false;
         return true;
     }
-
+    
     @Override
     public int compareTo(Daki o) {
         int result = packDirectoryName.compareTo(o.packDirectoryName) * 1000;
         return result + dakiDirectoryName.compareTo(o.dakiDirectoryName);
     }
-
+    
     @Override
     public String toString() {
         return "Daki [packDirectoryName=" + packDirectoryName + ", dakiDirectoryName=" + dakiDirectoryName + "]";

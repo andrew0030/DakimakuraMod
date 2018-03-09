@@ -2,6 +2,7 @@ package moe.plushie.dakimakuramod.common.items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
@@ -10,6 +11,7 @@ import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +26,7 @@ public class ItemDakiDesign extends AbstractModItem {
     
     public ItemDakiDesign() {
         super("dakiDesign");
-        setMaxStackSize(1);
+        setMaxStackSize(16);
     }
     
     @SideOnly(Side.CLIENT)
@@ -67,21 +69,38 @@ public class ItemDakiDesign extends AbstractModItem {
     }*/
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer playerIn, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
+        Daki checkDaki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+        if (checkDaki != null) {
+            return new ActionResult(EnumActionResult.PASS, itemStack);
+        }
         ArrayList<Daki> dakiList = dakiManager.getDakiList();
         if (dakiList.isEmpty()) {
             return new ActionResult(EnumActionResult.PASS, itemStack);
         }
+        
         if (!world.isRemote) {
-            int ranValue = world.rand.nextInt(dakiList.size());
+            Random random = new Random(System.nanoTime());
+            int ranValue = random.nextInt(dakiList.size());
             Daki daki = dakiList.get(ranValue);
-            if (!itemStack.hasTagCompound()) {
-                itemStack.setTagCompound(new NBTTagCompound());
-            }
-            DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
+            giveDesignToPlayer(world, entityPlayer, daki);
+            itemStack.stackSize--;
+            return new ActionResult(EnumActionResult.SUCCESS, itemStack);
         }
         return new ActionResult(EnumActionResult.SUCCESS, itemStack);
+    }
+    
+    private void giveDesignToPlayer(World world, EntityPlayer entityPlayer, Daki daki) {
+        ItemStack itemStack = new ItemStack(ModItems.dakiDesign);
+        if (!itemStack.hasTagCompound()) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
+        InventoryPlayer inv = entityPlayer.inventory;
+        if (!inv.addItemStackToInventory(itemStack)) {
+            entityPlayer.entityDropItem(itemStack, entityPlayer.getEyeHeight());
+        }
     }
     
     @SideOnly(Side.CLIENT)

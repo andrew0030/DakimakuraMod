@@ -51,18 +51,23 @@ public class ModelDakimakura extends ModelBase {
             }
         }
         profiler.endStartSection("model");
+        
         GlStateManager.resetColor();
         GlStateManager.pushMatrix();
         GL11.glPushAttrib(GL11.GL_POLYGON_BIT | GL11.GL_ENABLE_BIT | GL11.GL_LIGHTING_BIT);
+        // Enable bit.
+        GlStateManager.enableNormalize();
+        
+        // Polygon bit.
         GlStateManager.cullFace(CullFace.BACK);
         GlStateManager.enableCull();
-        GlStateManager.enableNormalize();
-        GlStateManager.color(1F, 1F, 1F, 1F);
+        
+        // Lighting bit.
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.scale(0.55F, 0.55F, 0.55F);
         GlStateManager.translate(0, 0.35F, 0);
         GlStateManager.scale(-1, -1, 1);
-        GlStateManager.enableLighting();
         
         //State manager is shit. 
         GL11.glCullFace(GL11.GL_BACK);
@@ -107,7 +112,7 @@ public class ModelDakimakura extends ModelBase {
         buff.tex(0, 1);
         buff.endVertex();
         
-
+        
         //Back
         buff.pos(-0.5F, -1.5F, 0);
         buff.tex(0.5F, 1);
@@ -117,7 +122,7 @@ public class ModelDakimakura extends ModelBase {
         buff.tex(1, 1);
         buff.endVertex();
         
-
+        
         buff.pos(0.5F, 1.5F, 0);
         buff.tex(1, 0);
         buff.endVertex();
@@ -125,7 +130,6 @@ public class ModelDakimakura extends ModelBase {
         buff.pos(-0.5F, 1.5F, 0);
         buff.tex(0.5F, 0);
         buff.endVertex();
-
         
         tess.draw();
     }
