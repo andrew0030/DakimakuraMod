@@ -14,6 +14,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -220,21 +221,15 @@ public class ItemBlockDakimakura extends ModItemBlock {
         }
     }
     
-    /*
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean func_150936_a(World world, int x, int y, int z, int side, EntityPlayer entityPlayer, ItemStack itemStack) {
-        Block block = world.getBlock(x, y, z);
-        ForgeDirection sideDir = ForgeDirection.getOrientation(side);
-        if (block == Blocks.snow_layer && (world.getBlockMetadata(x, y, y) & 7) < 1) {
-            sideDir = ForgeDirection.UP;
-            side = 0;
-        } else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(world, x, y, y)) {
-            x += sideDir.offsetX;
-            y += sideDir.offsetY;
-            z += sideDir.offsetZ;
+    public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side, EntityPlayer player, ItemStack stack) {
+        Block block = world.getBlockState(pos).getBlock();
+        if (block == Blocks.SNOW_LAYER && block.isReplaceable(world, pos)) {
+            side = EnumFacing.UP;
+        } else if (!block.isReplaceable(world, pos)) {
+            pos = pos.offset(side);
         }
-        return world.canPlaceEntityOnSide(Blocks.stone, x, y, z, false, side, (Entity)null, itemStack);
+        return world.canBlockBePlaced(Blocks.STONE, pos, false, side, (Entity)null, stack);
     }
-    */
 }
