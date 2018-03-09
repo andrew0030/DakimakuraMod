@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -81,14 +80,6 @@ public class ClientProxy extends CommonProxy {
         new PlacementPreviewHandler(modelDakimakura);
         ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "Unlock", "inventory"));
         //registerRender(ModItems.dakiDesign);
-    }
-    
-    @Override
-    public MinecraftServer getServer() {
-        if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
-            return Minecraft.getMinecraft().getIntegratedServer();
-        }
-        return super.getServer();
     }
     
     @Override

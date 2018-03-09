@@ -46,7 +46,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     public static final PropertyBool PROPERTY_FLIPPED = PropertyBool.create("flipped");
     
     protected BlockDakimakura() {
-        super("dakimakura", Material.GLASS, SoundType.CLOTH, true);
+        super("dakimakura", Material.CLOTH, SoundType.CLOTH, true);
         setHardness(1.0F);
         setLightOpacity(0);
         setDefaultState(this.blockState.getBaseState().withProperty(PROPERTY_DIRECTION, EnumFacing.EAST).withProperty(PROPERTY_STANDING, false).withProperty(PROPERTY_TOP, false));

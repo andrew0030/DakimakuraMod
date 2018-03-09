@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -54,49 +55,33 @@ public class CommandDakimakura extends CommandBase {
     
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-        // TODO Auto-generated method stub
-        return super.getTabCompletionOptions(server, sender, args, pos);
-    }
-    /*
-    @Override
-    public List addTabCompletionOptions(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand.length == 1) {
-            return getListOfStringsMatchingLastWord(currentCommand, getSubCommandNames());
+        if (args.length == 1) {
+            return getListOfStringsMatchingLastWord(args, getSubCommandNames());
         }
-        if (currentCommand.length > 1) {
-            String commandName = currentCommand[0];
+        if (args.length > 1) {
+            String commandName = args[0];
             AbstractCommand command = getSubCommand(commandName);
             if (command != null) {
-                return command.addTabCompletionOptions(commandSender, currentCommand);
+                return command.getTabCompletionOptions(server, sender, args, pos);
             }
         }
-        return null;
-    }
-
-    @Override
-    public void processCommand(ICommandSender commandSender, String[] currentCommand) {
-        if (currentCommand == null) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
-        }
-        if (currentCommand.length < 1) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
-        }
-        String commandName = currentCommand[0];
-        AbstractCommand command = getSubCommand(commandName);
-        if (command != null) {
-            command.processCommand(commandSender, currentCommand);
-            return;
-        }
-        throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
     
-    private String[] getPlayers() {
-        return MinecraftServer.getServer().getAllUsernames();
-    }
-*/
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        // TODO Auto-generated method stub
-        
+        if (args == null) {
+            throw new WrongUsageException(getCommandUsage(sender), (Object)args);
+        }
+        if (args.length < 1) {
+            throw new WrongUsageException(getCommandUsage(sender), (Object)args);
+        }
+        String commandName = args[0];
+        AbstractCommand command = getSubCommand(commandName);
+        if (command != null) {
+            command.execute(server, sender, args);
+            return;
+        }
+        throw new WrongUsageException(getCommandUsage(sender), (Object)args);
     }
 }

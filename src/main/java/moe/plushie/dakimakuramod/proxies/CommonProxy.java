@@ -17,7 +17,6 @@ import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -76,11 +75,6 @@ public class CommonProxy {
     
     public void postInit(FMLPostInitializationEvent event) {
         DakiExtractor.extractDakis();
-    }
-    
-    public MinecraftServer getServer() {
-        return null;
-        //return MinecraftServer.getServer();
     }
     
     public DakiManager getDakimakuraManager() {
