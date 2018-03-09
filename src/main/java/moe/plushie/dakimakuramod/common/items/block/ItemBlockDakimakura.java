@@ -7,6 +7,7 @@ import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
+import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -94,8 +95,11 @@ public class ItemBlockDakimakura extends ModItemBlock {
             EnumFacing[] rots = new EnumFacing[] {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
             EnumFacing rotation = rots[rot].getOpposite();
             if (canPlaceDakiAt(world, entityPlayer, stack, pos, facing, rotation)) {
-                // TODO If is bed place entity.
-                placeDakiAt(world, entityPlayer, stack, pos, facing, rotation);
+                if (block.isBed(iblockstate, world, pos, entityPlayer)) {
+                    placeAsEntity(world, entityPlayer, stack, pos, facing, rotation);
+                } else {
+                    placeDakiAt(world, entityPlayer, stack, pos, facing, rotation);
+                }
                 return EnumActionResult.SUCCESS;
             } else {
                 return EnumActionResult.FAIL;
@@ -190,22 +194,24 @@ public class ItemBlockDakimakura extends ModItemBlock {
         return true;
     }
     
-    /*
-    private void placeAsEntity(World world, EntityPlayer entityPlayer, ItemStack itemStack, int x, int y, int z, ForgeDirection side, ForgeDirection rotation) {
+    
+    private void placeAsEntity(World world, EntityPlayer entityPlayer, ItemStack itemStack, BlockPos pos, EnumFacing side, EnumFacing rotation) {
         if (world.isRemote) {
             return;
         }
         Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         EntityDakimakura entityDakimakura = new EntityDakimakura(world);
-        entityDakimakura.setPosition(x, y, z);
+        entityDakimakura.setPosition(pos.getX(), pos.getY(), pos.getZ());
         entityDakimakura.setDaki(daki);
         entityDakimakura.setFlipped(isFlipped(itemStack));
         entityDakimakura.setRotation(rotation);
         world.spawnEntityInWorld(entityDakimakura);
-        world.playSoundEffect((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), this.field_150939_a.stepSound.func_150496_b(), (this.field_150939_a.stepSound.getVolume() + 1.0F) / 2.0F, this.field_150939_a.stepSound.getPitch() * 0.8F);
+        DakimakuraMod.getLogger().info("Placing daki at " + pos);
+        SoundType soundtype = this.block.getSoundType();
+        world.playSound(entityPlayer, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
         --itemStack.stackSize;
     }
-    */
+    
     
     @SideOnly(Side.CLIENT)
     @Override
