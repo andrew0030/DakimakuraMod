@@ -245,10 +245,13 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         return getBit(meta, META_BIT_TOP_BOT) == 1;
     }
     
-    
-    
     @Override
     public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
     
