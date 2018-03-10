@@ -1,5 +1,6 @@
 package moe.plushie.dakimakuramod.client.texture;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
@@ -7,6 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -14,18 +17,18 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
-import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
 
 @SideOnly(Side.CLIENT)
 public class DakiTextureManagerClient {
     
     private final HashMap<Daki, DakiTexture> textureMap;
+    private final ArrayList<DakiTexture> texturesForDeletion;
     private final AtomicInteger textureRequests;
     private final CompletionService<DakiImageData> textureCompletion;
     
     public DakiTextureManagerClient() {
         textureMap = new HashMap<Daki, DakiTexture>();
+        texturesForDeletion = new ArrayList<DakiTexture>();
         textureRequests = new AtomicInteger(0);
         textureCompletion = new ExecutorCompletionService<DakiImageData>(Executors.newFixedThreadPool(1));
         FMLCommonHandler.instance().bus().register(this);
@@ -46,6 +49,7 @@ public class DakiTextureManagerClient {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
+            deleteTextures();
             Future<DakiImageData> futureDakiImageData = textureCompletion.poll();
             if (futureDakiImageData != null) {
                 try {
@@ -66,16 +70,27 @@ public class DakiTextureManagerClient {
     }
     
     public void reloadTextures() {
+        markTexturesForDeletion();
+    }
+    
+    private void markTexturesForDeletion() {
         synchronized (textureMap) {
-            deleteTextures();
+            synchronized (texturesForDeletion) {
+                Daki[] keys = (Daki[]) textureMap.keySet().toArray(new Daki[textureMap.size()]);
+                for (int i = 0; i < keys.length; i++) {
+                    DakiTexture dakiTexture = textureMap.remove(keys[i]);
+                    texturesForDeletion.add(dakiTexture);
+                }
+            }
         }
     }
     
     private void deleteTextures() {
-        Daki[] keys = (Daki[]) textureMap.keySet().toArray(new Daki[textureMap.size()]);
-        for (int i = 0; i < keys.length; i++) {
-            DakiTexture dakiTexture = textureMap.remove(keys[i]);
-            dakiTexture.deleteGlTexture();
+        synchronized (texturesForDeletion) {
+            for (int i = 0; i < texturesForDeletion.size(); i++) {
+                texturesForDeletion.get(i).deleteGlTexture();
+            }
+            texturesForDeletion.clear();
         }
     }
     
