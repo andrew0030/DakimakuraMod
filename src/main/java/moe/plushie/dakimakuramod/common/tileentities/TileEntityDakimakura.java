@@ -3,9 +3,12 @@ package moe.plushie.dakimakuramod.common.tileentities;
 import java.util.List;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
+import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +16,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -36,7 +40,7 @@ public class TileEntityDakimakura extends TileEntity {
             dakiDirName = null;
         }
         markDirty();
-        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        syncWithClients();
     }
     
     public Daki getDaki() {
@@ -47,7 +51,6 @@ public class TileEntityDakimakura extends TileEntity {
         this.flipped = flipped;
         markDirty();
         syncWithClients();
-        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     public boolean isFlipped() {
@@ -112,21 +115,22 @@ public class TileEntityDakimakura extends TileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox();
-        /*
-        if (BlockDakimakura.isStanding(getBlockMetadata())) {
-            return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
+        if (getBlockType() == ModBlocks.blockDakimakura) {
+            IBlockState blockState = worldObj.getBlockState(getPos());
+            boolean standing = blockState.getValue(BlockDakimakura.PROPERTY_STANDING);
+            EnumFacing rotation = blockState.getValue(BlockDakimakura.PROPERTY_DIRECTION);
+            if (standing) {
+                return new AxisAlignedBB(pos, pos.add(1, 2, 1));
+            }
+            AxisAlignedBB[] rots = {
+                    new AxisAlignedBB(0, 0, -1, 1, 0.28F, 1),
+                    new AxisAlignedBB(0, 0, 0, 1, 0.28F, 2),
+                    new AxisAlignedBB(-1, 0, 0, 1, 0.28F, 1),
+                    new AxisAlignedBB(0, 0, 0, 2, 0.28F, 1)
+                    };
+            return rots[(rotation.ordinal() - 2) & 3].offset(pos);
         }
-        AxisAlignedBB[] rots = {
-                AxisAlignedBB.getBoundingBox(0, 0, -1, 1, 0.28F, 1),
-                AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 0.28F, 2),
-                AxisAlignedBB.getBoundingBox(-1, 0, 0, 1, 0.28F, 1),
-                AxisAlignedBB.getBoundingBox(0, 0, 0, 2, 0.28F, 1)
-                };
-        
-        ForgeDirection rot = BlockDakimakura.getRotation(getBlockMetadata());
-        return rots[(rot.ordinal() - 2) & 3].offset(xCoord, yCoord, zCoord);
-        */
+        return INFINITE_EXTENT_AABB;
     }
     
     public void syncWithClients() {
