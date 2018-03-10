@@ -13,11 +13,11 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 public final class CraftingManager {
 
     public static void init() {
-        RecipeSorter.INSTANCE.register("dakimakuramod:shapeless", RecipeDaki.class, Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.INSTANCE.register("dakimakuramod:daki", RecipeDaki.class, Category.SHAPELESS, "after:minecraft:shapeless");
         GameRegistry.addRecipe(new RecipeDaki());
         
         if (ConfigHandler.enableRecycleRecipe) {
-            RecipeSorter.INSTANCE.register("dakimakuramod:shapeless", RecipeDakiRecycle.class, Category.SHAPELESS, "after:minecraft:shapeless");
+            RecipeSorter.INSTANCE.register("dakimakuramod:dakirecycle", RecipeDakiRecycle.class, Category.SHAPELESS, "after:minecraft:shapeless");
             GameRegistry.addRecipe(new RecipeDakiRecycle());
         }
         

@@ -7,6 +7,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 public class RecipeDakiRecycle implements IRecipe {
     
@@ -100,6 +101,6 @@ public class RecipeDakiRecycle implements IRecipe {
 
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        return new ItemStack[inventoryCrafting.getSizeInventory()];
+        return ForgeHooks.defaultRecipeGetRemainingItems(inventoryCrafting);
     }
 }
