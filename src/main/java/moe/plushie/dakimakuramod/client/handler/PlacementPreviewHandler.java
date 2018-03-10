@@ -67,8 +67,6 @@ public class PlacementPreviewHandler {
             }
             if (facing == EnumFacing.DOWN) {
                 standing = true;
-                //rotation = EnumFacing.UP;
-                
                 pos = pos.offset(EnumFacing.DOWN);
             }
             

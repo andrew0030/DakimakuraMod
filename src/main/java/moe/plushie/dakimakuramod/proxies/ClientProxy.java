@@ -76,13 +76,11 @@ public class ClientProxy extends CommonProxy {
     
     @Override
     public void initRenderers() {
-        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.blockDakimakura), new RenderItemDakimakura(modelDakimakura));
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDakimakura.class, new RenderBlockDakimakura(modelDakimakura));
         maxGpuTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
         DakimakuraMod.getLogger().info(String.format("Max GPU texture size: %d.", maxGpuTextureSize));
         new PlacementPreviewHandler(modelDakimakura);
         ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "Unlock", "inventory"));
-        //registerRender(ModItems.dakiDesign);
     }
     
     @Override

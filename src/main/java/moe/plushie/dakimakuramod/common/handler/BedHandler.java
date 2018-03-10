@@ -2,7 +2,6 @@ package moe.plushie.dakimakuramod.common.handler;
 
 import java.util.ArrayList;
 
-import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -39,7 +38,6 @@ public class BedHandler {
         if (!entityPlayer.isSneaking()) {
             return;
         }
-        DakimakuraMod.getLogger().info("Over block " + event.getHand());
         AxisAlignedBB aabb = new AxisAlignedBB(blockPos.add(-1, 0, -1), blockPos.add(1, 2, 1));
         ArrayList entityList = (ArrayList) world.getEntitiesWithinAABB(EntityDakimakura.class, aabb);
         if (entityList.isEmpty()) {

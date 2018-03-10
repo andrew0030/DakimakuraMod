@@ -69,7 +69,7 @@ public class ModelDakimakura extends ModelBase {
         GlStateManager.translate(0, 0.35F, 0);
         GlStateManager.scale(-1, -1, 1);
         
-        //State manager is shit. 
+        // State manager is shit. 
         GL11.glCullFace(GL11.GL_BACK);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glEnable(GL11.GL_NORMALIZE);
@@ -95,7 +95,7 @@ public class ModelDakimakura extends ModelBase {
         
         buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         
-        //Front
+        // Front
         buff.pos(-0.5F, 1.5F, -0.2F);
         buff.tex(0, 0);
         buff.endVertex();
@@ -113,7 +113,7 @@ public class ModelDakimakura extends ModelBase {
         buff.endVertex();
         
         
-        //Back
+        // Back
         buff.pos(-0.5F, -1.5F, 0);
         buff.tex(0.5F, 1);
         buff.endVertex();

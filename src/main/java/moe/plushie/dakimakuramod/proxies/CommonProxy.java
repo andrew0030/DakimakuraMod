@@ -12,11 +12,11 @@ import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import moe.plushie.dakimakuramod.common.handler.BedHandler;
+import moe.plushie.dakimakuramod.common.handler.LootTableHandler;
 import moe.plushie.dakimakuramod.common.handler.MobLootHandler;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -37,6 +37,7 @@ public class CommonProxy {
         modBlocks = new ModBlocks();
         modItems = new ModItems();
         EntityRegistry.registerModEntity(EntityDakimakura.class, "entityDakimakura", 1, DakimakuraMod.getInstance(), 64, 100, false);
+        new LootTableHandler();
     }
     
     public void init(FMLInitializationEvent event) {
@@ -46,28 +47,9 @@ public class CommonProxy {
         SyncHandler.init();
         new MobLootHandler();
         new BedHandler();
-        if (ConfigHandler.addUnlockToLootChests) {
-            addLootToChests();
-        }
     }
     
     public void preInitRenderers() {
-    }
-    
-    private void addLootToChests() {
-        ItemStack itemStack = new ItemStack(ModItems.dakiDesign);
-        /*
-        WeightedRandomChestContent chestContent = new WeightedRandomChestContent(itemStack, 1, 2, 5);
-        ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_DESERT_CHEST).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_CHEST).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.PYRAMID_JUNGLE_DISPENSER).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.VILLAGE_BLACKSMITH).addItem(chestContent);
-        ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(chestContent);
-        */
     }
     
     public void initRenderers() {
