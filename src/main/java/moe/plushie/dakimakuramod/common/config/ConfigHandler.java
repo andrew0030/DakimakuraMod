@@ -21,7 +21,6 @@ public class ConfigHandler {
     // General
     public static boolean onlyUnlockNewSkins;
     
-    
     // Recipes
     public static boolean enableRecipe;
     public static boolean useAltRecipe;
@@ -35,7 +34,6 @@ public class ConfigHandler {
     // Client
     public static int textureMaxSize;
     public static int dakiRenderDist;
-    public static boolean checkForUpdates;
     
     public ConfigHandler(File file) {
         if (config == null) {
@@ -108,9 +106,5 @@ public class ConfigHandler {
                 "The maximum distance away in blocks dakimakuras will render.",
                 LANG_KEY_PREFIX + "dakiRenderDist");
         dakiRenderDist = dakiRenderDist * dakiRenderDist;
-        
-        checkForUpdates = config.getBoolean("checkForUpdates", CATEGORY_CLIENT, true,
-                "Should the mod check for newer versions?",
-                LANG_KEY_PREFIX + "checkForUpdates");
     }
 }
