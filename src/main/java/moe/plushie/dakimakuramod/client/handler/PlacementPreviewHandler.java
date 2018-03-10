@@ -6,7 +6,7 @@ import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
@@ -70,49 +70,47 @@ public class PlacementPreviewHandler {
                 pos = pos.offset(EnumFacing.DOWN);
             }
             
-            GL11.glPushMatrix();
-            GL11.glTranslated(-xOff + pos.getX(), -yOff + pos.getY(), -zOff + pos.getZ());
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(-xOff + pos.getX(), -yOff + pos.getY(), -zOff + pos.getZ());
             float scale = 0.0625F;
-            GL11.glTranslatef(8F * scale, 2F * scale, 8F * scale);
+            GlStateManager.translate(8F * scale, 2F * scale, 8F * scale);
             if (rotation == EnumFacing.WEST) {
-                GL11.glRotatef(-90, 0, 1, 0);
+                GlStateManager.rotate(-90, 0, 1, 0);
             }
             if (rotation == EnumFacing.NORTH) {
-                GL11.glRotatef(180, 0, 1, 0);
+                GlStateManager.rotate(180, 0, 1, 0);
             }
             if (rotation == EnumFacing.EAST) {
-                GL11.glRotatef(90, 0, 1, 0);
+                GlStateManager.rotate(90, 0, 1, 0);
             }
             if (block.isBed(world.getBlockState(pos), world, pos, entityPlayer) & facing == EnumFacing.UP) {
-                GL11.glTranslatef(0F * scale, -7F * scale, 0);
+                GlStateManager.translate(0F * scale, -7F * scale, 0);
             }
             
-            GL11.glTranslatef(0F * scale, 0F * scale, 4F * scale);
+            GlStateManager.translate(0F * scale, 0F * scale, 4F * scale);
             
             if (!standing) {
-                GL11.glRotatef(90, 1, 0, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
             } else {
-                GL11.glTranslatef(0F * scale, 10F * scale, 2F * scale);
+                GlStateManager.translate(0F * scale, 10F * scale, 2F * scale);
             }
             
-            GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-            GL11.glEnable(GL11.GL_BLEND);
-            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
-            GL11.glLineWidth(1.0F);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glDepthMask(false);
-            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_NORMALIZE);
+            GlStateManager.pushAttrib();
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
+            GlStateManager.glLineWidth(1.0F);
+            GlStateManager.disableTexture2D();
+            GlStateManager.depthMask(false);
+            GlStateManager.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            GlStateManager.disableLighting();
+            GlStateManager.disableNormalize();
             modelDakimakura.render(null);
-            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            GL11.glDepthMask(true);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glPopAttrib();
-            GL11.glPopMatrix();
-            
+            GlStateManager.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            GlStateManager.depthMask(true);
+            GlStateManager.enableTexture2D();
+            GlStateManager.popAttrib();
+            GlStateManager.popMatrix();
         }
     }
 }
