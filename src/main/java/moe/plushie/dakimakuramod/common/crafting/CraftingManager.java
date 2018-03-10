@@ -3,7 +3,6 @@ package moe.plushie.dakimakuramod.common.crafting;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
@@ -36,7 +35,7 @@ public final class CraftingManager {
                         "sws",
                         "sws",
                         'w', new ItemStack(Blocks.WOOL, 1, 0),
-                        's', new ItemStack(Items.STRING, 1, 0)
+                        's', "string"
                         });
             }
         }

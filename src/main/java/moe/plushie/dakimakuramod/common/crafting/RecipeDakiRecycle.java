@@ -99,7 +99,7 @@ public class RecipeDakiRecycle implements IRecipe {
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-        return null;
+    public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
+        return new ItemStack[inventoryCrafting.getSizeInventory()];
     }
 }
