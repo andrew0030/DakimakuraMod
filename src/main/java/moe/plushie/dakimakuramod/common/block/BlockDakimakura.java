@@ -97,12 +97,9 @@ public class BlockDakimakura extends AbstractModBlockContainer {
             if (state.getValue(PROPERTY_TOP)) {
                 if (state.getValue(PROPERTY_STANDING)) {
                     pos = pos.offset(EnumFacing.DOWN);
-                    //y -= 1;
                 } else {
                     EnumFacing rot = state.getValue(PROPERTY_DIRECTION);
                     pos = pos.offset(rot);
-                    //x -= rot.offsetX;
-                    //z -= rot.offsetZ;
                 }
             }
             if (!world.isRemote) {
@@ -345,18 +342,14 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         if (!standing) {
             if (!topPart) {
                 return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).offset(pos);
-                //setBlockBounds(x1, y1, z1, x2, y2, z2);
             } else {
                 return new AxisAlignedBB((x1 - 1F * rot.getFrontOffsetX()), (y1 - 1F * rot.getFrontOffsetY()), (z1 - 1F * rot.getFrontOffsetZ()), (x2 - 1F * rot.getFrontOffsetX()), (y2 - 1F * rot.getFrontOffsetY()), (z2 - 1F * rot.getFrontOffsetZ())).offset(pos);
-                //setBlockBounds((x1 - 1F * rot.getFrontOffsetX()), (y1 - 1F * rot.getFrontOffsetY()), (z1 - 1F * rot.getFrontOffsetZ()), (x2 - 1F * rot.getFrontOffsetX()), (y2 - 1F * rot.getFrontOffsetY()), (z2 - 1F * rot.getFrontOffsetZ()));
             }
         } else {
             if (!topPart) {
                 return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).offset(pos);
-                //setBlockBounds(x1, y1, z1, x2, y2, z2);
             } else {
                 return new AxisAlignedBB(x1, y1 - 1, z1, x2, y2 - 1, z2).offset(pos);
-                //setBlockBounds(x1, y1 - 1, z1, x2, y2 - 1, z2);
             }
         }
     }

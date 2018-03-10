@@ -22,7 +22,6 @@ public class RenderEntityDakimakura extends Render<EntityDakimakura> {
     public RenderEntityDakimakura(RenderManager renderManager, ModelDakimakura modelDakimakura) {
         super(renderManager);
         this.modelDakimakura = modelDakimakura;
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -52,27 +51,12 @@ public class RenderEntityDakimakura extends Render<EntityDakimakura> {
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
         
-        // TODO Auto-generated method stub
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
     
     @Override
     public void doRenderShadowAndFire(Entity entityIn, double x, double y, double z, float yaw, float partialTicks) {
     }
-    
-    /*
-    private final ModelDakimakura modelDakimakura;
-    
-    public RenderEntityDakimakura(ModelDakimakura modelDakimakura) {
-        this.modelDakimakura = modelDakimakura;
-    }
-    */
-    /*
-    @Override
-    public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
-
-    }
-*/
 
     @Override
     protected ResourceLocation getEntityTexture(EntityDakimakura entity) {

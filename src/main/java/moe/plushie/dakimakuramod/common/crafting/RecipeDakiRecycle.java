@@ -100,7 +100,6 @@ public class RecipeDakiRecycle implements IRecipe {
 
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

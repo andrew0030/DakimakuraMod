@@ -27,17 +27,13 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
     }
     
     public void renderTileEntityAt(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTickTime, int destroyStage) {
-        
-        
         if (tileEntity != null) {
             IBlockState blockState = tileEntity.getWorld().getBlockState(tileEntity.getPos());
             Block block = blockState.getBlock();
             
-            
             if (block != ModBlocks.blockDakimakura) {
                 return;
             }
-            //DakimakuraMod.getLogger().info(block);
             boolean standing = blockState.getValue(BlockDakimakura.PROPERTY_STANDING);
             EnumFacing rot = blockState.getValue(BlockDakimakura.PROPERTY_DIRECTION);
             boolean topPart = blockState.getValue(BlockDakimakura.PROPERTY_TOP);
@@ -76,14 +72,6 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         } else {
             modelDakimakura.render(lastItemDaki);
         }
-        
-        
-        
-        /*
-        GL11.glPopMatrix();
-        Minecraft.getMinecraft().mcProfiler.endSection();
-        */
-        
     }
 
     @Override
