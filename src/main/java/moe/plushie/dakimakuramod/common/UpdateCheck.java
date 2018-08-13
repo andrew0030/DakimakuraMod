@@ -27,24 +27,24 @@ import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.MinecraftForge;
 
 public class UpdateCheck implements Runnable {
-
+    
     /** The url to use for update checking */
     private static final String UPDATE_URL = "http://plushie.moe/app_update/minecraft_mods/dakimakuramod/update.json";
     
     private static String downloadUrl = "";
     
     private boolean shownUpdateInfo = false;
-	
-	/** Was an update found. */
-	public boolean updateFound = false;
-	
-	public String remoteModVersion;
-	
-	public UpdateCheck() {
+    
+    /** Was an update found. */
+    public boolean updateFound = false;
+    
+    public String remoteModVersion;
+    
+    public UpdateCheck() {
         checkForUpdates();
         FMLCommonHandler.instance().bus().register(this);
     }
-	
+    
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == Side.CLIENT) {
@@ -71,33 +71,28 @@ public class UpdateCheck implements Runnable {
             player.addChatMessage(updateMessage);
         }
     }
-	
-	public void checkForUpdates() {
-		if (!ConfigHandler.checkForUpdates){
-		    return;
-		}
-		new Thread(this, LibModInfo.NAME + " update thread.").start();
-	}
-
-	@Override
-	public void run() {
-	    DakimakuraMod.getLogger().info("Starting Update Check");
-		String localVersion = LibModInfo.VERSION;
-		
-		//localVersion = "0.5";
-		if(localVersion.equals("@VERSION@")) {
-		    return;
-		}
-		
-        if (localVersion.contains("-")) {
-            String[] lvSplit = localVersion.split("-");
-            localVersion = lvSplit[1];
+    
+    public void checkForUpdates() {
+        if (!ConfigHandler.checkForUpdates) {
+            return;
+        }
+        new Thread(this, LibModInfo.NAME + " update thread.").start();
+    }
+    
+    @Override
+    public void run() {
+        DakimakuraMod.getLogger().info("Starting Update Check");
+        String localVersion = LibModInfo.VERSION;
+        
+        //localVersion = "1.7.10-0.15";
+        if (localVersion.equals("@VERSION@")) {
+            return;
         }
         
-		String downloadData = "";
-		HttpURLConnection conn = null;
-		try {
-		    String location = UPDATE_URL;
+        String downloadData = "";
+        HttpURLConnection conn = null;
+        try {
+            String location = UPDATE_URL;
             while (location != null && !location.isEmpty()) {
                 URL url = new URL(location);
                 if (conn != null) {
@@ -126,56 +121,54 @@ public class UpdateCheck implements Runnable {
                 }
             }
         }
-		
-		if (StringUtils.isNullOrEmpty(downloadData)) {
-		    return;
-		}
-		
-		try {
-			JsonObject json = (JsonObject) new JsonParser().parse(downloadData);
-			
-			remoteModVersion = json.getAsJsonObject("promos").get(MinecraftForge.MC_VERSION + "-latest").getAsString();
-			
-			DakimakuraMod.getLogger().info("Home page: " + json.get("homepage").getAsString());
-			downloadUrl = json.get("homepage").getAsString();
-			
-			DakimakuraMod.getLogger().info(String.format("Latest version for Minecraft %s is %s.", MinecraftForge.MC_VERSION, remoteModVersion));
-
-			if (versionCompare(localVersion, remoteModVersion) < 0) {
+        
+        if (StringUtils.isNullOrEmpty(downloadData)) {
+            return;
+        }
+        
+        try {
+            JsonObject json = (JsonObject) new JsonParser().parse(downloadData);
+            
+            remoteModVersion = json.getAsJsonObject("promos").get(MinecraftForge.MC_VERSION + "-latest").getAsString();
+            
+            DakimakuraMod.getLogger().info("Home page: " + json.get("homepage").getAsString());
+            downloadUrl = json.get("homepage").getAsString();
+            
+            DakimakuraMod.getLogger().info(String.format("Latest version for Minecraft %s is %s.", MinecraftForge.MC_VERSION, remoteModVersion));
+            
+            if (versionCompare(localVersion.replaceAll("-", "."), remoteModVersion.replaceAll("-", ".")) < 0) {
                 updateFound = true;
                 DakimakuraMod.getLogger().info("Update needed. New version " + remoteModVersion + " your version " + localVersion);
-			} else {
-			    updateFound = false;
-			    DakimakuraMod.getLogger().info("Mod is up to date with the latest version.");
-			}
-			
-		} catch (Exception e) {
-		    DakimakuraMod.getLogger().warn("Unable to read from remote version authority.");
-		    DakimakuraMod.getLogger().warn(e.toString());
-			updateFound = false;
-		}
-	}
-	
-	private int versionCompare(String str1, String str2) {
-	    String[] vals1 = str1.split("\\.");
-	    String[] vals2 = str2.split("\\.");
-	    int i = 0;
-	    // set index to first non-equal ordinal or length of shortest version string
-	    while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) 
-	    {
-	      i++;
-	    }
-	    // compare first non-equal ordinal number
-	    if (i < vals1.length && i < vals2.length) 
-	    {
-	        int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
-	        return Integer.signum(diff);
-	    }
-	    // the strings are equal or one string is a substring of the other
-	    // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
-	    else
-	    {
-	        return Integer.signum(vals1.length - vals2.length);
-	    }
-	}
+            } else {
+                updateFound = false;
+                DakimakuraMod.getLogger().info("Mod is up to date with the latest version.");
+            }
+            
+        } catch (Exception e) {
+            DakimakuraMod.getLogger().warn("Unable to read from remote version authority.");
+            DakimakuraMod.getLogger().warn(e.toString());
+            updateFound = false;
+        }
+    }
+    
+    private int versionCompare(String str1, String str2) {
+        String[] vals1 = str1.split("\\.");
+        String[] vals2 = str2.split("\\.");
+        int i = 0;
+        // set index to first non-equal ordinal or length of shortest version
+        // string
+        while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) {
+            i++;
+        }
+        // compare first non-equal ordinal number
+        if (i < vals1.length && i < vals2.length) {
+            int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
+            return Integer.signum(diff);
+        }
+        // the strings are equal or one string is a substring of the other
+        // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
+        else {
+            return Integer.signum(vals1.length - vals2.length);
+        }
+    }
 }
