@@ -52,7 +52,7 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         if (tileEntity.isFlipped()) {
             GL11.glRotatef(180, 0, 1, 0);
         }
-        modelDakimakura.render(tileEntity.getDaki());
+        modelDakimakura.render(tileEntity.getDaki(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
     }

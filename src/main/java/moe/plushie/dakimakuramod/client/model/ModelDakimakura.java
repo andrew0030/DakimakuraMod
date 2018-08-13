@@ -12,29 +12,48 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class ModelDakimakura extends ModelBase {
     
-    private static final ResourceLocation MODEL_LOCATION = new ResourceLocation(LibModInfo.ID, "models/bolster-new-uv.obj");
+    private static final String MODEL_PATH = "models/bolster-new-uv.obj";
+    private static final String MODEL_PATH_LOD = "models/daki-LOD-%d.obj";
+    
     private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(LibModInfo.ID, "textures/models/blank.png");
     
     private final ObjModel DAKIMAKURA_MODEL;
+    private final ObjModel[] DAKIMAKURA_MODEL_LODS;
+    
     private final DakiTextureManagerClient dakiTextureManager;
     private final Profiler profiler;
-    private int modelList = -1;
     
     public ModelDakimakura(DakiTextureManagerClient dakiTextureManager) {
-        DAKIMAKURA_MODEL = ObjModel.loadModel(MODEL_LOCATION);
+        DAKIMAKURA_MODEL = ObjModel.loadModel(new ResourceLocation(LibModInfo.ID, MODEL_PATH));
+        DAKIMAKURA_MODEL_LODS = new ObjModel[4];
+        for (int i = 0; i < DAKIMAKURA_MODEL_LODS.length; i++) {
+            DAKIMAKURA_MODEL_LODS[i] = ObjModel.loadModel(new ResourceLocation(LibModInfo.ID, String.format(MODEL_PATH_LOD, i + 1)));
+        }
+        
         this.dakiTextureManager = dakiTextureManager;
         profiler = Minecraft.getMinecraft().mcProfiler;
     }
     
-    public void render(Daki daki) {
+    public void render(Daki daki, double x, double y, double z) {
+        double distance = Minecraft.getMinecraft().thePlayer.getDistance(x, y, z);
+        render(daki, distance);
+    }
+    
+    public void render(Daki daki, double distance) {
+        int lod = MathHelper.floor_double(distance / 16D);
+        render(daki, lod);
+    }
+    
+    public void render(Daki daki, int lod) {
+        lod = MathHelper.clamp_int(lod, 0, 4);
         profiler.startSection("texture");
         if (daki == null) {
             Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);
@@ -64,13 +83,25 @@ public class ModelDakimakura extends ModelBase {
         GL11.glTranslatef(0, 0.35F, 0);
         GL11.glScalef(-1, -1, 1);
         
-        if (modelList == -1) { 
-            modelList = GLAllocation.generateDisplayLists(1);
-            GL11.glNewList(modelList, GL11.GL_COMPILE);
+        switch (lod) {
+        case 0:
             DAKIMAKURA_MODEL.render();
-            GL11.glEndList();
+            break;
+        case 1:
+            DAKIMAKURA_MODEL_LODS[0].render();
+            break;
+        case 2:
+            DAKIMAKURA_MODEL_LODS[1].render();
+            break;
+        case 3:
+            DAKIMAKURA_MODEL_LODS[2].render();
+            break;
+        case 4:
+            DAKIMAKURA_MODEL_LODS[3].render();
+            break;
+        default:
+            break;
         }
-        GL11.glCallList(modelList);
         
         GL11.glPopAttrib();
         GL11.glPopMatrix();

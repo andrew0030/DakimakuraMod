@@ -44,7 +44,7 @@ public class RenderEntityDakimakura extends Render {
         if (((EntityDakimakura)entity).isFlipped()) {
             GL11.glRotatef(180, 0, 1, 0);
         }
-        modelDakimakura.render(((EntityDakimakura)entity).getDaki());
+        modelDakimakura.render(((EntityDakimakura)entity).getDaki(), x, y, z);
         GL11.glPopMatrix();
         Minecraft.getMinecraft().mcProfiler.endSection();
     }

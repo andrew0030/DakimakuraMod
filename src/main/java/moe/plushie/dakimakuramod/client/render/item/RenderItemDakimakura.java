@@ -62,7 +62,7 @@ public class RenderItemDakimakura implements IItemRenderer {
             GL11.glScalef(4F, 4F, 4F);
         }
 
-        modelDakimakura.render(daki);
+        modelDakimakura.render(daki, 0);
         GL11.glPopMatrix();
     }
 }

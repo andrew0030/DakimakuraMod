@@ -103,7 +103,7 @@ public class PlacementPreviewHandler {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDepthMask(false);
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            modelDakimakura.render(null);
+            modelDakimakura.render(null, 0);
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             GL11.glDepthMask(true);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
