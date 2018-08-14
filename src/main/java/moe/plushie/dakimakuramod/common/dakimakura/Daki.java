@@ -21,6 +21,7 @@ public class Daki implements Comparable<Daki> {
     private String imageFront = null;
     private String imageBack = null;
     private String flavourText = "";
+    private boolean smooth = true;
     
     public Daki(String packDirectoryName, String dakiDirectoryName) {
         this.packDirectoryName = packDirectoryName;
@@ -81,6 +82,14 @@ public class Daki implements Comparable<Daki> {
         } else {
             return dakiDirectoryName;
         }
+    }
+    
+    public boolean isSmooth() {
+        return smooth;
+    }
+    
+    public void setSmooth(boolean smooth) {
+        this.smooth = smooth;
     }
     
     @Override

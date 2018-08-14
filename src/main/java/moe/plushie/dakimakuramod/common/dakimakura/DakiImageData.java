@@ -133,8 +133,8 @@ public class DakiImageData implements Callable<DakiImageData> {
             int textureSize = getMaxTextureSize();
             textureSize = Math.min(textureSize, getNextPowerOf2(maxTexture));
             
-            bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize);
-            bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize);
+            bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize, daki.isSmooth());
+            bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize, daki.isSmooth());
             
             AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
             tx.translate(-bufferedimageBack.getWidth(null), 0);
@@ -174,10 +174,13 @@ public class DakiImageData implements Callable<DakiImageData> {
         return Math.min(maxGpuSize, maxConfigSize);
     }
     
-    private BufferedImage resize(BufferedImage img, int newW, int newH) { 
-        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+    private BufferedImage resize(BufferedImage img, int newW, int newH, boolean smooth) { 
+        int hint = Image.SCALE_SMOOTH;
+        if (!smooth) {
+            hint = Image.SCALE_FAST;
+        }
+        Image tmp = img.getScaledInstance(newW, newH, hint);
         BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB);
-
         Graphics2D g2d = dimg.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
