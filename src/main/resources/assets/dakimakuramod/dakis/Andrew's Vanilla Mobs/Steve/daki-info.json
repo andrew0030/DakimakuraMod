@@ -3,5 +3,6 @@
 	"author":"andrew0030",
 	"image-front":"front.png",
 	"image-back":"back.png",
-	"flavour-text": "Hi I'm Steve"
+	"flavour-text":"Hi I'm Steve",
+	"smooth":false
 }
