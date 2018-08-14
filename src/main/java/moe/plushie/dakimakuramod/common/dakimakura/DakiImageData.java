@@ -21,6 +21,7 @@ import moe.plushie.dakimakuramod.proxies.ClientProxy;
 
 public class DakiImageData implements Callable<DakiImageData> {
     
+    private final static String[] VALID_FILE_EXT = {"png", "jpg", "jpeg"};
     private final Daki daki;
     private BufferedImage bufferedImageFull;
     private byte[] textureFront;
@@ -44,17 +45,39 @@ public class DakiImageData implements Callable<DakiImageData> {
         dir = new File(dir, daki.getPackDirectoryName());
         dir = new File(dir, daki.getDakiDirectoryName());
         
-        File fileFront = new File(dir, daki.getImageFront());
-        File fileBack = new File(dir, daki.getImageBack());
+        File fileFront = null;
+        File fileBack = null;
+        
+        if (daki.getImageFront() != null) {
+            fileFront = new File(dir, daki.getImageFront());
+        } else {
+            for (int i = 0; i < VALID_FILE_EXT.length; i++) {
+                if (new File(dir, "front." + VALID_FILE_EXT[i]).exists()) {
+                    fileFront = new File(dir, "front." + VALID_FILE_EXT[i]);
+                    break;
+                }
+            }
+        }
+        if (daki.getImageBack() != null) {
+            fileBack = new File(dir, daki.getImageBack());
+        } else {
+            for (int i = 0; i < VALID_FILE_EXT.length; i++) {
+                if (new File(dir, "back." + VALID_FILE_EXT[i]).exists()) {
+                    fileBack = new File(dir, "back." + VALID_FILE_EXT[i]);
+                    break;
+                }
+            }
+        }
         
         InputStream inputstream = null;
         try {
-            if (fileFront.exists()) {
+            if (fileFront != null && fileFront.exists()) {
                 inputstream = new FileInputStream(fileFront);
                 textureFront = IOUtils.toByteArray(inputstream);
+                IOUtils.closeQuietly(inputstream);
                 inputstream.close();
             }
-            if (fileBack.exists()) {
+            if (fileBack != null && fileBack.exists()) {
                 inputstream = new FileInputStream(fileBack);
                 textureBack = IOUtils.toByteArray(inputstream);
                 inputstream.close();
