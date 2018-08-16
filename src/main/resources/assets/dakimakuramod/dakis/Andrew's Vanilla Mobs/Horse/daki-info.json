@@ -3,5 +3,6 @@
 	"author":"andrew0030",
 	"image-front":"front.png",
 	"image-back":"back.png",
-	"flavour-text": "Brrpf!"
+	"flavour-text":"Brrpf!",
+	"smooth":false
 }

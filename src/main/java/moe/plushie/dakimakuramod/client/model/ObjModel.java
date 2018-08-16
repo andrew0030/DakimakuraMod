@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +27,7 @@ public class ObjModel {
     private Vector2f[] vt;
     private Vector3f[] vn;
     private Face[] faces;
+    private int modelList = -1;
     
     private ObjModel(Vector3d[] v, Vector2f[] vt, Vector3f[] vn, Face[] faces) {
         this.v = v;
@@ -35,6 +37,16 @@ public class ObjModel {
     }
     
     public void render() {
+        if (modelList == -1) { 
+            modelList = GLAllocation.generateDisplayLists(1);
+            GL11.glNewList(modelList, GL11.GL_COMPILE);
+            renderModel();
+            GL11.glEndList();
+        }
+        GL11.glCallList(modelList);
+    }
+    
+    private void renderModel() {
         Tessellator tess = Tessellator.getInstance();
         tess.getBuffer().begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_NORMAL);
         try {

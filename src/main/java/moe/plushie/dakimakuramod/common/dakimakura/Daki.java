@@ -18,9 +18,10 @@ public class Daki implements Comparable<Daki> {
     
     private String name = "";
     private String author = "";
-    private String imageFront = "";
-    private String imageBack = "";
+    private String imageFront = null;
+    private String imageBack = null;
     private String flavourText = "";
+    private boolean smooth = true;
     
     public Daki(String packDirectoryName, String dakiDirectoryName) {
         this.packDirectoryName = packDirectoryName;
@@ -52,11 +53,7 @@ public class Daki implements Comparable<Daki> {
     }
     
     public String getImageFront() {
-        if (StringUtils.isNullOrEmpty(imageFront)) {
-            return "front.png";
-        } else {
-            return imageFront;
-        }
+        return imageFront;
     }
     
     public void setImageFront(String imageFront) {
@@ -64,11 +61,7 @@ public class Daki implements Comparable<Daki> {
     }
     
     public String getImageBack() {
-        if (StringUtils.isNullOrEmpty(imageBack)) {
-            return "back.png";
-        } else {
-            return imageBack;
-        }
+        return imageBack;
     }
     
     public void setImageBack(String imageBack) {
@@ -89,6 +82,14 @@ public class Daki implements Comparable<Daki> {
         } else {
             return dakiDirectoryName;
         }
+    }
+    
+    public boolean isSmooth() {
+        return smooth;
+    }
+    
+    public void setSmooth(boolean smooth) {
+        this.smooth = smooth;
     }
     
     @Override

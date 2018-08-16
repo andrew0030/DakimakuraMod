@@ -21,6 +21,7 @@ import moe.plushie.dakimakuramod.proxies.ClientProxy;
 
 public class DakiImageData implements Callable<DakiImageData> {
     
+    private final static String[] VALID_FILE_EXT = {"png", "jpg", "jpeg"};
     private final Daki daki;
     private BufferedImage bufferedImageFull;
     private byte[] textureFront;
@@ -44,17 +45,39 @@ public class DakiImageData implements Callable<DakiImageData> {
         dir = new File(dir, daki.getPackDirectoryName());
         dir = new File(dir, daki.getDakiDirectoryName());
         
-        File fileFront = new File(dir, daki.getImageFront());
-        File fileBack = new File(dir, daki.getImageBack());
+        File fileFront = null;
+        File fileBack = null;
+        
+        if (daki.getImageFront() != null) {
+            fileFront = new File(dir, daki.getImageFront());
+        } else {
+            for (int i = 0; i < VALID_FILE_EXT.length; i++) {
+                if (new File(dir, "front." + VALID_FILE_EXT[i]).exists()) {
+                    fileFront = new File(dir, "front." + VALID_FILE_EXT[i]);
+                    break;
+                }
+            }
+        }
+        if (daki.getImageBack() != null) {
+            fileBack = new File(dir, daki.getImageBack());
+        } else {
+            for (int i = 0; i < VALID_FILE_EXT.length; i++) {
+                if (new File(dir, "back." + VALID_FILE_EXT[i]).exists()) {
+                    fileBack = new File(dir, "back." + VALID_FILE_EXT[i]);
+                    break;
+                }
+            }
+        }
         
         InputStream inputstream = null;
         try {
-            if (fileFront.exists()) {
+            if (fileFront != null && fileFront.exists()) {
                 inputstream = new FileInputStream(fileFront);
                 textureFront = IOUtils.toByteArray(inputstream);
+                IOUtils.closeQuietly(inputstream);
                 inputstream.close();
             }
-            if (fileBack.exists()) {
+            if (fileBack != null && fileBack.exists()) {
                 inputstream = new FileInputStream(fileBack);
                 textureBack = IOUtils.toByteArray(inputstream);
                 inputstream.close();
@@ -110,8 +133,8 @@ public class DakiImageData implements Callable<DakiImageData> {
             int textureSize = getMaxTextureSize();
             textureSize = Math.min(textureSize, getNextPowerOf2(maxTexture));
             
-            bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize);
-            bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize);
+            bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize, daki.isSmooth());
+            bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize, daki.isSmooth());
             
             AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
             tx.translate(-bufferedimageBack.getWidth(null), 0);
@@ -151,10 +174,13 @@ public class DakiImageData implements Callable<DakiImageData> {
         return Math.min(maxGpuSize, maxConfigSize);
     }
     
-    private BufferedImage resize(BufferedImage img, int newW, int newH) { 
-        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+    private BufferedImage resize(BufferedImage img, int newW, int newH, boolean smooth) { 
+        int hint = Image.SCALE_SMOOTH;
+        if (!smooth) {
+            hint = Image.SCALE_FAST;
+        }
+        Image tmp = img.getScaledInstance(newW, newH, hint);
         BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_RGB);
-
         Graphics2D g2d = dimg.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();

@@ -67,10 +67,11 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
             if (tileEntity.isFlipped()) {
                 GlStateManager.rotate(180, 0, 1, 0);
             }
-            modelDakimakura.render(tileEntity.getDaki());
+            modelDakimakura.render(tileEntity.getDaki(), tileEntity.getPos());
             GlStateManager.popMatrix();
+            mc.mcProfiler.endSection();
         } else {
-            modelDakimakura.render(lastItemDaki);
+            modelDakimakura.render(lastItemDaki, 0);
         }
     }
 
