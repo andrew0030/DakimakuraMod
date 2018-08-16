@@ -265,12 +265,11 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-        return blockState.getBoundingBox(worldIn, pos);
+        return getSelectedBoundingBox(blockState, worldIn, new BlockPos(0, 0, 0));
     }
     
     @Override
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos) {
-        IBlockState blockState = worldIn.getBlockState(pos);
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
         boolean standing = blockState.getValue(PROPERTY_STANDING);
         EnumFacing rot = blockState.getValue(PROPERTY_DIRECTION);
         boolean topPart = blockState.getValue(PROPERTY_TOP);
