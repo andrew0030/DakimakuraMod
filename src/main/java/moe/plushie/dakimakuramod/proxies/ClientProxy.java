@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.client.handler.PlacementPreviewHandler;
+import moe.plushie.dakimakuramod.client.handler.RehostedJarHandler;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.client.render.entity.RenderEntityDakimakura;
 import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
@@ -20,6 +21,7 @@ import moe.plushie.dakimakuramod.common.UpdateCheck;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
+import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -36,6 +38,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         new UpdateCheck();
+        new RehostedJarHandler(event.getSourceFile(), "dakimakuramod-" + LibModInfo.VERSION + ".jar");
     }
     
     @Override

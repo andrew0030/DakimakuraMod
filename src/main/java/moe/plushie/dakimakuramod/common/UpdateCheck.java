@@ -31,7 +31,7 @@ public class UpdateCheck implements Runnable {
     /** The url to use for update checking */
     private static final String UPDATE_URL = "http://plushie.moe/app_update/minecraft_mods/dakimakuramod/update.json";
     
-    private static String downloadUrl = "";
+    public static String downloadUrl = "https://discord.gg/5Z3KKvU";
     
     private boolean shownUpdateInfo = false;
     
@@ -85,7 +85,7 @@ public class UpdateCheck implements Runnable {
         String localVersion = LibModInfo.VERSION;
         
         //localVersion = "1.7.10-0.15";
-        if (localVersion.equals("@VERSION@")) {
+        if (LibModInfo.isDevelopmentVersion()) {
             return;
         }
         
