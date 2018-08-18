@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -31,45 +32,21 @@ public class ItemDakiDesign extends AbstractModItem {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list) {
-        list.add(new ItemStack(item, 1, 0));
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    	subItems.add(new ItemStack(itemIn, 1, 0));
         ArrayList<Daki> dakiList = DakimakuraMod.getProxy().getDakimakuraManager().getDakiList();
         for (int i = 0; i < dakiList.size(); i++) {
-            ItemStack itemStack = new ItemStack(item, 1, 0);
+            ItemStack itemStack = new ItemStack(itemIn, 1, 0);
             itemStack.setTagCompound(new NBTTagCompound());
             Daki daki = dakiList.get(i);
             DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-            list.add(itemStack);
+            subItems.add(itemStack);
         }
     }
     
     @Override
-    public ItemStack getContainerItem(ItemStack itemStack) {
-        ItemStack containerItem = super.getContainerItem(itemStack);
-        if (containerItem != null) {
-            return itemStack.copy();
-        } else {
-            return null;
-        }
-    }
-    
-    @Override
-    public boolean hasContainerItem(ItemStack itemStack) {
-        if (getContainerItem() != null) {
-            Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
-            return daki != null;
-        } else {
-            return false;
-        }
-    }
-    /*
-    @Override
-    public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
-        return false;
-    }*/
-    
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+    	ItemStack itemStack = playerIn.getHeldItem(handIn);
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         Daki checkDaki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
         if (checkDaki != null) {
@@ -80,12 +57,12 @@ public class ItemDakiDesign extends AbstractModItem {
             return new ActionResult(EnumActionResult.PASS, itemStack);
         }
         
-        if (!world.isRemote) {
+        if (!worldIn.isRemote) {
             Random random = new Random(System.nanoTime());
             int ranValue = random.nextInt(dakiList.size());
             Daki daki = dakiList.get(ranValue);
-            giveDesignToPlayer(world, entityPlayer, daki);
-            itemStack.stackSize--;
+            giveDesignToPlayer(worldIn, playerIn, daki);
+            itemStack.shrink(1);
             return new ActionResult(EnumActionResult.SUCCESS, itemStack);
         }
         return new ActionResult(EnumActionResult.SUCCESS, itemStack);

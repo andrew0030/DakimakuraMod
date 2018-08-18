@@ -16,7 +16,9 @@ import moe.plushie.dakimakuramod.common.handler.LootTableHandler;
 import moe.plushie.dakimakuramod.common.handler.MobLootHandler;
 import moe.plushie.dakimakuramod.common.handler.SyncHandler;
 import moe.plushie.dakimakuramod.common.items.ModItems;
+import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -36,7 +38,7 @@ public class CommonProxy {
         textureManagerCommon = new DakiTextureManagerCommon();
         modBlocks = new ModBlocks();
         modItems = new ModItems();
-        EntityRegistry.registerModEntity(EntityDakimakura.class, "entityDakimakura", 1, DakimakuraMod.getInstance(), 64, 100, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "entityDakimakura"), EntityDakimakura.class, "entityDakimakura", 1, DakimakuraMod.getInstance(), 64, 100, false);
         new LootTableHandler();
     }
     

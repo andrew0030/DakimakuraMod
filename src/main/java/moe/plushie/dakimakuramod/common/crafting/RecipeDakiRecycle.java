@@ -1,27 +1,30 @@
 package moe.plushie.dakimakuramod.common.crafting;
 
+import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.items.ModItems;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeHooks;
 
 public class RecipeDakiRecycle implements IRecipe {
     
     @Override
     public boolean matches(InventoryCrafting inventoryCrafting, World world) {
-        ItemStack stackDesign1 = null;
-        ItemStack stackDesign2 = null;
-        
+        ItemStack stackDesign1 = ItemStack.EMPTY;
+        ItemStack stackDesign2 = ItemStack.EMPTY;
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != null) {
-                if (stackDesign1 == null) {
+            if (stack != ItemStack.EMPTY) {
+                if (stackDesign1 == ItemStack.EMPTY) {
                     stackDesign1 = stack;
-                } else if (stackDesign2 == null) {
+                } else if (stackDesign2 == ItemStack.EMPTY) {
                     stackDesign2 = stack;
                 } else {
                     return false;
@@ -29,10 +32,10 @@ public class RecipeDakiRecycle implements IRecipe {
             }
         }
         
-        if (stackDesign1 == null) {
+        if (stackDesign1 == ItemStack.EMPTY) {
             return false;
         }
-        if (stackDesign2 == null) {
+        if (stackDesign2 == ItemStack.EMPTY) {
             return false;
         }
         
@@ -51,42 +54,39 @@ public class RecipeDakiRecycle implements IRecipe {
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
-        ItemStack stackDesign1 = null;
-        ItemStack stackDesign2 = null;
+        ItemStack stackDesign1 = ItemStack.EMPTY;
+        ItemStack stackDesign2 = ItemStack.EMPTY;
         
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != null) {
-                if (stackDesign1 == null) {
+            if (stack != ItemStack.EMPTY) {
+                if (stackDesign1 == ItemStack.EMPTY) {
                     stackDesign1 = stack;
-                } else if (stackDesign2 == null) {
+                } else if (stackDesign2 == ItemStack.EMPTY) {
                     stackDesign2 = stack;
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }   
             }
         }
         
-        if (stackDesign1 == null) {
-            return null;
+        if (stackDesign1 == ItemStack.EMPTY) {
+            return ItemStack.EMPTY;
         }
-        if (stackDesign2 == null) {
-            return null;
+        if (stackDesign2 == ItemStack.EMPTY) {
+            return ItemStack.EMPTY;
         }
         
         Daki dakiDesign1 = DakiNbtSerializer.deserialize(stackDesign1.getTagCompound());
         if (dakiDesign1 == null) {
-            return null;
+            return ItemStack.EMPTY;
         }
         
         Daki dakiDesign2 = DakiNbtSerializer.deserialize(stackDesign2.getTagCompound());
         if (dakiDesign2 == null) {
-            return null;
+            return ItemStack.EMPTY;
         }
-        
-        ModItems.dakiDesign.setContainerItem(null);
-        
-        return new ItemStack(ModItems.dakiDesign);
+        return new ItemStack(stackDesign1.getItem(), 1, 0);
     }
 
     @Override
@@ -96,11 +96,11 @@ public class RecipeDakiRecycle implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        return ForgeHooks.defaultRecipeGetRemainingItems(inventoryCrafting);
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+        return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
     }
 }

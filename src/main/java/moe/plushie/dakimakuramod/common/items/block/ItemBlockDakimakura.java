@@ -23,6 +23,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -41,16 +42,16 @@ public class ItemBlockDakimakura extends ModItemBlock {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List list) {
-        list.add(new ItemStack(item, 1, 0));
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    	subItems.add(new ItemStack(itemIn, 1, 0));
         ArrayList<Daki> dakiList = DakimakuraMod.getProxy().getDakimakuraManager().getDakiList();
         for (int i = 0; i < dakiList.size(); i++) {
-            ItemStack itemStack = new ItemStack(item, 1, 0);
+            ItemStack itemStack = new ItemStack(itemIn, 1, 0);
             itemStack.setTagCompound(new NBTTagCompound());
             Daki daki = dakiList.get(i);
             DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-            list.add(itemStack);
-        }
+            subItems.add(itemStack);
+        };
     }
     
     public static boolean isFlipped(ItemStack itemStack) {
@@ -75,8 +76,9 @@ public class ItemBlockDakimakura extends ModItemBlock {
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World worldIn, EntityPlayer entityPlayer, EnumHand hand) {
-        if (entityPlayer.isSneaking()) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+    	ItemStack itemStack = playerIn.getHeldItem(handIn);
+        if (playerIn.isSneaking()) {
             boolean flipped = isFlipped(itemStack);
             itemStack = setFlipped(itemStack, !flipped);
         }
@@ -84,21 +86,22 @@ public class ItemBlockDakimakura extends ModItemBlock {
     }
     
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer entityPlayer, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        IBlockState iblockstate = world.getBlockState(pos);
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    	ItemStack stack = player.getHeldItem(hand);
+        IBlockState iblockstate = worldIn.getBlockState(pos);
         Block block = iblockstate.getBlock();
-        if (!block.isReplaceable(world, pos)) {
+        if (!block.isReplaceable(worldIn, pos)) {
             pos = pos.offset(facing);
         }
-        if (stack.stackSize != 0 && entityPlayer.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack)) {
-            int rot = (MathHelper.floor_double((double)(entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
+        if (stack.getCount() != 0 && player.canPlayerEdit(pos, facing, stack) && worldIn.mayPlace(this.block, pos, false, facing, (Entity)null)) {
+            int rot = (MathHelper.floor((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
             EnumFacing[] rots = new EnumFacing[] {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
             EnumFacing rotation = rots[rot].getOpposite();
-            if (canPlaceDakiAt(world, entityPlayer, stack, pos, facing, rotation)) {
-                if (block.isBed(iblockstate, world, pos, entityPlayer)) {
-                    placeAsEntity(world, entityPlayer, stack, pos, facing, rotation);
+            if (canPlaceDakiAt(worldIn, player, stack, pos, facing, rotation)) {
+                if (block.isBed(iblockstate, worldIn, pos, player)) {
+                    placeAsEntity(worldIn, player, stack, pos, facing, rotation);
                 } else {
-                    placeDakiAt(world, entityPlayer, stack, pos, facing, rotation);
+                    placeDakiAt(worldIn, player, stack, pos, facing, rotation);
                 }
                 return EnumActionResult.SUCCESS;
             } else {
@@ -153,7 +156,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         placeBlockAt(itemStack, entityPlayer, world, pos, side, 0, 0, 0, blockstate);
         SoundType soundtype = this.block.getSoundType();
         world.playSound(entityPlayer, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-        --itemStack.stackSize;
+        itemStack.shrink(1);
         
         world.scheduleBlockUpdate(pos, block, 1, 0);
         //world.markBlockForUpdate(x, y, z);
@@ -205,11 +208,11 @@ public class ItemBlockDakimakura extends ModItemBlock {
         entityDakimakura.setDaki(daki);
         entityDakimakura.setFlipped(isFlipped(itemStack));
         entityDakimakura.setRotation(rotation);
-        world.spawnEntityInWorld(entityDakimakura);
+        world.spawnEntity(entityDakimakura);
         DakimakuraMod.getLogger().info("Placing daki at " + pos);
         SoundType soundtype = this.block.getSoundType();
         world.playSound(entityPlayer, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-        --itemStack.stackSize;
+        itemStack.shrink(1);
     }
     
     
@@ -236,6 +239,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
         } else if (!block.isReplaceable(world, pos)) {
             pos = pos.offset(side);
         }
-        return world.canBlockBePlaced(Blocks.STONE, pos, false, side, (Entity)null, stack);
+        return world.mayPlace(Blocks.STONE, pos, false, side, (Entity)null);
     }
 }

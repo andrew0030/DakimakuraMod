@@ -116,7 +116,7 @@ public class TileEntityDakimakura extends TileEntity {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         if (getBlockType() == ModBlocks.blockDakimakura) {
-            IBlockState blockState = worldObj.getBlockState(getPos());
+            IBlockState blockState = getWorld().getBlockState(getPos());
             boolean standing = blockState.getValue(BlockDakimakura.PROPERTY_STANDING);
             EnumFacing rotation = blockState.getValue(BlockDakimakura.PROPERTY_DIRECTION);
             if (standing) {
@@ -134,7 +134,7 @@ public class TileEntityDakimakura extends TileEntity {
     }
     
     public void syncWithClients() {
-        if (!worldObj.isRemote) {
+        if (!getWorld().isRemote) {
             syncWithNearbyPlayers(this);
         }
     }

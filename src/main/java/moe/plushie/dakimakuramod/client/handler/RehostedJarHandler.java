@@ -78,7 +78,7 @@ public final class RehostedJarHandler {
             return;
         }
         lastMessagePost = System.currentTimeMillis();
-        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         TextComponentTranslation downloadLink = new TextComponentTranslation("chat.dakimakuramod:invalidJarDownload", (Object)null);
         downloadLink.getStyle().setUnderlined(true);
         downloadLink.getStyle().setColor(TextFormatting.BLUE);
@@ -93,6 +93,6 @@ public final class RehostedJarHandler {
         
         TextComponentTranslation updateMessage = new TextComponentTranslation("chat.dakimakuramod:invalidJar", downloadLink, stopModRepostsLink);
         updateMessage.getStyle().setColor(TextFormatting.RED);
-        player.addChatMessage(updateMessage);
+        player.sendMessage(updateMessage);
     }
 }

@@ -92,8 +92,8 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer entityPlayer, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (entityPlayer.isSneaking()) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (playerIn.isSneaking()) {
             if (state.getValue(PROPERTY_TOP)) {
                 if (state.getValue(PROPERTY_STANDING)) {
                     pos = pos.offset(EnumFacing.DOWN);
@@ -102,8 +102,8 @@ public class BlockDakimakura extends AbstractModBlockContainer {
                     pos = pos.offset(rot);
                 }
             }
-            if (!world.isRemote) {
-                TileEntity tileEntity = world.getTileEntity(pos);
+            if (!worldIn.isRemote) {
+                TileEntity tileEntity = worldIn.getTileEntity(pos);
                 if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
                     ((TileEntityDakimakura)tileEntity).flip();
                 }
@@ -155,7 +155,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     
     private static void spawnItemInWorld(World world, double x, double y, double z, ItemStack itemStack) {
         EntityItem entityItem = new EntityItem(world, x, y, z, itemStack);
-        world.spawnEntityInWorld(entityItem);
+        world.spawnEntity(entityItem);
     }
     
     @Override
@@ -264,8 +264,8 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-        return getSelectedBoundingBox(blockState, worldIn, new BlockPos(0, 0, 0));
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+    	return getSelectedBoundingBox(blockState, (World) worldIn, new BlockPos(0, 0, 0));
     }
     
     @Override
@@ -354,30 +354,30 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
-        IBlockState blockState = world.getBlockState(pos);
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        IBlockState blockState = worldIn.getBlockState(pos);
         boolean standing = blockState.getValue(PROPERTY_STANDING);
         EnumFacing rotation = blockState.getValue(PROPERTY_DIRECTION);
         boolean topPart = blockState.getValue(PROPERTY_TOP);
         
         if (!standing) {
             if (!topPart) {
-                if (world.getBlockState(pos.offset(rotation)).getBlock() != this) {
-                    world.setBlockToAir(pos);
+                if (worldIn.getBlockState(pos.offset(rotation)).getBlock() != this) {
+                	worldIn.setBlockToAir(pos);
                 }
             } else {
-                if (world.getBlockState(pos.offset(rotation.getOpposite())).getBlock() != this) {
-                    world.setBlockToAir(pos);
+                if (worldIn.getBlockState(pos.offset(rotation.getOpposite())).getBlock() != this) {
+                	worldIn.setBlockToAir(pos);
                 }
             }
         } else {
             if (!topPart) {
-                if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() != this) {
-                    world.setBlockToAir(pos);
+                if (worldIn.getBlockState(pos.offset(EnumFacing.UP)).getBlock() != this) {
+                	worldIn.setBlockToAir(pos);
                 }
             } else {
-                if (world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() != this) {
-                    world.setBlockToAir(pos);
+                if (worldIn.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() != this) {
+                	worldIn.setBlockToAir(pos);
                 }
             }
         }

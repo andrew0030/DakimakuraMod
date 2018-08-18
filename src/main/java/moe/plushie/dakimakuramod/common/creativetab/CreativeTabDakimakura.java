@@ -4,6 +4,7 @@ import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class CreativeTabDakimakura extends CreativeTabs {
     
@@ -12,7 +13,7 @@ public class CreativeTabDakimakura extends CreativeTabs {
     }
 
     @Override
-    public Item getTabIconItem() {
-        return Item.getItemFromBlock(ModBlocks.blockDakimakura);
+    public ItemStack getTabIconItem() {
+        return new ItemStack(Item.getItemFromBlock(ModBlocks.blockDakimakura));
     }
 }

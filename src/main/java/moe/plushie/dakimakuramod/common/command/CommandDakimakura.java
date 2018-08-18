@@ -26,19 +26,19 @@ public class CommandDakimakura extends CommandBase {
     }
     
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "dakimakura";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender commandSender) {
+    public String getUsage(ICommandSender commandSender) {
         return "commands.dakimakura.usage";
     }
     
     private String[] getSubCommandNames() {
         String[] subCommandNames = new String[subCommands.size()];
         for (int i = 0; i < subCommandNames.length; i++) {
-            subCommandNames[i] = subCommands.get(i).getCommandName();
+            subCommandNames[i] = subCommands.get(i).getName();
         }
         Arrays.sort(subCommandNames);
         return subCommandNames;
@@ -46,7 +46,7 @@ public class CommandDakimakura extends CommandBase {
     
     private AbstractCommand getSubCommand(String name) {
         for (int i = 0; i < subCommands.size(); i++) {
-            if (subCommands.get(i).getCommandName().equals(name)) {
+            if (subCommands.get(i).getName().equals(name)) {
                 return subCommands.get(i);
             }
         }
@@ -54,7 +54,7 @@ public class CommandDakimakura extends CommandBase {
     }
     
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, getSubCommandNames());
         }
@@ -62,19 +62,19 @@ public class CommandDakimakura extends CommandBase {
             String commandName = args[0];
             AbstractCommand command = getSubCommand(commandName);
             if (command != null) {
-                return command.getTabCompletionOptions(server, sender, args, pos);
+                return command.getTabCompletions(server, sender, args, targetPos);
             }
         }
-        return super.getTabCompletionOptions(server, sender, args, pos);
+    	return super.getTabCompletions(server, sender, args, targetPos);
     }
     
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args == null) {
-            throw new WrongUsageException(getCommandUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         if (args.length < 1) {
-            throw new WrongUsageException(getCommandUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         String commandName = args[0];
         AbstractCommand command = getSubCommand(commandName);
@@ -82,6 +82,6 @@ public class CommandDakimakura extends CommandBase {
             command.execute(server, sender, args);
             return;
         }
-        throw new WrongUsageException(getCommandUsage(sender), (Object)args);
+        throw new WrongUsageException(getUsage(sender), (Object)args);
     }
 }

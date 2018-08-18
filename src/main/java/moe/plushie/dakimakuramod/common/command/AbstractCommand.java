@@ -6,12 +6,12 @@ import net.minecraft.server.MinecraftServer;
 
 public abstract class AbstractCommand extends CommandBase {
 
-    @Override
-    public String getCommandUsage(ICommandSender commandSender) {
-        return "commands.armourers." + getCommandName() + ".usage";
-    }
+	@Override
+	public String getUsage(ICommandSender sender) {
+		return "commands.armourers." + getName() + ".usage";
+	}
     
     protected String[] getPlayers(MinecraftServer server) {
-        return server.getAllUsernames();
+        return server.getOnlinePlayerNames();
     }
 }

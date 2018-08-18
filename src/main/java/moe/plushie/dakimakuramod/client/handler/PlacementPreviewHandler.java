@@ -53,7 +53,7 @@ public class PlacementPreviewHandler {
             if (!block.isReplaceable(world, pos)) {
                 pos = pos.offset(facing);
             }
-            int rot = (MathHelper.floor_double((double)(entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
+            int rot = (MathHelper.floor((double)(entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
             EnumFacing[] rots = new EnumFacing[] {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
             EnumFacing rotation = rots[rot].getOpposite();
             

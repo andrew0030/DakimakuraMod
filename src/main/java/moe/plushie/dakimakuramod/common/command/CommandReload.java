@@ -8,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
 public class CommandReload extends AbstractCommand {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "reload";
     }
     

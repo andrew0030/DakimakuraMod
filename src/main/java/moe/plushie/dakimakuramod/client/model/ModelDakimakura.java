@@ -47,22 +47,22 @@ public class ModelDakimakura extends ModelBase {
     }
     
     public void render(Daki daki, BlockPos pos) {
-        double distance = Minecraft.getMinecraft().thePlayer.getDistance(pos.getX(), pos.getY(), pos.getZ());
+        double distance = Minecraft.getMinecraft().player.getDistance(pos.getX(), pos.getY(), pos.getZ());
         render(daki, distance);
     }
     
     public void render(Daki daki, double x, double y, double z) {
-        double distance = Minecraft.getMinecraft().thePlayer.getDistance(x, y, z);
+        double distance = Minecraft.getMinecraft().player.getDistance(x, y, z);
         render(daki, distance);
     }
     
     public void render(Daki daki, double distance) {
-        int lod = MathHelper.floor_double(distance / 16D);
+        int lod = MathHelper.floor(distance / 16D);
         render(daki, lod);
     }
     
     public void render(Daki daki, int lod) {
-        lod = MathHelper.clamp_int(lod, 0, 4);
+        lod = MathHelper.clamp(lod, 0, 4);
         profiler.startSection("texture");
         if (daki == null) {
             Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_BLANK);

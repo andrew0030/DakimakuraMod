@@ -22,7 +22,7 @@ public class MobLootHandler {
     public void onLivingDropsEvent(LivingDropsEvent event) {
         if (event.getEntity() instanceof EntityMob) {
             EntityLivingBase entity = event.getEntityLiving();
-            World world = entity.worldObj;
+            World world = entity.getEntityWorld();
             if (world.getGameRules().getBoolean("doMobLoot")) {
                 float dropChance = ConfigHandler.mobDropChance;
                 float lootingBonus = ConfigHandler.mobDropLootingBonus;

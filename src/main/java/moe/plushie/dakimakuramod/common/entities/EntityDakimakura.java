@@ -52,11 +52,11 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     
     @Override
     public void onUpdate() {
-        if (!worldObj.isRemote) {
+        if (!getEntityWorld().isRemote) {
             BlockPos pos = new BlockPos(posX, posY - 1, posZ);
-            IBlockState blockState = worldObj.getBlockState(pos);
+            IBlockState blockState = getEntityWorld().getBlockState(pos);
             Block block = blockState.getBlock();
-            if (!block.isBed(blockState, worldObj, pos, null)) {
+            if (!block.isBed(blockState, getEntityWorld(), pos, null)) {
                 dropAsItem();
                 setDead();
             }
@@ -73,8 +73,8 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
                 ItemBlockDakimakura.setFlipped(itemStack, true);
             }
         }
-        EntityItem entityItem = new EntityItem(worldObj, posX + 0.5F, posY + 0.5F, posZ + 0.5F, itemStack);
-        worldObj.spawnEntityInWorld(entityItem);
+        EntityItem entityItem = new EntityItem(getEntityWorld(), posX + 0.5F, posY + 0.5F, posZ + 0.5F, itemStack);
+        getEntityWorld().spawnEntity(entityItem);
     }
     
     /*
