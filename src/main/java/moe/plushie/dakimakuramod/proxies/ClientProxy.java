@@ -9,6 +9,7 @@ import moe.plushie.dakimakuramod.client.handler.PlacementPreviewHandler;
 import moe.plushie.dakimakuramod.client.handler.RehostedJarHandler;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.client.render.entity.RenderEntityDakimakura;
+import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
 import moe.plushie.dakimakuramod.client.render.tileentity.RenderBlockDakimakura;
 import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
@@ -26,20 +27,24 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Mod.EventBusSubscriber(modid = LibModInfo.ID)
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
     private DakiTextureManagerClient dakiTextureManager;
     private int maxGpuTextureSize;
-    private ModelDakimakura modelDakimakura;
+    public static ModelDakimakura modelDakimakura;
     
     @Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -47,12 +52,8 @@ public class ClientProxy extends CommonProxy {
         new RehostedJarHandler(event.getSourceFile(), "dakimakuramod-" + LibModInfo.VERSION + ".jar");
     }
     
-    @Override
-    public void preInitRenderers() {
-        dakiTextureManager = new DakiTextureManagerClient();
-        modelDakimakura = new ModelDakimakura(dakiTextureManager);
-        
-        ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(ModBlocks.blockDakimakura), 0, TileEntityDakimakura.class);
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent event) {
         ModelLoader.setCustomMeshDefinition(ModItems.dakiDesign, new ItemMeshDefinition() {
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -60,30 +61,29 @@ public class ClientProxy extends CommonProxy {
                 if (daki == null) {
                     return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
                 } else {
-                    return new ModelResourceLocation(stack.getItem().getRegistryName() + "Unlock", "inventory");
+                    return new ModelResourceLocation(stack.getItem().getRegistryName() + "-unlock", "inventory");
                 }
             }
         });
-        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.blockDakimakura), new ItemMeshDefinition() {
-            
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound());
-                RenderBlockDakimakura.lastItemDaki = daki;
-                return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
-            }
-        });
-        
+        ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "-unlock", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(ModBlocks.itemBlockDakimakura, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, "item.dakimakura"), "inventory"));
+        Item.getItemFromBlock(ModBlocks.blockDakimakura).setTileEntityItemStackRenderer(new RenderItemDakimakura(modelDakimakura));
+    }
+    
+    @Override
+    public void preInitRenderers() {
+        dakiTextureManager = new DakiTextureManagerClient();
+        modelDakimakura = new ModelDakimakura(dakiTextureManager);
         RenderingRegistry.registerEntityRenderingHandler(EntityDakimakura.class, new RenderEntityDakimakura(Minecraft.getMinecraft().getRenderManager(), modelDakimakura));
     }
     
     @Override
     public void initRenderers() {
+        ModBlocks.itemBlockDakimakura.setTileEntityItemStackRenderer(new RenderItemDakimakura(modelDakimakura));
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDakimakura.class, new RenderBlockDakimakura(modelDakimakura));
         maxGpuTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
         DakimakuraMod.getLogger().info(String.format("Max GPU texture size: %d.", maxGpuTextureSize));
         new PlacementPreviewHandler(modelDakimakura);
-        ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "Unlock", "inventory"));
     }
     
     @Override

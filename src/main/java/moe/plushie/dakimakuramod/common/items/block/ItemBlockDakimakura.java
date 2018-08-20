@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
-import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -40,7 +38,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
     public ItemBlockDakimakura(Block block) {
         super(block);
         setMaxStackSize(1);
-        setTileEntityItemStackRenderer(new RenderItemDakimakura(ClientProxy.modelDakimakura));
+        //setTileEntityItemStackRenderer(new RenderItemDakimakura(ClientProxy.modelDakimakura));
     }
     
     @SideOnly(Side.CLIENT)

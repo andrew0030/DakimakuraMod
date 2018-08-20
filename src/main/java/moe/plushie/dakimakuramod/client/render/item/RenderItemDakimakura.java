@@ -1,6 +1,5 @@
 package moe.plushie.dakimakuramod.client.render.item;
 
-import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
@@ -17,10 +16,7 @@ public class RenderItemDakimakura extends TileEntityItemStackRenderer {
     
     @Override
     public void renderByItem(ItemStack itemStackIn) {
-        DakimakuraMod.getLogger().info("render");
         Daki daki = DakiNbtSerializer.deserialize(itemStackIn.getTagCompound());
-        
-        
         modelDakimakura.render(daki, 0);
     }
 

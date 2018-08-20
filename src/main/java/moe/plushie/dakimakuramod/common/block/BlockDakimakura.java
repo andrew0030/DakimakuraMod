@@ -260,7 +260,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     @SideOnly(Side.CLIENT)
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.SOLID;
+        return BlockRenderLayer.TRANSLUCENT;
     }
     
     @Override

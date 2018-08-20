@@ -3,7 +3,6 @@ package moe.plushie.dakimakuramod.client.render.tileentity;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -16,8 +15,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockDakimakura extends TileEntitySpecialRenderer<TileEntityDakimakura> {
-
-    public static Daki lastItemDaki = null;
     
     private final ModelDakimakura modelDakimakura;
     
@@ -70,8 +67,6 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer<TileEntityD
             modelDakimakura.render(tileEntity.getDaki(), tileEntity.getPos());
             GlStateManager.popMatrix();
             mc.mcProfiler.endSection();
-        } else {
-            modelDakimakura.render(lastItemDaki, 0);
         }
         super.render(tileEntity, x, y, z, partialTicks, destroyStage, alpha);
     }
