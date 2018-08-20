@@ -9,10 +9,10 @@ import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -26,21 +26,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemDakiDesign extends AbstractModItem {
     
     public ItemDakiDesign() {
-        super("dakiDesign");
+        super("daki-design");
         setMaxStackSize(16);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-    	subItems.add(new ItemStack(itemIn, 1, 0));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        items.add(new ItemStack(this, 1, 0));
         ArrayList<Daki> dakiList = DakimakuraMod.getProxy().getDakimakuraManager().getDakiList();
         for (int i = 0; i < dakiList.size(); i++) {
-            ItemStack itemStack = new ItemStack(itemIn, 1, 0);
+            ItemStack itemStack = new ItemStack(this, 1, 0);
             itemStack.setTagCompound(new NBTTagCompound());
             Daki daki = dakiList.get(i);
             DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-            subItems.add(itemStack);
+            items.add(itemStack);
         }
     }
     
@@ -82,18 +82,18 @@ public class ItemDakiDesign extends AbstractModItem {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
-        super.addInformation(itemStack, player, list, advancedItemTooltips);
-        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound());
         if (daki != null) {
-            addTooltip(itemStack, player, list, advancedItemTooltips, "usage");
-            daki.addInformation(itemStack, player, list, advancedItemTooltips);
+            addTooltip(stack, tooltip, "usage");
+            daki.addInformation(stack, tooltip);
         } else {
-            addTooltip(itemStack, player, list, advancedItemTooltips, "unlock");
+            addTooltip(stack, tooltip, "unlock");
         }
     }
     
-    private void addTooltip(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips, String tooltipName) {
+    private void addTooltip(ItemStack itemStack, List list, String tooltipName) {
         String unlocalized = itemStack.getUnlocalizedName() + ".tooltip." + tooltipName;
         String localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {

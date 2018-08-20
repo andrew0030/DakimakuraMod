@@ -10,10 +10,10 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
@@ -128,7 +128,7 @@ public class ModelDakimakura extends ModelBase {
     
     private void drawDebugRender() {
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer buff = tess.getBuffer();
+        BufferBuilder buff = tess.getBuffer();
         
         buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         

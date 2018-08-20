@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.client.render.item.RenderItemDakimakura;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
+import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -38,20 +40,21 @@ public class ItemBlockDakimakura extends ModItemBlock {
     public ItemBlockDakimakura(Block block) {
         super(block);
         setMaxStackSize(1);
+        setTileEntityItemStackRenderer(new RenderItemDakimakura(ClientProxy.modelDakimakura));
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-    	subItems.add(new ItemStack(itemIn, 1, 0));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        items.add(new ItemStack(this, 1, 0));
         ArrayList<Daki> dakiList = DakimakuraMod.getProxy().getDakimakuraManager().getDakiList();
         for (int i = 0; i < dakiList.size(); i++) {
-            ItemStack itemStack = new ItemStack(itemIn, 1, 0);
+            ItemStack itemStack = new ItemStack(this, 1, 0);
             itemStack.setTagCompound(new NBTTagCompound());
             Daki daki = dakiList.get(i);
             DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-            subItems.add(itemStack);
-        };
+            items.add(itemStack);
+        }
     }
     
     public static boolean isFlipped(ItemStack itemStack) {
@@ -215,19 +218,19 @@ public class ItemBlockDakimakura extends ModItemBlock {
         itemStack.shrink(1);
     }
     
-    
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
-        super.addInformation(itemStack, player, list, advancedItemTooltips);
-        Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound());
         if (daki != null) {
-            String textFlip = I18n.format(itemStack.getUnlocalizedName() + ".tooltip.flip");
-            list.add(I18n.format(textFlip));
-            daki.addInformation(itemStack, player, list, advancedItemTooltips);
+            String textFlip = I18n.format(stack.getUnlocalizedName() + ".tooltip.flip");
+            tooltip.add(I18n.format(textFlip));
+            daki.addInformation(stack, tooltip);
         } else {
-            list.add("Blank");
+            tooltip.add("Blank");
         }
+        tooltip.add(getTileEntityItemStackRenderer().toString());
     }
     
     @SideOnly(Side.CLIENT)

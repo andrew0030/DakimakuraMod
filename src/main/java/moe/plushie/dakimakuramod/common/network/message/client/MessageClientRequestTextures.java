@@ -1,12 +1,12 @@
 package moe.plushie.dakimakuramod.common.network.message.client;
 
+import io.netty.buffer.ByteBuf;
+import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 
 public class MessageClientRequestTextures implements IMessage, IMessageHandler<MessageClientRequestTextures, IMessage> {
 
@@ -32,7 +32,7 @@ public class MessageClientRequestTextures implements IMessage, IMessageHandler<M
     
     @Override
     public IMessage onMessage(MessageClientRequestTextures message, MessageContext ctx) {
-        DakimakuraMod.getProxy().getTextureManagerCommon().onClientRequestTexture(ctx.getServerHandler().playerEntity, message.daki);
+        DakimakuraMod.getProxy().getTextureManagerCommon().onClientRequestTexture(ctx.getServerHandler().player, message.daki);
         return null;
     }
 }

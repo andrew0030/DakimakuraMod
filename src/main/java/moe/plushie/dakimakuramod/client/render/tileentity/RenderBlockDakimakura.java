@@ -10,13 +10,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
+public class RenderBlockDakimakura extends TileEntitySpecialRenderer<TileEntityDakimakura> {
 
     public static Daki lastItemDaki = null;
     
@@ -26,7 +25,8 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         this.modelDakimakura = modelDakimakura;
     }
     
-    public void renderTileEntityAt(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTickTime, int destroyStage) {
+    @Override
+    public void render(TileEntityDakimakura tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (tileEntity != null) {
             IBlockState blockState = tileEntity.getWorld().getBlockState(tileEntity.getPos());
             Block block = blockState.getBlock();
@@ -73,10 +73,6 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
         } else {
             modelDakimakura.render(lastItemDaki, 0);
         }
-    }
-
-    @Override
-    public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
-        renderTileEntityAt((TileEntityDakimakura)tileEntity, x, y, z, partialTicks, destroyStage);
+        super.render(tileEntity, x, y, z, partialTicks, destroyStage, alpha);
     }
 }

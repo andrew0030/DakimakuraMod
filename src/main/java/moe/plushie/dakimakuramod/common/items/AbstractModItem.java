@@ -4,11 +4,11 @@ import java.util.List;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,10 +30,10 @@ public abstract class AbstractModItem extends Item {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         String unlocalized;
         String localized;
-        unlocalized = itemStack.getUnlocalizedName() + ".tooltip";
+        unlocalized = stack.getUnlocalizedName() + ".tooltip";
         /*
         localized = StatCollector.translateToLocal(unlocalized);
         if (!unlocalized.equals(localized)) {
@@ -47,14 +47,13 @@ public abstract class AbstractModItem extends Item {
             }
         }
         */
-        super.addInformation(itemStack, player, list, advancedItemTooltips);
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
     
     @Override
     public Item setUnlocalizedName(String name) {
         super.setUnlocalizedName(name);
-        //setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + name));
-        GameRegistry.register(this, new ResourceLocation(LibModInfo.ID, "item." + name));
+        setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + name));
         return this;
     }
     

@@ -254,13 +254,13 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.INVISIBLE;
+        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BlockRenderLayer.SOLID;
     }
     
     @Override

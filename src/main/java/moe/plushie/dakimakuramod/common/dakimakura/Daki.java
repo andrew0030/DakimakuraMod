@@ -5,7 +5,6 @@ import java.util.List;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -135,7 +134,7 @@ public class Daki implements Comparable<Daki> {
     }
     
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {
+    public void addInformation(ItemStack itemStack, List list) {
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         int index = dakiManager.getDakiIndexInPack(this) + 1;
         int total = dakiManager.getNumberOfDakisInPack(packDirectoryName);

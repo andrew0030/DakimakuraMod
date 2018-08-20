@@ -1,17 +1,13 @@
 package moe.plushie.dakimakuramod.common.crafting;
 
-import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiNbtSerializer;
-import moe.plushie.dakimakuramod.common.items.ModItems;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.ForgeHooks;
 
 public class RecipeDakiRecycle implements IRecipe {
     
@@ -90,11 +86,6 @@ public class RecipeDakiRecycle implements IRecipe {
     }
 
     @Override
-    public int getRecipeSize() {
-        return 2;
-    }
-
-    @Override
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
     }
@@ -102,5 +93,29 @@ public class RecipeDakiRecycle implements IRecipe {
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
         return NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+    }
+
+    @Override
+    public IRecipe setRegistryName(ResourceLocation name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResourceLocation getRegistryName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Class<IRecipe> getRegistryType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean canFit(int width, int height) {
+        // TODO Auto-generated method stub
+        return false;
     }
 }
