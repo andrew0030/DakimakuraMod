@@ -24,8 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemBlockDakimakura extends ModItemBlock {
-
-    private static final String TAG_FLIPPED = "flipped";
     
     public ItemBlockDakimakura(Block block) {
         super(block);
@@ -53,7 +51,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (!itemStack.hasTagCompound()) {
             return false;
         }
-        return itemStack.getTagCompound().getBoolean(TAG_FLIPPED);
+        return DakiNbtSerializer.isFlipped(itemStack.getTagCompound());
     }
     
     public static ItemStack setFlipped(ItemStack itemStack, boolean flipped) {
@@ -63,7 +61,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (!itemStack.hasTagCompound()) {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        itemStack.getTagCompound().setBoolean(TAG_FLIPPED, flipped);
+        DakiNbtSerializer.setFlipped(itemStack.getTagCompound(), flipped);
         return itemStack;
     }
     

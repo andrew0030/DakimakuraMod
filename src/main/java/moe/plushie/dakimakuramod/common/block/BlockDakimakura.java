@@ -26,7 +26,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDakimakura extends AbstractModBlockContainer {
-
+    
+    private static final String TAG_FLIPPED = "flipped";
     private static final int META_BIT_STANDING = 0;
     private static final int META_BIT_POS_NEG = 1;
     private static final int META_BIT_X_Z = 2;
