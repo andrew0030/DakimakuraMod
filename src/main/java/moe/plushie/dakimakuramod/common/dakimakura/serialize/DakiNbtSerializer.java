@@ -9,6 +9,7 @@ public final class DakiNbtSerializer {
     
     public static final String TAG_DAKI_PACK_NAME = "dakiPackName";
     public static final String TAG_DAKI_DIR_NAME = "dakiDirName";
+    public static final String TAG_FLIPPED = "flipped";
     
     public DakiNbtSerializer() {}
     
@@ -21,6 +22,14 @@ public final class DakiNbtSerializer {
         compound.setString(TAG_DAKI_PACK_NAME, daki.getPackDirectoryName());
         compound.setString(TAG_DAKI_DIR_NAME, daki.getDakiDirectoryName());
         return compound;
+    }
+    
+    public static void setFlipped(NBTTagCompound compound, boolean flipped) {
+        compound.setBoolean(TAG_FLIPPED, flipped);
+    }
+    
+    public static boolean isFlipped(NBTTagCompound compound) {
+        return compound.getBoolean(TAG_FLIPPED);
     }
     
     public static Daki deserialize(NBTTagCompound compound) {

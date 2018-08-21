@@ -16,11 +16,6 @@ public class ModItemBlock extends ItemBlock {
         super(block);
     }
 
-    @Override
-    public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-        return super.getUnlocalizedNameInefficiently(par1ItemStack);
-    }
-
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedItemTooltips) {

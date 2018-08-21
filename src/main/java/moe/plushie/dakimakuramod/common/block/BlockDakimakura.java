@@ -34,7 +34,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDakimakura extends AbstractModBlockContainer {
-
+    
+    private static final String TAG_FLIPPED = "flipped";
     private static final int META_BIT_STANDING = 0;
     private static final int META_BIT_POS_NEG = 1;
     private static final int META_BIT_X_Z = 2;
@@ -133,6 +134,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
                     Daki daki = ((TileEntityDakimakura)te).getDaki();
                     if (daki != null) {
                         itemStack.setTagCompound(DakiNbtSerializer.serialize(daki));
+                        DakiNbtSerializer.setFlipped(itemStack.getTagCompound(), ((TileEntityDakimakura)te).isFlipped());
                     }
                     spawnItemInWorld(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, itemStack);
                 }

@@ -25,8 +25,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityDakimakura extends TileEntity {
     
-    private static final String TAG_FLIPPED = "flipped";
-    
     private String packDirName;
     private String dakiDirName;
     private boolean flipped;
@@ -68,7 +66,7 @@ public class TileEntityDakimakura extends TileEntity {
             packDirName = compound.getString(DakiNbtSerializer.TAG_DAKI_PACK_NAME);
             dakiDirName = compound.getString(DakiNbtSerializer.TAG_DAKI_DIR_NAME);
         }
-        flipped = compound.getBoolean(TAG_FLIPPED);
+        flipped = DakiNbtSerializer.isFlipped(compound);
     }
 
     @Override
@@ -78,7 +76,7 @@ public class TileEntityDakimakura extends TileEntity {
             compound.setString(DakiNbtSerializer.TAG_DAKI_PACK_NAME, packDirName);
             compound.setString(DakiNbtSerializer.TAG_DAKI_DIR_NAME, dakiDirName);
         }
-        compound.setBoolean(TAG_FLIPPED, flipped);
+        DakiNbtSerializer.setFlipped(compound, flipped);
         return compound;
     }
     

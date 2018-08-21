@@ -31,8 +31,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockDakimakura extends ModItemBlock {
-
-    private static final String TAG_FLIPPED = "flipped";
     
     public ItemBlockDakimakura(Block block) {
         super(block);
@@ -60,7 +58,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (!itemStack.hasTagCompound()) {
             return false;
         }
-        return itemStack.getTagCompound().getBoolean(TAG_FLIPPED);
+        return DakiNbtSerializer.isFlipped(itemStack.getTagCompound());
     }
     
     public static ItemStack setFlipped(ItemStack itemStack, boolean flipped) {
@@ -70,7 +68,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (!itemStack.hasTagCompound()) {
             itemStack.setTagCompound(new NBTTagCompound());
         }
-        itemStack.getTagCompound().setBoolean(TAG_FLIPPED, flipped);
+        DakiNbtSerializer.setFlipped(itemStack.getTagCompound(), flipped);
         return itemStack;
     }
     
@@ -223,7 +221,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
             list.add(I18n.format(textFlip));
             daki.addInformation(itemStack, player, list, advancedItemTooltips);
         } else {
-            list.add("Blank");
+            list.add(I18n.format(itemStack.getUnlocalizedName() + ".tooltip.blank"));
         }
     }
     
