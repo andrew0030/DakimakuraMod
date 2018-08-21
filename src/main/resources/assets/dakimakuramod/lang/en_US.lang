@@ -32,6 +32,7 @@ tile.dakimakuramod:dakimakura.tooltip.pack=§7Pack: §f%s§7 - (%d/%d)
 tile.dakimakuramod:dakimakura.tooltip.name=§7Name: §f%s
 tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=Sneak and §aright click§7 in the air to flip.
+tile.dakimakuramod:dakimakura.tooltip.blank=Blank
 
 # Item names
 item.dakimakuramod:dakiDesign.name=Dakimakura Design
@@ -62,6 +63,9 @@ config.dakimakuramod:useAltRecipe.tooltip=Changes the crafting recipe from 6 woo
 
 config.dakimakuramod:enableRecycleRecipe=Enable recycle recipe.
 config.dakimakuramod:enableRecycleRecipe.tooltip=Allow getting a new dakimakura design by crafting 2 unwanted designs together.
+
+config.dakimakuramod:enableClearingRecipe=Enable clearing recipe.
+config.dakimakuramod:enableClearingRecipe.tooltip=Allow crafting a dakimakura to clear its design.
 
 config.dakimakuramod:addUnlockToLootChests=Add designs to loot chests.
 config.dakimakuramod:addUnlockToLootChests.tooltip=Add the dakimakura design items to loot chests around the world.

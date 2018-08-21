@@ -213,7 +213,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
             list.add(StatCollector.translateToLocal(textFlip));
             daki.addInformation(itemStack, player, list, advancedItemTooltips);
         } else {
-            list.add("Blank");
+            list.add(StatCollector.translateToLocal(itemStack.getUnlocalizedName() + ".tooltip.blank"));
         }
     }
     
