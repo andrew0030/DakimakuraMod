@@ -40,6 +40,9 @@ public class RenderItemDakimakura implements IItemRenderer {
             GL11.glTranslated(0, -3.5F * scale, 0);
             GL11.glRotatef(180, 0, 1, 0);
             GL11.glScalef(1.1F, 1.1F, 1.1F);
+            if (flipped) {
+                GL11.glRotatef(180, 0, 1, 0);
+            }
         }
         if (renderType == ItemRenderType.EQUIPPED_FIRST_PERSON) {
             GL11.glRotatef(90, 0, 1, 0);
