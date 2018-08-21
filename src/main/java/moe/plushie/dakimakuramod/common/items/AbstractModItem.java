@@ -14,8 +14,6 @@ import net.minecraft.util.StatCollector;
 
 public abstract class AbstractModItem extends Item {
 
-    private int sortPriority = 0;
-    
     public AbstractModItem(String name) {
         this(name, true);
     }
@@ -82,10 +80,5 @@ public abstract class AbstractModItem extends Item {
         } else {
             return "item." + LibModInfo.ID.toLowerCase() + ":" + name;
         }
-    }
-    
-    public AbstractModItem setSortPriority(int sortPriority) {
-        this.sortPriority = sortPriority;
-        return this;
     }
 }

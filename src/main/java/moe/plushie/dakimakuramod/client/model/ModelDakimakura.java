@@ -12,7 +12,6 @@ import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -106,38 +105,5 @@ public class ModelDakimakura extends ModelBase {
         GL11.glPopAttrib();
         GL11.glPopMatrix();
         profiler.endSection();
-    }
-    
-    private void drawDebugRender() {
-        Tessellator tess = Tessellator.instance;
-        tess.startDrawing(GL11.GL_QUADS);
-        // Front
-        
-        tess.addVertex(-0.5F, 1.5F, -0.2F);
-        tess.setTextureUV(0, 0);
-        
-        tess.addVertex(0.5F, 1.5F, -0.2F);
-        tess.setTextureUV(0.5F, 0);
-        
-        tess.addVertex(0.5F, -1.5F, -0.2F);
-        tess.setTextureUV(0.5F, 1);
-        
-        tess.addVertex(-0.5F, -1.5F, -0.2F);
-        tess.setTextureUV(0, 1);
-        
-        // Back
-        tess.addVertex(-0.5F, -1.5F, 0);
-        tess.setTextureUV(0.5F, 1);
-        
-        tess.addVertex(0.5F, -1.5F, 0);
-        tess.setTextureUV(1, 1);
-        
-        tess.addVertex(0.5F, 1.5F, 0);
-        tess.setTextureUV(1, 0);
-        
-        tess.addVertex(-0.5F, 1.5F, 0);
-        tess.setTextureUV(0.5F, 0);
-        
-        tess.draw();
     }
 }

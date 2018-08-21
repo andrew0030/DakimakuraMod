@@ -104,10 +104,6 @@ public class DakiSendHelper {
                 System.arraycopy(newSkinData, sizeFront, data2, 0, sizeBack);
             }
             
-            //DakimakuraMod.getLogger().info("Got packets total size " + newSkinData.length);
-            //DakimakuraMod.getLogger().info("Front size " + data1.length);
-            //DakimakuraMod.getLogger().info("Back size " + data2.length);
-            
             DakiImageData imageData = new DakiImageData(daki, data1, data2);
 
            ((ClientProxy)DakimakuraMod.getProxy()).getDakiTextureManager().serverSentTextures(imageData);

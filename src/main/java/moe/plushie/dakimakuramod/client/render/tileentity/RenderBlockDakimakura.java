@@ -2,6 +2,8 @@ package moe.plushie.dakimakuramod.client.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import moe.plushie.dakimakuramod.client.model.ModelDakimakura;
 import moe.plushie.dakimakuramod.common.block.BlockDakimakura;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
@@ -10,6 +12,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+@SideOnly(Side.CLIENT)
 public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
 
     private final ModelDakimakura modelDakimakura;
