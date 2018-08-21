@@ -229,7 +229,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
         } else {
             tooltip.add("Blank");
         }
-        tooltip.add(getTileEntityItemStackRenderer().toString());
     }
     
     @SideOnly(Side.CLIENT)
