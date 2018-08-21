@@ -36,9 +36,8 @@ public final class CraftingManager {
                         "sws",
                         'w', new ItemStack(Blocks.WOOL, 1, 0),
                         's', "string"
-                        }).setRegistryName(new ResourceLocation(LibModInfo.ID, "daki")));
+                        }).setRegistryName(new ResourceLocation(LibModInfo.ID, "daki-alt")));
             }
         }
-
     }
 }
