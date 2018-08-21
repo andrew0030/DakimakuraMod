@@ -10,11 +10,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class RecipeDaki implements IRecipe {
+public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
+    
     @Override
     public boolean matches(InventoryCrafting inventoryCrafting, World world) {
         ItemStack stackDaki = ItemStack.EMPTY;
@@ -123,28 +128,9 @@ public class RecipeDaki implements IRecipe {
         }
         return ret;
     }
-
-    @Override
-    public IRecipe setRegistryName(ResourceLocation name) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public ResourceLocation getRegistryName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Class<IRecipe> getRegistryType() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
+    
     @Override
     public boolean canFit(int width, int height) {
-        // TODO Auto-generated method stub
-        return false;
+        return width * height >= 2;
     }
 }

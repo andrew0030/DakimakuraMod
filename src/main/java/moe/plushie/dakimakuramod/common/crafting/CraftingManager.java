@@ -1,7 +1,21 @@
 package moe.plushie.dakimakuramod.common.crafting;
 
+import moe.plushie.dakimakuramod.common.lib.LibModInfo;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+@Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public final class CraftingManager {
 
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+        event.getRegistry().register(new RecipeDaki().setRegistryName(new ResourceLocation(LibModInfo.ID, "daki_design")));
+        event.getRegistry().register(new RecipeDakiRecycle().setRegistryName(new ResourceLocation(LibModInfo.ID, "design_recycle")));
+    }
+    
     public static void init() {
         /*
         RecipeSorter.INSTANCE.register("dakimakuramod:daki", RecipeDaki.class, Category.SHAPELESS, "after:minecraft:shapeless");
