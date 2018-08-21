@@ -44,14 +44,16 @@ public class ItemBlockDakimakura extends ModItemBlock {
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        items.add(new ItemStack(this, 1, 0));
-        ArrayList<Daki> dakiList = DakimakuraMod.getProxy().getDakimakuraManager().getDakiList();
-        for (int i = 0; i < dakiList.size(); i++) {
-            ItemStack itemStack = new ItemStack(this, 1, 0);
-            itemStack.setTagCompound(new NBTTagCompound());
-            Daki daki = dakiList.get(i);
-            DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
-            items.add(itemStack);
+        if (isInCreativeTab(tab)) {
+            items.add(new ItemStack(this, 1, 0));
+            ArrayList<Daki> dakiList = DakimakuraMod.getProxy().getDakimakuraManager().getDakiList();
+            for (int i = 0; i < dakiList.size(); i++) {
+                ItemStack itemStack = new ItemStack(this, 1, 0);
+                itemStack.setTagCompound(new NBTTagCompound());
+                Daki daki = dakiList.get(i);
+                DakiNbtSerializer.serialize(daki, itemStack.getTagCompound());
+                items.add(itemStack);
+            }
         }
     }
     
