@@ -35,7 +35,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDakimakura extends AbstractModBlockContainer {
     
-    private static final String TAG_FLIPPED = "flipped";
     private static final int META_BIT_STANDING = 0;
     private static final int META_BIT_POS_NEG = 1;
     private static final int META_BIT_X_Z = 2;
@@ -100,7 +99,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
                     pos = pos.offset(EnumFacing.DOWN);
                 } else {
                     EnumFacing rot = state.getValue(PROPERTY_DIRECTION);
-                    pos = pos.offset(rot);
+                    pos = pos.offset(rot.getOpposite());
                 }
             }
             if (!world.isRemote) {
