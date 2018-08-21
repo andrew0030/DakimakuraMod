@@ -38,7 +38,6 @@ public class ItemBlockDakimakura extends ModItemBlock {
     public ItemBlockDakimakura(Block block) {
         super(block);
         setMaxStackSize(1);
-        //setTileEntityItemStackRenderer(new RenderItemDakimakura(ClientProxy.modelDakimakura));
     }
     
     @SideOnly(Side.CLIENT)
