@@ -26,6 +26,7 @@ public class ConfigHandler {
     public static boolean enableRecipe;
     public static boolean useAltRecipe;
     public static boolean enableRecycleRecipe;
+    public static boolean enableClearingRecipe;
     
     // Loot
     public static boolean addUnlockToLootChests;
@@ -79,6 +80,10 @@ public class ConfigHandler {
         enableRecycleRecipe = config.getBoolean("enableRecycleRecipe", CATEGORY_RECIPE, true,
                 "Allow getting a new dakimakura design by crafting 2 unwanted designs together.",
                 LANG_KEY_PREFIX + "enableRecycleRecipe");
+        
+        enableClearingRecipe = config.getBoolean("enableClearingRecipe", CATEGORY_RECIPE, true,
+                "Allow crafting a dakimakura to clear its design.",
+                LANG_KEY_PREFIX + "enableClearingRecipe"); 
     }
     
     private void loadCategoryLoot() {
