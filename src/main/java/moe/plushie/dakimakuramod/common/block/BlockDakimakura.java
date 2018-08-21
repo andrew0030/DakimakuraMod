@@ -82,6 +82,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
                     Daki daki = ((TileEntityDakimakura)te).getDaki();
                     if (daki != null) {
                         itemStack.setTagCompound(DakiNbtSerializer.serialize(daki));
+                        DakiNbtSerializer.setFlipped(itemStack.getTagCompound(), ((TileEntityDakimakura)te).isFlipped());
                     }
                     spawnItemInWorld(world, x + 0.5F, y + 0.5F, z + 0.5F, itemStack);
                 }
