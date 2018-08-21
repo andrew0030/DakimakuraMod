@@ -30,9 +30,6 @@ public class BedHandler {
         int y = event.y;
         int z = event.z;
         Block block = world.getBlock(x, y, z);
-        if (world.isRemote) {
-            return;
-        }
         if (!block.isBed(world, x, y, z, entityPlayer)) {
             return;
         }
@@ -50,13 +47,15 @@ public class BedHandler {
             if (entity instanceof EntityDakimakura) {
                 EntityDakimakura entityDaki = (EntityDakimakura) entity;
                 if (entityDaki.isDakiOverBlock(x, y, z)) {
-                    if (event.action == Action.RIGHT_CLICK_BLOCK) {
-                        entityDaki.flip();
-                        flipped = true;
-                    }
-                    if (event.action == Action.LEFT_CLICK_BLOCK) {
-                        entityDaki.dropAsItem();
-                        entityDaki.setDead();
+                    if (!world.isRemote) {
+                        if (event.action == Action.RIGHT_CLICK_BLOCK) {
+                            entityDaki.flip();
+                            flipped = true;
+                        }
+                        if (event.action == Action.LEFT_CLICK_BLOCK) {
+                            entityDaki.dropAsItem();
+                            entityDaki.setDead();
+                        }
                     }
                 }
             }
