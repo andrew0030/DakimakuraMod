@@ -60,7 +60,7 @@ public class ClientProxy extends CommonProxy {
                 if (daki == null) {
                     return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
                 } else {
-                    return new ModelResourceLocation(stack.getItem().getRegistryName() + "Unlock", "inventory");
+                    return new ModelResourceLocation(stack.getItem().getRegistryName() + "-unlock", "inventory");
                 }
             }
         });
@@ -86,7 +86,7 @@ public class ClientProxy extends CommonProxy {
         maxGpuTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
         DakimakuraMod.getLogger().info(String.format("Max GPU texture size: %d.", maxGpuTextureSize));
         new PlacementPreviewHandler(modelDakimakura);
-        ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "Unlock", "inventory"));
+        ModelBakery.registerItemVariants(ModItems.dakiDesign, new ModelResourceLocation(ModItems.dakiDesign.getRegistryName(), "inventory"), new ModelResourceLocation(ModItems.dakiDesign.getRegistryName() + "-unlock", "inventory"));
     }
     
     @Override
