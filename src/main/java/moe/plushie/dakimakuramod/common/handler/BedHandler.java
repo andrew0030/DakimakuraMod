@@ -25,13 +25,11 @@ public class BedHandler {
         if (event.getFace() == null) {
             return;
         }
+        
         World world = event.getWorld();
         EntityPlayer entityPlayer = event.getEntityPlayer();
         BlockPos blockPos = event.getPos();
         IBlockState blockState = world.getBlockState(blockPos);
-        if (world.isRemote) {
-            return;
-        }
         if (!blockState.getBlock().isBed(blockState, world, blockPos, entityPlayer)) {
             return;
         }
@@ -50,13 +48,15 @@ public class BedHandler {
             if (entity instanceof EntityDakimakura) {
                 EntityDakimakura entityDaki = (EntityDakimakura) entity;
                 if (entityDaki.isDakiOverBlock(blockPos)) {
-                    if (event.getHand() == EnumHand.MAIN_HAND) {
-                        entityDaki.flip();
-                        flipped = true;
-                    }
-                    if (event.getHand() == EnumHand.OFF_HAND) {
-                        entityDaki.dropAsItem();
-                        entityDaki.setDead();
+                    if (!world.isRemote) {
+                        if (event.getHand() == EnumHand.MAIN_HAND) {
+                            entityDaki.flip();
+                            flipped = true;
+                        }
+                        if (event.getHand() == EnumHand.OFF_HAND) {
+                            entityDaki.dropAsItem();
+                            entityDaki.setDead();
+                        }
                     }
                 }
             }

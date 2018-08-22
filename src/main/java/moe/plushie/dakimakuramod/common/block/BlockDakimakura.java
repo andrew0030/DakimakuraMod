@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDakimakura extends AbstractModBlockContainer {
-
+    
     private static final int META_BIT_STANDING = 0;
     private static final int META_BIT_POS_NEG = 1;
     private static final int META_BIT_X_Z = 2;
@@ -84,6 +84,14 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if (state.getValue(PROPERTY_TOP)) {
+            if (state.getValue(PROPERTY_STANDING)) {
+                pos = pos.offset(EnumFacing.DOWN);
+            } else {
+                EnumFacing rot = state.getValue(PROPERTY_DIRECTION);
+                pos = pos.offset(rot.getOpposite());
+            }
+        }
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
             state = state.withProperty(PROPERTY_FLIPPED, ((TileEntityDakimakura)tileEntity).isFlipped());
@@ -99,7 +107,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
                     pos = pos.offset(EnumFacing.DOWN);
                 } else {
                     EnumFacing rot = state.getValue(PROPERTY_DIRECTION);
-                    pos = pos.offset(rot);
+                    pos = pos.offset(rot.getOpposite());
                 }
             }
             if (!world.isRemote) {
@@ -133,6 +141,7 @@ public class BlockDakimakura extends AbstractModBlockContainer {
                     Daki daki = ((TileEntityDakimakura)te).getDaki();
                     if (daki != null) {
                         itemStack.setTagCompound(DakiNbtSerializer.serialize(daki));
+                        DakiNbtSerializer.setFlipped(itemStack.getTagCompound(), ((TileEntityDakimakura)te).isFlipped());
                     }
                     spawnItemInWorld(world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, itemStack);
                 }
@@ -264,12 +273,21 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return getBoundingBox(state);
+    }
+    
+    @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
-        return getSelectedBoundingBox(blockState, worldIn, new BlockPos(0, 0, 0));
+        return getBoundingBox(blockState);
     }
     
     @Override
     public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
+        return getBoundingBox(blockState).offset(pos);
+    }
+    
+    public AxisAlignedBB getBoundingBox(IBlockState blockState) {
         boolean standing = blockState.getValue(PROPERTY_STANDING);
         EnumFacing rot = blockState.getValue(PROPERTY_DIRECTION);
         boolean topPart = blockState.getValue(PROPERTY_TOP);
@@ -340,15 +358,15 @@ public class BlockDakimakura extends AbstractModBlockContainer {
         }
         if (!standing) {
             if (!topPart) {
-                return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).offset(pos);
+                return new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
             } else {
-                return new AxisAlignedBB((x1 - 1F * rot.getFrontOffsetX()), (y1 - 1F * rot.getFrontOffsetY()), (z1 - 1F * rot.getFrontOffsetZ()), (x2 - 1F * rot.getFrontOffsetX()), (y2 - 1F * rot.getFrontOffsetY()), (z2 - 1F * rot.getFrontOffsetZ())).offset(pos);
+                return new AxisAlignedBB((x1 - 1F * rot.getFrontOffsetX()), (y1 - 1F * rot.getFrontOffsetY()), (z1 - 1F * rot.getFrontOffsetZ()), (x2 - 1F * rot.getFrontOffsetX()), (y2 - 1F * rot.getFrontOffsetY()), (z2 - 1F * rot.getFrontOffsetZ()));
             }
         } else {
             if (!topPart) {
-                return new AxisAlignedBB(x1, y1, z1, x2, y2, z2).offset(pos);
+                return new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
             } else {
-                return new AxisAlignedBB(x1, y1 - 1, z1, x2, y2 - 1, z2).offset(pos);
+                return new AxisAlignedBB(x1, y1 - 1, z1, x2, y2 - 1, z2);
             }
         }
     }

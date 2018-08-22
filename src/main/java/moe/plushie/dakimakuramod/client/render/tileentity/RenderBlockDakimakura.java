@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
 
     public static Daki lastItemDaki = null;
+    public static boolean lastItemflipped = false;
     
     private final ModelDakimakura modelDakimakura;
     
@@ -71,7 +72,12 @@ public class RenderBlockDakimakura extends TileEntitySpecialRenderer {
             GlStateManager.popMatrix();
             mc.mcProfiler.endSection();
         } else {
+            GlStateManager.pushMatrix();
+            if (lastItemflipped) {
+                GlStateManager.rotate(180, 0, 1, 0);
+            }
             modelDakimakura.render(lastItemDaki, 0);
+            GlStateManager.popMatrix();
         }
     }
 
