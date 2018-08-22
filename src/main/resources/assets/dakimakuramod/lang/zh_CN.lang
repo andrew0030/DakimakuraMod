@@ -34,7 +34,7 @@ tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=§a潜行§7 + §a鼠标右击空气§7 翻转抱枕.
 
 # Item Names
-item.dakimakuramod:daki-design.name=抱枕的设计图
+item.dakimakuramod:daki-design.name=抱枕设计图
 
 # Item tooltip
 item.dakimakuramod:dakiDesign.tooltip.unlock=§a右击鼠标§7 随机获得一个有图案的抱枕设计图.
