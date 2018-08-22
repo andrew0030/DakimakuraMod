@@ -70,6 +70,9 @@ public class ClientProxy extends CommonProxy {
             public ModelResourceLocation getModelLocation(ItemStack stack) {
                 Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound());
                 RenderBlockDakimakura.lastItemDaki = daki;
+                if (daki != null) {
+                    RenderBlockDakimakura.lastItemflipped = DakiNbtSerializer.isFlipped(stack.getTagCompound());
+                }
                 return new ModelResourceLocation(stack.getItem().getRegistryName(), "inventory");
             }
         });

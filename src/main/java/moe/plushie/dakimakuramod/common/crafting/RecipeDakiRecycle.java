@@ -22,6 +22,9 @@ public class RecipeDakiRecycle implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != ItemStack.EMPTY) {
+                if (stack.getItem() != ModItems.dakiDesign) {
+                    return false;
+                }
                 if (stackDesign1 == ItemStack.EMPTY) {
                     stackDesign1 = stack;
                 } else if (stackDesign2 == ItemStack.EMPTY) {
@@ -60,6 +63,9 @@ public class RecipeDakiRecycle implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != ItemStack.EMPTY) {
+                if (stack.getItem() != ModItems.dakiDesign) {
+                    return ItemStack.EMPTY;
+                }
                 if (stackDesign1 == ItemStack.EMPTY) {
                     stackDesign1 = stack;
                 } else if (stackDesign2 == ItemStack.EMPTY) {
