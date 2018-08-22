@@ -265,6 +265,15 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     }
     
     @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        if (source instanceof World) {
+            return getSelectedBoundingBox(state, (World) source, new BlockPos(0, 0, 0));
+        } else {
+            return super.getBoundingBox(state, source, pos);
+        }
+    }
+    
+    @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos) {
         return getSelectedBoundingBox(blockState, worldIn, new BlockPos(0, 0, 0));
     }
