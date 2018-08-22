@@ -22,8 +22,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelDakimakura extends ModelBase {
     
-    private static final String MODEL_PATH = "models/bolster-new-uv.obj";
-    private static final String MODEL_PATH_LOD = "models/daki-lod-%d.obj";
+    private static final String MODEL_PATH = "models/dakimakura.obj";
+    private static final String MODEL_PATH_LOD = "models/dakimakura-lod-%d.obj";
     
     private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(LibModInfo.ID, "textures/models/blank.png");
     

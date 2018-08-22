@@ -37,8 +37,8 @@ tile.dakimakuramod:dakimakura.tooltip.flip=§a潜行§7 + §a鼠标右击空气�
 item.dakimakuramod:daki-design.name=抱枕设计图
 
 # Item tooltip
-item.dakimakuramod:dakiDesign.tooltip.unlock=§a右击鼠标§7 随机获得一个有图案的抱枕设计图.
-item.dakimakuramod:dakiDesign.tooltip.usage=可与一个空白抱枕合成为一个有图案的抱枕.
+item.dakimakuramod:daki-design.tooltip.unlock=§a右击鼠标§7 随机获得一个有图案的抱枕设计图.
+item.dakimakuramod:daki-design.tooltip.usage=可与一个空白抱枕合成为一个有图案的抱枕.
 
 # Creative tab
 itemGroup.dakimakuramod=抱枕模组

@@ -55,3 +55,4 @@ Tips & Ticks
 --------------
 The command "/dakimakura reload" can be used to reload all dakimakura packs without restarting the game.
 The hard coded max size for dakimakura images is 4096*8192 for each side. Using bigger images is just a waste of space.
+Deleting this readme will cause the "Andrew's Vanilla Mobs" pack to be reset.
