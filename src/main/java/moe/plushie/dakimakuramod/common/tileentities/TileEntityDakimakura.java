@@ -88,7 +88,6 @@ public class TileEntityDakimakura extends TileEntity {
     }
     
     public Packet getDescriptionPacket() {
-
         return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
     }
     
@@ -113,8 +112,8 @@ public class TileEntityDakimakura extends TileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        if (getBlockType() == ModBlocks.blockDakimakura) {
-            IBlockState blockState = worldObj.getBlockState(getPos());
+        IBlockState blockState = worldObj.getBlockState(getPos());
+        if (blockState.getBlock() == ModBlocks.blockDakimakura) {
             boolean standing = blockState.getValue(BlockDakimakura.PROPERTY_STANDING);
             EnumFacing rotation = blockState.getValue(BlockDakimakura.PROPERTY_DIRECTION);
             if (standing) {
