@@ -35,11 +35,11 @@ tile.dakimakuramod:dakimakura.tooltip.flip=Sneak and §aright click§7 in the ai
 tile.dakimakuramod:dakimakura.tooltip.blank=Blank
 
 # Item names
-item.dakimakuramod:dakiDesign.name=Dakimakura Design
+item.dakimakuramod:daki-design.name=Dakimakura Design
 
 # Item tooltip
-item.dakimakuramod:dakiDesign.tooltip.unlock=§aRight click§7 this item to unlock a dakimakura design.
-item.dakimakuramod:dakiDesign.tooltip.usage=Craft this design with a blank dakimakura.
+item.dakimakuramod:daki-design.tooltip.unlock=§aRight click§7 this item to unlock a dakimakura design.
+item.dakimakuramod:daki-design.tooltip.usage=Craft this design with a blank dakimakura.
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod

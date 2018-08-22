@@ -28,7 +28,7 @@ public class ItemDakiDesign extends AbstractModItem {
     private IIcon unlockedIcon;
     
     public ItemDakiDesign() {
-        super("dakiDesign");
+        super("daki-design");
         setMaxStackSize(16);
     }
     
