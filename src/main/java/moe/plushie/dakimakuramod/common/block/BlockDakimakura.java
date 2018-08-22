@@ -84,6 +84,14 @@ public class BlockDakimakura extends AbstractModBlockContainer {
     
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if (state.getValue(PROPERTY_TOP)) {
+            if (state.getValue(PROPERTY_STANDING)) {
+                pos = pos.offset(EnumFacing.DOWN);
+            } else {
+                EnumFacing rot = state.getValue(PROPERTY_DIRECTION);
+                pos = pos.offset(rot.getOpposite());
+            }
+        }
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityDakimakura) {
             state = state.withProperty(PROPERTY_FLIPPED, ((TileEntityDakimakura)tileEntity).isFlipped());
