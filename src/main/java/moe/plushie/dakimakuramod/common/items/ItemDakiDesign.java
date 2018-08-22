@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemDakiDesign extends AbstractModItem {
     
     public ItemDakiDesign() {
-        super("dakiDesign");
+        super("daki-design");
         setMaxStackSize(16);
     }
     

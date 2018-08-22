@@ -34,11 +34,11 @@ tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=Нажмите §aПКМ §7в присяде на пустое место чтобы перевернуть. 
 
 # Item Names
-item.dakimakuramod:dakiDesign.name=Дизайн Дакимакуры
+item.dakimakuramod:daki-design.name=Дизайн Дакимакуры
 
 # Item tooltip
-item.dakimakuramod:dakiDesign.tooltip.unlock=Нажмите §aПКМ §7этим с предметом в руке, чтобы открыть этот дизайн.
-item.dakimakuramod:dakiDesign.tooltip.usage=Совместите этот дизайн с пустой Дакимакурой на верстаке
+item.dakimakuramod:daki-design.tooltip.unlock=Нажмите §aПКМ §7этим с предметом в руке, чтобы открыть этот дизайн.
+item.dakimakuramod:daki-design.tooltip.usage=Совместите этот дизайн с пустой Дакимакурой на верстаке
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod

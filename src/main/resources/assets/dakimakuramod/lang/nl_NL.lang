@@ -30,11 +30,11 @@ tile.dakimakuramod:dakimakura.name=Dakimakura
 tile.dakimakuramod:dakimakura.tooltip=Een Knuffelbare Vriend!
 
 # Item Names
-item.dakimakuramod:dakiDesign.name=Dakimakura Uiterlijk
+item.dakimakuramod:daki-design.name=Dakimakura Uiterlijk
 
 # Item tooltip
-item.dakimakuramod:dakiDesign.tooltip.unlock=Gebruik Rechtermuisknop op dit item om het Dakimakura design te krijgen
-item.dakimakuramod:dakiDesign.tooltip.usage=Combineer dit design met een lege Dakimakura
+item.dakimakuramod:daki-design.tooltip.unlock=Gebruik Rechtermuisknop op dit item om het Dakimakura design te krijgen
+item.dakimakuramod:daki-design.tooltip.usage=Combineer dit design met een lege Dakimakura
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
