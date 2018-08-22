@@ -38,7 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod.EventBusSubscriber(modid = LibModInfo.ID)
+@Mod.EventBusSubscriber(modid = LibModInfo.ID, value = { Side.CLIENT })
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
