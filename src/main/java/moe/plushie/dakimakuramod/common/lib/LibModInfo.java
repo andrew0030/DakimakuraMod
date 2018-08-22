@@ -11,6 +11,6 @@ public class LibModInfo {
     public static final String GUI_FACTORY_CLASS = "moe.plushie.dakimakuramod.client.gui.ModGuiFactory";
     
     public static boolean isDevelopmentVersion() {
-        return VERSION.equals("@VERSION@");
+        return VERSION.startsWith("@VER");
     }
 }
