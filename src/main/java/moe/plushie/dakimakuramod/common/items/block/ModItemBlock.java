@@ -16,11 +16,6 @@ public class ModItemBlock extends ItemBlock {
     public ModItemBlock(Block block) {
         super(block);
     }
-
-    @Override
-    public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-        return super.getUnlocalizedNameInefficiently(par1ItemStack);
-    }
     
     @SideOnly(Side.CLIENT)
     @Override

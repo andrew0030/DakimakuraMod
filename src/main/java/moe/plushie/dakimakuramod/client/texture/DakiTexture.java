@@ -30,7 +30,6 @@ public class DakiTexture extends AbstractTexture {
     }
     
     public boolean isLoaded() {
-
         if (glTextureId == -1) {
             if (lastLoad + 200 < System.currentTimeMillis()) {
                 if (load()) {
@@ -51,11 +50,9 @@ public class DakiTexture extends AbstractTexture {
                             load();
                         }
                     }
-                    
                 }
             }
             return false;
-            
         }
         return true;
     }

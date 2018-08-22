@@ -21,6 +21,11 @@ public final class CraftingManager {
         if (ConfigHandler.enableRecycleRecipe) {
             event.getRegistry().register(new RecipeDakiRecycle().setRegistryName(new ResourceLocation(LibModInfo.ID, "design_recycle")));
         }
+        
+        if (ConfigHandler.enableClearingRecipe) {
+            event.getRegistry().register(new RecipeDakiClear().setRegistryName(new ResourceLocation(LibModInfo.ID, "daki_clear")));
+        }
+        
         if (ConfigHandler.enableRecipe) {
             if (!ConfigHandler.useAltRecipe) {
                 event.getRegistry().register(new ShapedOreRecipe(null, new ItemStack(ModBlocks.blockDakimakura, 1, 0), new Object[] {
