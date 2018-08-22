@@ -88,7 +88,7 @@ public class ItemBlockDakimakura extends ModItemBlock {
         if (!block.isReplaceable(world, pos)) {
             pos = pos.offset(facing);
         }
-        if (stack.stackSize != 0 && entityPlayer.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(this.block, pos, false, facing, (Entity)null, stack)) {
+        if (stack.stackSize != 0 && entityPlayer.canPlayerEdit(pos, facing, stack) && world.canBlockBePlaced(Blocks.STONE, pos, false, facing, (Entity)null, stack)) {
             int rot = (MathHelper.floor_double((double)(entityPlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
             EnumFacing[] rots = new EnumFacing[] {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
             EnumFacing rotation = rots[rot].getOpposite();
