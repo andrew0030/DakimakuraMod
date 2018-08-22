@@ -34,7 +34,7 @@ tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=§a潜行§7 + §a鼠标右击空气§7 翻转抱枕.
 
 # Item Names
-item.dakimakuramod:dakiDesign.name=抱枕的设计图
+item.dakimakuramod:daki-design.name=抱枕的设计图
 
 # Item tooltip
 item.dakimakuramod:dakiDesign.tooltip.unlock=§a右击鼠标§7 随机获得一个有图案的抱枕设计图.
@@ -49,7 +49,7 @@ chat.dakimakuramod:updateDownload=[下载]
 chat.dakimakuramod:updateDownloadRollover=点击打开下载页.
 
 # Config
-config.dakimakuramod:enableRecipe=允许玩家合成.
+config.dakimakuramod:enableRecipe=允许玩家合成抱枕.
 config.dakimakuramod:enableRecipe.tooltip=允许抱枕的合成表.
 
 config.dakimakuramod:useAltRecipe=当合成冲突时使用备用合成表.
@@ -58,20 +58,20 @@ config.dakimakuramod:useAltRecipe.tooltip=抱枕的合成表6个羊毛变为3个
 config.dakimakuramod:enableRecycleRecipe=允许设计图二次合成.
 config.dakimakuramod:enableRecycleRecipe.tooltip=可以使用两个已经鉴定过的抱枕设计图合成为一个新的未鉴定的抱枕设计图.
 
-config.dakimakuramod:addUnlockToLootChests=设置设计图出现在奖励箱里.
+config.dakimakuramod:addUnlockToLootChests=设计图在奖励箱出现.
 config.dakimakuramod:addUnlockToLootChests.tooltip=将抱枕设计图添加到世界随机刷出的箱子中.
 
-config.dakimakuramod:mobDropChance=生物死亡基础掉落几率设置.
-config.dakimakuramod:mobDropChance.tooltip=设置抱枕设计图在生物死亡时的掉落几率，设置0为不掉落.
+config.dakimakuramod:mobDropChance=设计图掉落几率.
+config.dakimakuramod:mobDropChance.tooltip=设置抱枕设计图在生物死亡时的掉落几率，设置0为不掉落, 设置100为一定掉落.
 
-config.dakimakuramod:mobDropLootingBonus=生物死亡额外掉落率设置.
-config.dakimakuramod:mobDropLootingBonus.tooltip=升物死亡额外掉落一个抱枕设计图几率等级.\nmobDropChance + (mobDropLootingBonus * lootingLevel)\n生物死亡基础掉落几率 + (生物掉落额外几率 X 稀有度等级)
+config.dakimakuramod:mobDropLootingBonus=设计图每级抢夺增加的掉落几率.
+config.dakimakuramod:mobDropLootingBonus.tooltip=设置抱枕设计图在每级抢夺附魔下增加的掉落几率, 实际掉落几率 = 基础掉落几率 + 抢夺增加几率 * 抢夺等级
 
 config.dakimakuramod:textureMaxSize=最大贴图尺寸.
 config.dakimakuramod:textureMaxSize.tooltip=抱枕贴图尺寸.\n这个值将被四舍五入到最合适比例 2.\n将限制在GPU最大纹理尺寸.
 
 config.dakimakuramod:dakiRenderDist=最大渲染距离.
-config.dakimakuramod:dakiRenderDist.tooltip=多少方块距离可以显示出抱枕.
+config.dakimakuramod:dakiRenderDist.tooltip=显示抱枕的最大距离(单位为方块).
 
-config.dakimakuramod:checkForUpdates=是否显示检查更新?
-config.dakimakuramod:checkForUpdates.tooltip=是否打开检测新版本?
+config.dakimakuramod:checkForUpdates=是否自动检查更新
+config.dakimakuramod:checkForUpdates.tooltip=打开Minecraft时是否自动检测Mod有新版本
