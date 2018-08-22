@@ -53,7 +53,10 @@ public final class DakiExtractor {
     
     public static void extractDakis() {
         File packFolder = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
-        extractResource("readme.txt", new File(packFolder, "readme.txt"), false);
+        if (new File(packFolder, "readme.txt").exists()) {
+            return;
+        }
+        extractResource("readme.txt", new File(packFolder, "readme.txt"), true);
         extractDakiPack(packFolder, DAKI_PACK_ANDREWS, DAKI_PACK_ANDREWS_LIST);
     }
     
@@ -65,7 +68,7 @@ public final class DakiExtractor {
                 return;
             }
         }
-        extractResource(packName + "/pack-info.json", new File(packFolder, "pack-info.json"), false);
+        extractResource(packName + "/pack-info.json", new File(packFolder, "pack-info.json"), true);
         for (int i = 0; i < packFiles.length; i++) {
             extractDaki(packFolder, packName, packFiles[i]);
         }
@@ -79,9 +82,9 @@ public final class DakiExtractor {
         File dakiFolder = new File(packFolder, name);
         if (!dakiFolder.exists()) {
             dakiFolder.mkdir();
-            for (int i = 0; i < files.length; i++) {
-                extractResource(packName + "/" + name + "/" + files[i], new File(dakiFolder, files[i]), false);
-            }
+        }
+        for (int i = 0; i < files.length; i++) {
+            extractResource(packName + "/" + name + "/" + files[i], new File(dakiFolder, files[i]), true);
         }
     }
     
@@ -96,14 +99,14 @@ public final class DakiExtractor {
         InputStream input = null;
         FileOutputStream output = null;
         try {
-            DakimakuraMod.getLogger().info(String.format("Extracting file %s. to %s", source, target.getAbsolutePath()));
+            DakimakuraMod.getLogger().info(String.format("Extracting file '%s' to '%s'.", source, target.getAbsolutePath()));
             input = DakiExtractor.class.getClassLoader().getResourceAsStream(DAKI_ASSETS_LOCATION + source);
             if (input != null) {
                 output = new FileOutputStream(target);
                 IOUtils.copy(input, output);
                 output.flush();
             } else {
-                DakimakuraMod.getLogger().error(String.format("Error extracting file %s.", source));
+                DakimakuraMod.getLogger().error(String.format("Error extracting file '%s'.", source));
             }
         } catch (IOException e) {
             e.printStackTrace();
