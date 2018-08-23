@@ -75,7 +75,7 @@ public class DakiTexture extends AbstractTexture {
         try {
             int sizeW = bufferedImageFull.getWidth();
             int sizeH = bufferedImageFull.getHeight();
-            DakimakuraMod.getLogger().info(String.format("Uploading texture of size %d*%d to GPU for daki %s", sizeW, sizeH, daki.toString()));
+            //DakimakuraMod.getLogger().info(String.format("Uploading texture of size %d*%d to GPU for daki %s", sizeW, sizeH, daki.toString()));
             TextureUtil.uploadTextureImageAllocate(this.getGlTextureId(), bufferedImageFull, false, false);
         } catch (Exception e) {
             e.printStackTrace();

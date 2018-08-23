@@ -39,7 +39,7 @@ public class DakiImageData implements Callable<DakiImageData> {
     }
     
     public void load() {
-        DakimakuraMod.getLogger().info("Loading daki from disk: " + daki);
+        //DakimakuraMod.getLogger().info("Loading daki from disk: " + daki);
         File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         
         dir = new File(dir, daki.getPackDirectoryName());
