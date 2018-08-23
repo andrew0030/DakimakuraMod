@@ -29,6 +29,9 @@ public final class DakiNbtSerializer {
     }
     
     public static boolean isFlipped(NBTTagCompound compound) {
+        if (compound == null) {
+            return false;
+        }
         return compound.getBoolean(TAG_FLIPPED);
     }
     
