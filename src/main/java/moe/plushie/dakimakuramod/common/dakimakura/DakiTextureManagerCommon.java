@@ -121,7 +121,7 @@ public class DakiTextureManagerCommon implements Runnable {
     }
     
     private void sendTextureToClient(EntityPlayerMP playerEntity, Daki daki, DakiImageData imageData) {
-        DakimakuraMod.getLogger().info("Sending daki to client " + playerEntity.getDisplayName() + " " + daki);
+        //DakimakuraMod.getLogger().info("Sending daki to client " + playerEntity.getDisplayName() + " " + daki);
         DakiSendHelper.sendDakiTexturesToClient(playerEntity, daki, imageData);
     }
     
