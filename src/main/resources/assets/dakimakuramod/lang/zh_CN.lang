@@ -29,9 +29,10 @@ tile.dakimakuramod:dakimakura.name=抱枕
 # Block tooltip
 tile.dakimakuramod:dakimakura.tooltip=要抱着才能睡觉
 tile.dakimakuramod:dakimakura.tooltip.pack=§7抱枕包名: §f%s§7 - (%d/%d)
-tile.dakimakuramod:dakimakura.tooltip.name=§7作者名字: §f%s
+tile.dakimakuramod:dakimakura.tooltip.name=§7抱枕名字: §f%s
 tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=§a潜行§7 + §a鼠标右击空气§7 翻转抱枕.
+tile.dakimakuramod:dakimakura.tooltip.blank=无图案
 
 # Item Names
 item.dakimakuramod:daki-design.name=抱枕设计图
@@ -47,6 +48,11 @@ itemGroup.dakimakuramod=抱枕模组
 chat.dakimakuramod:updateAvailable=抱枕模组最新版 %s 已经推出.
 chat.dakimakuramod:updateDownload=[下载]
 chat.dakimakuramod:updateDownloadRollover=点击打开下载页.
+chat.dakimakuramod:invalidJar=抱枕模组检测到自身jar包已损坏. 请点击 %s 打开下载页, 或者点击 %s 来提交一个错误报告.
+chat.dakimakuramod:invalidJarDownload=[这里]
+chat.dakimakuramod:invalidJarDownloadTooltip=点击打开下载页面.
+chat.dakimakuramod:invalidJarStopModReposts=[这里]
+chat.dakimakuramod:invalidJarStopModRepostsTooltip=点击打开Mod错误报告页面.
 
 # Config
 config.dakimakuramod:enableRecipe=允许玩家合成抱枕.
@@ -57,6 +63,9 @@ config.dakimakuramod:useAltRecipe.tooltip=抱枕的合成表6个羊毛变为3个
 
 config.dakimakuramod:enableRecycleRecipe=允许设计图二次合成.
 config.dakimakuramod:enableRecycleRecipe.tooltip=可以使用两个已经鉴定过的抱枕设计图合成为一个新的未鉴定的抱枕设计图.
+
+config.dakimakuramod:enableClearingRecipe=允许通过合成的方式清空抱枕上的图案.
+config.dakimakuramod:enableClearingRecipe.tooltip=允许直接合成有图案的抱枕, 得到一个无图案的空白抱枕.
 
 config.dakimakuramod:addUnlockToLootChests=设计图在奖励箱出现.
 config.dakimakuramod:addUnlockToLootChests.tooltip=将抱枕设计图添加到世界随机刷出的箱子中.
@@ -72,6 +81,3 @@ config.dakimakuramod:textureMaxSize.tooltip=抱枕贴图尺寸.\n这个值将被
 
 config.dakimakuramod:dakiRenderDist=最大渲染距离.
 config.dakimakuramod:dakiRenderDist.tooltip=显示抱枕的最大距离(单位为方块).
-
-config.dakimakuramod:checkForUpdates=是否自动检查更新
-config.dakimakuramod:checkForUpdates.tooltip=打开Minecraft时是否自动检测Mod有新版本
