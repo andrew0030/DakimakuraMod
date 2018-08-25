@@ -31,7 +31,7 @@ public class UpdateCheck implements Runnable {
     /** The url to use for update checking */
     private static final String UPDATE_URL = "http://plushie.moe/app_update/minecraft_mods/dakimakuramod/update.json";
     
-    public static String downloadUrl = "https://discord.gg/5Z3KKvU";
+    public static String downloadUrl = "https://minecraft.curseforge.com/projects/dakimakura-mod/files";
     
     private boolean shownUpdateInfo = false;
     
