@@ -44,31 +44,6 @@ public class ItemDakiDesign extends AbstractModItem {
     }
     
     @Override
-    public ItemStack getContainerItem(ItemStack itemStack) {
-        ItemStack containerItem = super.getContainerItem(itemStack);
-        if (containerItem != null) {
-            return itemStack.copy();
-        } else {
-            return null;
-        }
-    }
-    
-    @Override
-    public boolean hasContainerItem(ItemStack itemStack) {
-        if (getContainerItem() != null) {
-            Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
-            return daki != null;
-        } else {
-            return false;
-        }
-    }
-    /*
-    @Override
-    public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
-        return false;
-    }*/
-    
-    @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         Daki checkDaki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());

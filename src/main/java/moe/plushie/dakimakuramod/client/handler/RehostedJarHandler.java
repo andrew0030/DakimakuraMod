@@ -83,7 +83,7 @@ public final class RehostedJarHandler {
         downloadLink.getStyle().setUnderlined(true);
         downloadLink.getStyle().setColor(TextFormatting.BLUE);
         downloadLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.dakimakuramod:invalidJarDownloadTooltip", (Object)null)));
-        downloadLink.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, LibModInfo.UPDATE_PAGE));
+        downloadLink.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, LibModInfo.DOWNLOAD_URL));
         
         TextComponentTranslation stopModRepostsLink = new TextComponentTranslation("chat.dakimakuramod:invalidJarStopModReposts", (Object)null);
         stopModRepostsLink.getStyle().setUnderlined(true);

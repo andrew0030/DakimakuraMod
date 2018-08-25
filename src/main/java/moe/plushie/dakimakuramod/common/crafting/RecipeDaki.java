@@ -21,6 +21,9 @@ public class RecipeDaki implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != null) {
+                if (stack.stackSize > 1) {
+                    return false;
+                }
                 if (stack.getItem() == ModItems.dakiDesign) {
                     if (stackDesign == null) {
                         stackDesign = stack;
@@ -66,6 +69,9 @@ public class RecipeDaki implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != null) {
+                if (stack.stackSize > 1) {
+                    return null;
+                }
                 if (stack.getItem() == ModItems.dakiDesign) {
                     if (stackDesign == null) {
                         stackDesign = stack;
@@ -102,8 +108,6 @@ public class RecipeDaki implements IRecipe {
         }
         DakiNbtSerializer.serialize(dakiDesign, result.getTagCompound());
         
-        ModItems.dakiDesign.setContainerItem(ModItems.dakiDesign);
-        
         return result;
     }
 
@@ -119,6 +123,16 @@ public class RecipeDaki implements IRecipe {
     
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        return new ItemStack[inventoryCrafting.getSizeInventory()];
+        ItemStack[] ret = new ItemStack[inventoryCrafting.getSizeInventory()];
+        for (int i = 0; i < ret.length; i++) {
+            ItemStack itemStack = inventoryCrafting.getStackInSlot(i);
+            ret[i] = null;
+            if (itemStack != null) {
+                if (itemStack.getItem() == ModItems.dakiDesign) {
+                    ret[i] = itemStack.copy();
+                }
+            }
+        }
+        return ret;
     }
 }

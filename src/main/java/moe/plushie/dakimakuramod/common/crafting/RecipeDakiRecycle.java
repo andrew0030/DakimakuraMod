@@ -7,7 +7,6 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 public class RecipeDakiRecycle implements IRecipe {
     
@@ -19,6 +18,9 @@ public class RecipeDakiRecycle implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != null) {
+                if (stack.stackSize > 1) {
+                    return false;
+                }
                 if (stack.getItem() != ModItems.dakiDesign) {
                     return false;
                 }
@@ -60,6 +62,9 @@ public class RecipeDakiRecycle implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != null) {
+                if (stack.stackSize > 1) {
+                    return null;
+                }
                 if (stack.getItem() != ModItems.dakiDesign) {
                     return null;
                 }
@@ -90,8 +95,6 @@ public class RecipeDakiRecycle implements IRecipe {
             return null;
         }
         
-        ModItems.dakiDesign.setContainerItem(null);
-        
         return new ItemStack(ModItems.dakiDesign);
     }
 
@@ -107,6 +110,17 @@ public class RecipeDakiRecycle implements IRecipe {
 
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        return ForgeHooks.defaultRecipeGetRemainingItems(inventoryCrafting);
+        ItemStack[] ret = new ItemStack[inventoryCrafting.getSizeInventory()];
+        for (int i = 0; i < ret.length; i++) {
+            ItemStack itemStack = inventoryCrafting.getStackInSlot(i);
+            ret[i] = null;
+            if (itemStack != null) {
+                if (itemStack.stackSize > 1) {
+                    ret[i] = itemStack.copy();
+                    ret[i].stackSize--;
+                }
+            }
+        }
+        return ret;
     }
 }

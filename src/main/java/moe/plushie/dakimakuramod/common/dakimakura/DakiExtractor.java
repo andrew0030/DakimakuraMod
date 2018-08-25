@@ -8,6 +8,7 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 
 public final class DakiExtractor {
     
@@ -54,7 +55,9 @@ public final class DakiExtractor {
     public static void extractDakis() {
         File packFolder = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
         if (new File(packFolder, "readme.txt").exists()) {
-            return;
+            if (!ConfigHandler.hasUpdated) {
+                return;
+            }
         }
         extractResource("readme.txt", new File(packFolder, "readme.txt"), true);
         extractDakiPack(packFolder, DAKI_PACK_ANDREWS, DAKI_PACK_ANDREWS_LIST);
