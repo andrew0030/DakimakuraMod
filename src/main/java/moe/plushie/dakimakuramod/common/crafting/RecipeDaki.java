@@ -108,8 +108,6 @@ public class RecipeDaki implements IRecipe {
         }
         DakiNbtSerializer.serialize(dakiDesign, result.getTagCompound());
         
-        ModItems.dakiDesign.setContainerItem(ModItems.dakiDesign);
-        
         return result;
     }
 
@@ -125,6 +123,16 @@ public class RecipeDaki implements IRecipe {
     
     @Override
     public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting) {
-        return new ItemStack[inventoryCrafting.getSizeInventory()];
+        ItemStack[] ret = new ItemStack[inventoryCrafting.getSizeInventory()];
+        for (int i = 0; i < ret.length; i++) {
+            ItemStack itemStack = inventoryCrafting.getStackInSlot(i);
+            ret[i] = null;
+            if (itemStack != null) {
+                if (itemStack.getItem() == ModItems.dakiDesign) {
+                    ret[i] = itemStack.copy();
+                }
+            }
+        }
+        return ret;
     }
 }
