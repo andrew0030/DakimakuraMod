@@ -44,7 +44,6 @@ item.dakimakuramod:daki-design.tooltip.usage=Craft this design with a blank daki
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
 
-=======
 # Chat messages
 chat.dakimakuramod:updateAvailable=Dakimakura Mod update %s is available.
 chat.dakimakuramod:updateDownload=[Download]
@@ -82,3 +81,6 @@ config.dakimakuramod:textureMaxSize.tooltip=Max texture size for dakimakuras.\nT
 
 config.dakimakuramod:dakiRenderDist=Max render distance.
 config.dakimakuramod:dakiRenderDist.tooltip=The maximum distance away in blocks dakimakuras will render.
+
+config.dakimakuramod:checkForUpdates=Check for updates?
+config.dakimakuramod:checkForUpdates.tooltip=Should the mod check for newer versions?
