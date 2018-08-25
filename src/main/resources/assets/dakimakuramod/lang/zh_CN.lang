@@ -81,3 +81,6 @@ config.dakimakuramod:textureMaxSize.tooltip=抱枕贴图尺寸。\n这个值将�
 
 config.dakimakuramod:dakiRenderDist=最大渲染距离。
 config.dakimakuramod:dakiRenderDist.tooltip=显示抱枕的最大距离（单位为方块）。
+
+config.dakimakuramod:checkForUpdates=是否自动检查更新。
+config.dakimakuramod:checkForUpdates.tooltip=打开Minecraft时是否自动检测Mod有新版本。
