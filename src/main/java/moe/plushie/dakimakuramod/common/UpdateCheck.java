@@ -150,7 +150,7 @@ public class UpdateCheck implements Runnable {
         }
     }
     
-    private int versionCompare(String str1, String str2) {
+    public static int versionCompare(String str1, String str2) {
         String[] vals1 = str1.split("\\.");
         String[] vals2 = str2.split("\\.");
         int i = 0;

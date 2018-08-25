@@ -6,6 +6,8 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
+import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.UpdateCheck;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import net.minecraftforge.common.config.Configuration;
 
@@ -14,13 +16,13 @@ public class ConfigHandler {
     public static final String CATEGORY_RECIPE = "recipe";
     public static final String CATEGORY_LOOT = "loot";
     public static final String CATEGORY_CLIENT = "client";
+    public static final String CATEGORY_OTHER = "other";
     private static final String LANG_KEY_PREFIX = "config." + LibModInfo.ID + ":";
     
     public static Configuration config;
     
     // General
     public static boolean onlyUnlockNewSkins;
-    
     
     // Recipes
     public static boolean enableRecipe;
@@ -38,11 +40,16 @@ public class ConfigHandler {
     public static int dakiRenderDist;
     public static boolean checkForUpdates;
     
+    // Other
+    public static String lastVersion;
+    public static boolean hasUpdated;
+    
     public ConfigHandler(File file) {
         if (config == null) {
             config = new Configuration(file, "1");
             loadConfigFile();
         }
+        checkIfUpdated();
         FMLCommonHandler.instance().bus().register(this);
     }
     
@@ -50,6 +57,23 @@ public class ConfigHandler {
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
         if (eventArgs.modID.equals(LibModInfo.ID)) {
             loadConfigFile();
+        }
+    }
+    
+    public void checkIfUpdated() {
+        String localVersion = LibModInfo.VERSION;
+        if (LibModInfo.isDevelopmentVersion()) {
+            return;
+        }
+        if (UpdateCheck.versionCompare(lastVersion.replaceAll("-", "."), localVersion.replaceAll("-", ".")) < 0) {
+            DakimakuraMod.getLogger().info(String.format("Updated from version %s to version %s.", lastVersion, localVersion));
+            config.getCategory(CATEGORY_OTHER).get("lastVersion").set(localVersion);
+            if (config.hasChanged()) {
+                config.save();
+            }
+            hasUpdated = true;
+        } else {
+            hasUpdated = false;
         }
     }
 
@@ -66,6 +90,7 @@ public class ConfigHandler {
     private void loadCategoryCommon() {
         loadCategoryRecipe();
         loadCategoryLoot();
+        lastVersion = config.getString("lastVersion", CATEGORY_OTHER, "0.0", "Used by the mod to check if it has been updated.");
     }
     
     private void loadCategoryRecipe() {
