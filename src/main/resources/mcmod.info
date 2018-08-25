@@ -5,12 +5,12 @@
   "description": "Allows players to place Dakimakuras on their beds and around the world.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://discord.gg/5Z3KKvU",
+  "url": "https://minecraft.curseforge.com/projects/dakimakura-mod",
   "updateUrl": "",
   "authorList": ["RiskyKen"],
   "logoFile": "",
   "screenshots": [],
   "dependencies": [],
-  "credits": "Model by ORCS004. Andrew's Vanilla Mobs pack by andrew0030. Localisers nl_NL by MikaPikaaa, ru_RU by [\\//972] and zh_CN by Ethan & TROU2004"
+  "credits": "Model by ORCS004. Andrew's Vanilla Mobs pack by andrew0030. Localisers nl_NL by MikaPikaaa, ru_RU by [\\//972] and zh_CN by Ethan, TROU2004 and TartaricAcid"
 }
 ]

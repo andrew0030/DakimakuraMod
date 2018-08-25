@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
-@Mod(modid = LibModInfo.ID, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS, updateJSON = LibModInfo.UPDATE_URL, dependencies = LibModInfo.DEPENDENY)
+@Mod(modid = LibModInfo.ID, version = LibModInfo.VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS, updateJSON = LibModInfo.UPDATE_CHECK_URL, dependencies = LibModInfo.DEPENDENY)
 public class DakimakuraMod {
     
     @Instance(LibModInfo.ID)
