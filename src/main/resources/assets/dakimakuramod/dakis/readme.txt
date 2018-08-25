@@ -21,6 +21,14 @@ If you are still confused about the formatting check the "Andrew's Vanilla Mobs"
 
 
 
+Image Details
+--------------
+Dakimakura's in game are 50cm x 150cm so images that are a 1:3 ratio will work best.
+The default config settings only allow an image size of 1024*515 per side, larger images will be scaled down to save VRAM. It is recommended that you keep images at or under this size.
+Most image formats will be accepted however image formats without compression like BMP, are not recommended as they will take a long time for the client to load.
+
+
+
 Advanced Usage
 --------------
 A pack-info.json file can be created inside the pack directory to display more information about your pack. (all elements are optional)
@@ -56,3 +64,4 @@ Tips & Ticks
 The command "/dakimakura reload" can be used to reload all dakimakura packs without restarting the game.
 The hard coded max size for dakimakura images is 4096*8192 for each side. Using bigger images is just a waste of space.
 Deleting this readme will cause the "Andrew's Vanilla Mobs" pack to be reset.
+If you are playing on a server new dakimakura's only need to be installed on the server, they will be sent to the clients when they connect.

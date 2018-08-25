@@ -32,31 +32,41 @@ tile.dakimakuramod:dakimakura.tooltip.pack=§7Комплект: §f%s§7 - (%d/%
 tile.dakimakuramod:dakimakura.tooltip.name=§7Название: §f%s
 tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
 tile.dakimakuramod:dakimakura.tooltip.flip=Нажмите §aПКМ §7в присяде на пустое место чтобы перевернуть. 
+tile.dakimakuramod:dakimakura.tooltip.blank=Пустая
 
 # Item Names
-item.dakimakuramod:daki-design.name=Дизайн Дакимакуры
+item.dakimakuramod:dakiDesign.name=Дизайн Дакимакуры
 
 # Item tooltip
-item.dakimakuramod:daki-design.tooltip.unlock=Нажмите §aПКМ §7этим с предметом в руке, чтобы открыть этот дизайн.
-item.dakimakuramod:daki-design.tooltip.usage=Совместите этот дизайн с пустой Дакимакурой на верстаке
+item.dakimakuramod:dakiDesign.tooltip.unlock=Нажмите §aПКМ §7этим с предметом в руке, чтобы открыть этот дизайн.
+item.dakimakuramod:dakiDesign.tooltip.usage=Совместите этот дизайн с пустой Дакимакурой на верстаке
 
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
 
+=======
 # Chat messages
 chat.dakimakuramod:updateAvailable=Доступно обновление %s для мода Dakimakura Mod.
 chat.dakimakuramod:updateDownload=[Загрузить]
 chat.dakimakuramod:updateDownloadRollover=Нажмите чтобы перейти на страницу загрузки.
+chat.dakimakuramod:invalidJar=Dakimakura Mod обнаружил повреждённый jar файл. Нажмите %s чтобы перейти на официальную страницу загрузки или %s чтобы узнать больше о незаконный перезаливах модов.
+chat.dakimakuramod:invalidJarDownload=[сюда]
+chat.dakimakuramod:invalidJarDownloadTooltip=Нажмите, чтобы перейти на страницу загрузки.
+chat.dakimakuramod:invalidJarStopModReposts=[сюда]
+chat.dakimakuramod:invalidJarStopModRepostsTooltip=Нажмите, чтобы посетить страницу проекта Stop Mod Reposts.
 
 # Config
 config.dakimakuramod:enableRecipe=Позволить крафтить дакимакуры.
-config.dakimakuramod:enableRecipe.tooltip=Позволяет крафтить дакимакуры ан верстаке.
+config.dakimakuramod:enableRecipe.tooltip=Позволяет крафтить дакимакуры на верстаке.
 
 config.dakimakuramod:useAltRecipe=Альтернативный рецепт
-config.dakimakuramod:useAltRecipe.tooltip=Менят рецепт с 6ти блоков шерсти на 3 блока шерсти и 6 ниток
+config.dakimakuramod:useAltRecipe.tooltip=Менят рецепт с 6-ти блоков шерсти на 3 блока шерсти и 6 ниток
 
 config.dakimakuramod:enableRecycleRecipe=Позволить перерабатывать дизайны.
 config.dakimakuramod:enableRecycleRecipe.tooltip=Позволяет превратить два дизайна в случайный новый.
+
+config.dakimakuramod:enableClearingRecipe=Позволить сбрасывать дизайны.
+config.dakimakuramod:enableClearingRecipe.tooltip=Положите дакимакуру в верстак, чтобы сбросить дизайн.
 
 config.dakimakuramod:addUnlockToLootChests=Генерировть дизайны в сундуках.
 config.dakimakuramod:addUnlockToLootChests.tooltip=Позволить дизайнам появлятся в сундуках сокровищниц.
