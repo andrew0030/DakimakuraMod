@@ -21,6 +21,9 @@ public class RecipeDaki implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != null) {
+                if (stack.stackSize > 1) {
+                    return false;
+                }
                 if (stack.getItem() == ModItems.dakiDesign) {
                     if (stackDesign == null) {
                         stackDesign = stack;
@@ -66,6 +69,9 @@ public class RecipeDaki implements IRecipe {
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
             if (stack != null) {
+                if (stack.stackSize > 1) {
+                    return null;
+                }
                 if (stack.getItem() == ModItems.dakiDesign) {
                     if (stackDesign == null) {
                         stackDesign = stack;
