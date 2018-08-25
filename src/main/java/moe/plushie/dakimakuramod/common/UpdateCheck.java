@@ -29,9 +29,9 @@ import net.minecraftforge.common.MinecraftForge;
 public class UpdateCheck implements Runnable {
     
     /** The url to use for update checking */
-    private static final String UPDATE_URL = "http://plushie.moe/app_update/minecraft_mods/dakimakuramod/update.json";
+    private static final String UPDATE_URL = LibModInfo.UPDATE_CHECK_URL;
     
-    public static String downloadUrl = "https://minecraft.curseforge.com/projects/dakimakura-mod/files";
+    public static String downloadUrl = LibModInfo.DOWNLOAD_URL;
     
     private boolean shownUpdateInfo = false;
     
