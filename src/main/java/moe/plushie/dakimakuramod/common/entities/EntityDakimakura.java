@@ -26,7 +26,7 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
 
     private static final String TAG_FLIPPED = "flipped";
     private static final String TAG_ROTATION = "rotation";
-    private static final DataParameter<Boolean> FLIPPED = EntityDataManager.<Boolean>createKey(Entity.class, DataSerializers.BOOLEAN);
+    private static DataParameter<Boolean> FLIPPED = EntityDataManager.<Boolean>createKey(Entity.class, DataSerializers.BOOLEAN);
     
     private String packDirName;
     private String dakiDirName;
@@ -34,10 +34,13 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     
     public EntityDakimakura(World world) {
         super(world);
-        this.dataManager.register(FLIPPED, Boolean.valueOf(false));
         noClip = true;
-        width = 4;
-        height = 1;
+    }
+    
+    @Override
+    protected void entityInit() {
+        setSize(4, 1);
+        this.dataManager.register(FLIPPED, Boolean.valueOf(false));
     }
     
     public void setDaki(Daki daki) {
@@ -85,9 +88,6 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
         setRotation(yaw, pitch);
     }
      */
-    @Override
-    protected void entityInit() {
-    }
     
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {

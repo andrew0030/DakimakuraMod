@@ -37,6 +37,7 @@ public class ModBlocks {
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
+        //GameRegistry.registerTileEntity(tileEntityClass, new ResourceLocation(LibModInfo.ID, "tileentity." + id));
         GameRegistry.registerTileEntity(tileEntityClass, "tileentity." + id);
     }
 }

@@ -25,12 +25,15 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -74,7 +77,13 @@ public class ClientProxy extends CommonProxy {
     public void preInitRenderers() {
         dakiTextureManager = new DakiTextureManagerClient();
         modelDakimakura = new ModelDakimakura(dakiTextureManager);
-        RenderingRegistry.registerEntityRenderingHandler(EntityDakimakura.class, new RenderEntityDakimakura(Minecraft.getMinecraft().getRenderManager(), modelDakimakura));
+        RenderingRegistry.registerEntityRenderingHandler(EntityDakimakura.class, new IRenderFactory() {
+
+            @Override
+            public Render createRenderFor(RenderManager manager) {
+                return new RenderEntityDakimakura(Minecraft.getMinecraft().getRenderManager(), modelDakimakura);
+            }
+        });
     }
     
     @Override
