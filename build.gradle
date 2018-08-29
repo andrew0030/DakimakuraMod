@@ -11,6 +11,10 @@ buildscript {
     }
 }
 
+plugins{
+	id "thefireplace.en2ud" version "0.9"
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 if (System.env.BUILD_NUMBER != null) {
@@ -30,6 +34,10 @@ minecraft {
     
     mappings = "snapshot_20171003"
     makeObfSourceJar = false
+}
+
+en2ud {
+	modid = "dakimakuramod"
 }
 
 dependencies {
