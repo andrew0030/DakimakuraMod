@@ -1,0 +1,86 @@
+# 텍스트의 시작 부분에 다음 코드를 추가하여 스타일을 지정할 수 있습니다.
+# & 0 검정
+# & 1 진한 파란색
+# & 2 진한 녹색
+# & 3 다크 아쿠아
+# & 4 진한 빨강
+# & 5 진한 보라색
+# & 6 골드
+# & 7 회색
+# & 8 짙은 회색
+# & 9 블루
+# & a 녹색
+# & b 아쿠아
+# & c 빨간색
+# & d 라이트 퍼플
+# & e 옐로우
+# & f 흰색
+# §l 굵게 
+# §m 취소 선
+# §n 밑줄
+# §o 기울임 꼴
+# §r 재설정
+#
+# %n을(를) 사용하여 새 줄을 삽입할 수 있습니다. 쓰는 위치에 맞게 새 줄을 추가하거나 제거하십시오.
+
+# 블럭 이름
+tile.dakimakuramod:dakimakura.name=다키마쿠라(대형 베개)
+
+# 블럭 도구 정보
+tile.dakimakuramod:dakimakura.tooltip=껴안을 수있는 친구!
+tile.dakimakuramod:dakimakura.tooltip.pack=§7다키마쿠라(대형 베개) 이름: §f%s§7 - (%d/%d)
+tile.dakimakuramod:dakimakura.tooltip.name=§7제작자 이름: §f%s
+tile.dakimakuramod:dakimakura.tooltip.flavour=§5§o%s
+tile.dakimakuramod:dakimakura.tooltip.flip=§a마우스 오른쪽 버튼§7으로 베개를 클릭하십시오.
+tile.dakimakuramod:dakimakura.tooltip.blank=공백
+
+# 아이템 이름
+item.dakimakuramod:daki-design.name=다키마쿠라 디자인
+
+# 아이템 도구팁
+item.dakimakuramod:daki-design.tooltip.unlock=다키마쿠라 디자인의 잠금을 해제하려면이 항목을 §a오른쪽으로 클릭§7하십시오.
+item.dakimakuramod:daki-design.tooltip.usage=빈 다키마쿠라 디자인을 공예.
+
+# 크리에이티브 탭
+itemGroup.dakimakuramod=다키마쿠라 모드
+
+# 채팅 메시지
+chat.dakimakuramod:updateAvailable=다키마쿠라 모드 업데이트 %s을 (를) 사용할 수 있습니다.
+chat.dakimakuramod:updateDownload=[다운로드]
+chat.dakimakuramod:updateDownloadRollover=다운로드 페이지를 열려면 클릭하십시오..
+chat.dakimakuramod:invalidJar=다키마쿠라 모드가 잘못된 jar 파일을 감지했습니다. 불법 모드 재 게시에 대해 자세히 알아 보려면 %s을 (를) 클릭하여 공식 다운로드 페이지를 열거 나 %s을 (를) 클릭하십시오.
+chat.dakimakuramod:invalidJarDownload=[여기]
+chat.dakimakuramod:invalidJarDownloadTooltip=다운로드 페이지를 열려면 클릭하십시오.
+chat.dakimakuramod:invalidJarStopModReposts=[여기]
+chat.dakimakuramod:invalidJarStopModRepostsTooltip=모드 정기 리포스트 페이지를 클릭하여 엽니다.
+
+# 설정
+config.dakimakuramod:enableRecipe=제작 방법 사용.
+config.dakimakuramod:enableRecipe.tooltip=다키마쿠라 제작 방법 사용.
+
+config.dakimakuramod:useAltRecipe=대체 제조법 사용.
+config.dakimakuramod:useAltRecipe.tooltip=6 개의 양모를 3 개의 양모와 6 개의 끈으로 제작합니다.
+
+config.dakimakuramod:enableRecycleRecipe=재활용 방법 사용.
+config.dakimakuramod:enableRecycleRecipe.tooltip=원치 않는 두 개의 설계를 함께 만들어 새로운 다키마쿠라 설계를 가져올 수 있습니다.
+
+config.dakimakuramod:enableClearingRecipe=레시피 지우기를 사용합니다.
+config.dakimakuramod:enableClearingRecipe.tooltip=다키마쿠라 디자인을 깨끗하게 만들도록 허락하십시오.
+
+config.dakimakuramod:addUnlockToLootChests=가슴에 디자인을 추가합니다.
+config.dakimakuramod:addUnlockToLootChests.tooltip=전세계 다키마쿠라 디자인 아이템을 전리품 상자에 추가하십시오.
+
+config.dakimakuramod:mobDropChance=디자인 드로잉 확률.
+config.dakimakuramod:mobDropChance.tooltip=생물학적 죽음의 경우 베개 디자인이 떨어지는 확률을 설정하십시오. 0을 떨어 뜨리지 않도록 설정하고 100을 떨어 뜨리십시오.
+
+config.dakimakuramod:mobDropLootingBonus=디자인 맵은 레벨 당 증가 된 드롭 율을 부여합니다.
+config.dakimakuramod:mobDropLootingBonus.tooltip=마법의 각 레벨에서 드롭 기회를 증가 시키도록 베개 디자인을 설정합니다. 실제 낙하 확률 = 기본 낙하 확률 + 잡는 확률 * 스낵 레벨
+
+config.dakimakuramod:textureMaxSize=최대 텍스처 크기.
+config.dakimakuramod:textureMaxSize.tooltip=다키마쿠라의 최대 텍스처 크기. \ 이것은 2의 가장 가까운 제곱으로 반올림됩니다. \ 최대 텍스처 크기로 제한됩니다.
+
+config.dakimakuramod:dakiRenderDist=최대 렌더링 거리.
+config.dakimakuramod:dakiRenderDist.tooltip=베개의 최대 거리를 보여줍니다.
+
+config.dakimakuramod:checkForUpdates=업데이트 자동 확인 여부
+config.dakimakuramod:checkForUpdates.tooltip=Minecraft 를 열 때 자동으로 새로운 버전의 mod를 확인 하시겠습니까?
