@@ -95,13 +95,18 @@ public class DakiSendHelper {
             
             byte[] data1 = null;
             byte[] data2 = null;
-            if (sizeFront > 0) {
-                data1 = new byte[sizeFront];
-                System.arraycopy(newSkinData, 0, data1, 0, sizeFront);
-            }
-            if (sizeBack > 0) {
-                data2 = new byte[sizeBack];
-                System.arraycopy(newSkinData, sizeFront, data2, 0, sizeBack);
+            
+            try {
+                if (sizeFront > 0) {
+                    data1 = new byte[sizeFront];
+                    System.arraycopy(newSkinData, 0, data1, 0, sizeFront);
+                }
+                if (sizeBack > 0) {
+                    data2 = new byte[sizeBack];
+                    System.arraycopy(newSkinData, sizeFront, data2, 0, sizeBack);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             
             DakiImageData imageData = new DakiImageData(daki, data1, data2);
