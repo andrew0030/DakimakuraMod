@@ -31,10 +31,13 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     
     public EntityDakimakura(World world) {
         super(world);
-        dataWatcher.addObject(2, Byte.valueOf((byte)0));
         noClip = true;
-        width = 4;
-        height = 1;
+        setSize(4, 1);
+    }
+
+    @Override
+    protected void entityInit() {
+        dataWatcher.addObject(2, Byte.valueOf((byte)0));
     }
     
     public void setDaki(Daki daki) {
@@ -80,10 +83,6 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int p_70056_9_) {
         setPosition(x, y, z);
         setRotation(yaw, pitch);
-    }
-
-    @Override
-    protected void entityInit() {
     }
     
     @Override
