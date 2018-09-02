@@ -1,12 +1,17 @@
 package moe.plushie.dakimakuramod.client.texture;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
@@ -19,29 +24,27 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class DakiTextureManagerClient {
+public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTexture> {
     
-    private final HashMap<Daki, DakiTexture> textureMap;
-    private final ArrayList<DakiTexture> texturesForDeletion;
+    private final Cache<Daki, DakiTexture> textureCache;
     private final AtomicInteger textureRequests;
     private final CompletionService<DakiImageData> textureCompletion;
+    private final ArrayList<DakiTexture> textureCleanup;
     
     public DakiTextureManagerClient() {
-        textureMap = new HashMap<Daki, DakiTexture>();
-        texturesForDeletion = new ArrayList<DakiTexture>();
+        textureCache = CacheBuilder.newBuilder().removalListener(this).expireAfterAccess(20, TimeUnit.MINUTES).build();
         textureRequests = new AtomicInteger(0);
         textureCompletion = new ExecutorCompletionService<DakiImageData>(Executors.newFixedThreadPool(1));
+        textureCleanup = new ArrayList<DakiTexture>();
         FMLCommonHandler.instance().bus().register(this);
     }
     
     public DakiTexture getTextureForDaki(Daki daki) {
         DakiTexture dakiTexture  = null;
-        synchronized (textureMap) {
-            dakiTexture = textureMap.get(daki);
-            if (dakiTexture == null) {
-                dakiTexture = new DakiTexture(daki);
-                textureMap.put(daki, dakiTexture);
-            }
+        dakiTexture = textureCache.getIfPresent(daki);
+        if (dakiTexture == null) {
+            dakiTexture = new DakiTexture(daki);
+            textureCache.put(daki, dakiTexture);
         }
         return dakiTexture;
     }
@@ -49,48 +52,38 @@ public class DakiTextureManagerClient {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
-            deleteTextures();
+            textureCache.cleanUp();
             Future<DakiImageData> futureDakiImageData = textureCompletion.poll();
             if (futureDakiImageData != null) {
                 try {
                     DakiImageData dakiImageData = futureDakiImageData.get();
                     if (dakiImageData != null) {
-                        synchronized (textureMap) {
-                            DakiTexture dakiTexture = textureMap.get(dakiImageData.getDaki());
-                            if (dakiTexture != null) {
-                                dakiTexture.setBufferedImageFull(dakiImageData.getBufferedImageFull());
-                            }
+                        DakiTexture dakiTexture = textureCache.getIfPresent(dakiImageData.getDaki());
+                        if (dakiTexture != null) {
+                            dakiTexture.setBufferedImageFull(dakiImageData.getBufferedImageFull());
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            deleteTextures();
         }
     }
     
     public void reloadTextures() {
-        markTexturesForDeletion();
-    }
-    
-    private void markTexturesForDeletion() {
-        synchronized (textureMap) {
-            synchronized (texturesForDeletion) {
-                Daki[] keys = (Daki[]) textureMap.keySet().toArray(new Daki[textureMap.size()]);
-                for (int i = 0; i < keys.length; i++) {
-                    DakiTexture dakiTexture = textureMap.remove(keys[i]);
-                    texturesForDeletion.add(dakiTexture);
-                }
-            }
-        }
+        textureCache.asMap().clear();
     }
     
     private void deleteTextures() {
-        synchronized (texturesForDeletion) {
-            for (int i = 0; i < texturesForDeletion.size(); i++) {
-                texturesForDeletion.get(i).deleteGlTexture();
+        synchronized(textureCleanup) {
+            for (int i = 0; i < textureCleanup.size(); i++) {
+                DakiTexture texture = textureCleanup.get(i);
+                if (texture != null) {
+                    texture.deleteGlTexture();
+                }
             }
-            texturesForDeletion.clear();
+            textureCleanup.clear();
         }
     }
     
@@ -101,5 +94,13 @@ public class DakiTextureManagerClient {
     public void serverSentTextures(DakiImageData imageData) {
         textureRequests.decrementAndGet();
         textureCompletion.submit(imageData);
+    }
+
+    @Override
+    public void onRemoval(RemovalNotification<Daki, DakiTexture> notification) {
+        //DakimakuraMod.getLogger().info("Removing texture for daki " + notification.getKey().toString());
+        synchronized(textureCleanup) {
+            textureCleanup.add(notification.getValue());
+        }
     }
 }
