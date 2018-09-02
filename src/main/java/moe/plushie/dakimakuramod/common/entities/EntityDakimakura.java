@@ -35,11 +35,11 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
     public EntityDakimakura(World world) {
         super(world);
         noClip = true;
+        setSize(4, 1);
     }
     
     @Override
     protected void entityInit() {
-        setSize(4, 1);
         this.dataManager.register(FLIPPED, Boolean.valueOf(false));
     }
     
