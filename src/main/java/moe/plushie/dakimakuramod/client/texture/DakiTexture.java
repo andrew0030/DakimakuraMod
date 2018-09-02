@@ -31,7 +31,7 @@ public class DakiTexture extends AbstractTexture {
     
     public boolean isLoaded() {
         if (glTextureId == -1) {
-            if (lastLoad + 200 < System.currentTimeMillis()) {
+            if (lastLoad + 25 < System.currentTimeMillis()) {
                 if (load()) {
                     lastLoad = System.currentTimeMillis();
                 } else {
