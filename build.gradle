@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins{
-	id "thefireplace.en2ud" version "0.9"
+    id "thefireplace.en2ud" version "0.9"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -37,7 +37,7 @@ minecraft {
 }
 
 en2ud {
-	modid = "dakimakuramod"
+    modid = "dakimakuramod"
 }
 
 dependencies {

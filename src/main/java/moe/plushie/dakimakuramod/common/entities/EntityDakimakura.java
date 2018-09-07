@@ -26,7 +26,7 @@ public class EntityDakimakura extends Entity implements IEntityAdditionalSpawnDa
 
     private static final String TAG_FLIPPED = "flipped";
     private static final String TAG_ROTATION = "rotation";
-    private static DataParameter<Boolean> FLIPPED = EntityDataManager.<Boolean>createKey(EntityDakimakura.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> FLIPPED = EntityDataManager.<Boolean>createKey(EntityDakimakura.class, DataSerializers.BOOLEAN);
     
     private String packDirName;
     private String dakiDirName;
