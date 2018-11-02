@@ -12,10 +12,11 @@ import net.minecraft.server.MinecraftServer;
 public class CommandDakimakura extends CommandBase {
     
     private final ArrayList<AbstractCommand> subCommands;
-
+    
     public CommandDakimakura() {
         subCommands = new ArrayList<AbstractCommand>();
         subCommands.add(new CommandReload());
+        subCommands.add(new CommandOpenPackFolder());
     }
     
     @Override
@@ -27,7 +28,7 @@ public class CommandDakimakura extends CommandBase {
     public String getCommandName() {
         return "dakimakura";
     }
-
+    
     @Override
     public String getCommandUsage(ICommandSender commandSender) {
         return "commands.dakimakura.usage";
@@ -65,14 +66,14 @@ public class CommandDakimakura extends CommandBase {
         }
         return null;
     }
-
+    
     @Override
     public void processCommand(ICommandSender commandSender, String[] currentCommand) {
         if (currentCommand == null) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+            throw new WrongUsageException(getCommandUsage(commandSender), (Object) currentCommand);
         }
         if (currentCommand.length < 1) {
-            throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+            throw new WrongUsageException(getCommandUsage(commandSender), (Object) currentCommand);
         }
         String commandName = currentCommand[0];
         AbstractCommand command = getSubCommand(commandName);
@@ -80,7 +81,7 @@ public class CommandDakimakura extends CommandBase {
             command.processCommand(commandSender, currentCommand);
             return;
         }
-        throw new WrongUsageException(getCommandUsage(commandSender), (Object)currentCommand);
+        throw new WrongUsageException(getCommandUsage(commandSender), (Object) currentCommand);
     }
     
     private String[] getPlayers() {
