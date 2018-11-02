@@ -101,24 +101,29 @@ public class ConfigHandler {
         enableRecipe = config.getBoolean("enableRecipe", CATEGORY_RECIPE, true,
                 "Enable the crafting recipe for dakimakuras.",
                 LANG_KEY_PREFIX + "enableRecipe");
+        category.get("enableRecipe").setRequiresMcRestart(true);
         
         useAltRecipe = config.getBoolean("useAltRecipe", CATEGORY_RECIPE, false,
                 "Changes the crafting recipe from 6 wool to 3 wool and 6 string.",
                 LANG_KEY_PREFIX + "useAltRecipe");
+        category.get("useAltRecipe").setRequiresMcRestart(true);
         
         enableRecycleRecipe = config.getBoolean("enableRecycleRecipe", CATEGORY_RECIPE, true,
                 "Allow getting a new dakimakura design by crafting 2 unwanted designs together.",
                 LANG_KEY_PREFIX + "enableRecycleRecipe");
+        category.get("enableRecycleRecipe").setRequiresMcRestart(true);
         
         enableClearingRecipe = config.getBoolean("enableClearingRecipe", CATEGORY_RECIPE, true,
                 "Allow crafting a dakimakura to clear its design.",
-                LANG_KEY_PREFIX + "enableClearingRecipe"); 
+                LANG_KEY_PREFIX + "enableClearingRecipe");
+        category.get("enableClearingRecipe").setRequiresMcRestart(true);
     }
     
     private void loadCategoryLoot(ConfigCategory category) {
         addUnlockToLootChests = config.getBoolean("addUnlockToLootChests", CATEGORY_LOOT, false,
                 "Add the dakimakura design items to loot chests around the world.",
                 LANG_KEY_PREFIX + "addUnlockToLootChests");
+        category.get("addUnlockToLootChests").setRequiresMcRestart(true);
         
         mobDropChance = config.getFloat("mobDropChance", CATEGORY_LOOT, 1F, 0F, 100F,
                 "Percentage chance of mobs dropping a dakimakura design. 0 disables mob drops.",
