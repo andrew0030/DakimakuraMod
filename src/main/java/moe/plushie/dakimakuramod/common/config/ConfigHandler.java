@@ -156,7 +156,7 @@ public class ConfigHandler {
                 "How long in minutes dakimakuras can be loaded into the clients memory without getting used.\n"
                 + "Lower values will reduce memory use while higher values will reduce bandwidth usage.",
                 LANG_KEY_PREFIX + "cacheTimeClient");
-        category.get("cacheTimeClient").setRequiresMcRestart(true);
+        category.get("cacheTime").setRequiresMcRestart(true);
     }
     
     private void loadCategoryServer(ConfigCategory category) {
@@ -164,6 +164,6 @@ public class ConfigHandler {
                 "How long in minutes dakimakuras can be loaded into the servers memory without getting used.\n"
                 + "Lower values will reduce memory use while higher values will reduce disk access.",
                 LANG_KEY_PREFIX + "cacheTimeServer");
-        category.get("cacheTimeServer").setRequiresMcRestart(true);
+        category.get("cacheTime").setRequiresMcRestart(true);
     }
 }

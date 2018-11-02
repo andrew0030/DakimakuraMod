@@ -54,6 +54,9 @@ chat.dakimakuramod:invalidJarDownloadTooltip=Click to open the download page.
 chat.dakimakuramod:invalidJarStopModReposts=[here]
 chat.dakimakuramod:invalidJarStopModRepostsTooltip=Click to open Stop Mod Reposts page.
 
+# Command
+commands.dakimakura.usage=/dakimakura <reload | openPackFolder>
+
 # Config
 config.dakimakuramod:enableRecipe=Enable crafting recipe.
 config.dakimakuramod:enableRecipe.tooltip=Enable the crafting recipe for dakimakuras.
