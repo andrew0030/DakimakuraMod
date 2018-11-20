@@ -19,7 +19,7 @@ import moe.plushie.dakimakuramod.client.render.tileentity.RenderBlockDakimakura;
 import moe.plushie.dakimakuramod.client.texture.DakiTextureManagerClient;
 import moe.plushie.dakimakuramod.common.UpdateCheck;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.IDakiPack;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
 import moe.plushie.dakimakuramod.common.tileentities.TileEntityDakimakura;
@@ -62,8 +62,8 @@ public class ClientProxy extends CommonProxy {
     }
     
     @Override
-    public void setDakiList(ArrayList<Daki> dakiList) {
-        super.setDakiList(dakiList);
+    public void setDakiList(ArrayList<IDakiPack> packs) {
+        super.setDakiList(packs);
         dakiTextureManager.reloadTextures();
     }
     

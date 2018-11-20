@@ -10,10 +10,10 @@ import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.crafting.CraftingManager;
-import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiExtractor;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiTextureManagerCommon;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.IDakiPack;
 import moe.plushie.dakimakuramod.common.entities.EntityDakimakura;
 import moe.plushie.dakimakuramod.common.handler.BedHandler;
 import moe.plushie.dakimakuramod.common.handler.MobLootHandler;
@@ -88,7 +88,7 @@ public class CommonProxy {
         return textureManagerCommon;
     }
 
-    public void setDakiList(ArrayList<Daki> dakiList) {
-        dakimakuraManager.setDakiList(dakiList);
+    public void setDakiList(ArrayList<IDakiPack> packs) {
+        dakimakuraManager.setDakiList(packs);
     }
 }

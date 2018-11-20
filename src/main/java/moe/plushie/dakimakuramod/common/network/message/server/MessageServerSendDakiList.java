@@ -10,12 +10,15 @@ import io.netty.buffer.ByteBuf;
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.DakiPackClient;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.IDakiPack;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiJsonSerializer;
 
 public class MessageServerSendDakiList implements IMessage, IMessageHandler<MessageServerSendDakiList, IMessage> {
 
     private final DakiManager dakiManager;
-    private ArrayList<Daki> dakiList;
+    
+    private ArrayList<IDakiPack> packs;
     
     public MessageServerSendDakiList() {
         dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
@@ -23,32 +26,46 @@ public class MessageServerSendDakiList implements IMessage, IMessageHandler<Mess
     
     @Override
     public void toBytes(ByteBuf buf) {
-        ArrayList<Daki> dakiList = dakiManager.getDakiList();
-        buf.writeInt(dakiList.size());
-        DakimakuraMod.getLogger().info("Sending " + dakiList.size() + " to client.");
-        for (int i = 0; i < dakiList.size(); i++) {
-            Daki daki = dakiList.get(i);
-            ByteBufUtils.writeUTF8String(buf, daki.getPackDirectoryName() + ":" + daki.getDakiDirectoryName());
-            ByteBufUtils.writeUTF8String(buf, DakiJsonSerializer.serialize(daki).toString());
+        ArrayList<IDakiPack> dakiPacks = dakiManager.getDakiPacksList();
+        DakimakuraMod.getLogger().info("Sending " + dakiPacks.size() + " packs to client.");
+        buf.writeInt(dakiPacks.size());
+        for (int i = 0; i < dakiPacks.size(); i++) {
+            IDakiPack dakiPack = dakiPacks.get(i);
+            ByteBufUtils.writeUTF8String(buf, dakiPack.getResourceName());
+            ArrayList<Daki> dakis = dakiPack.getDakisInPack();
+            DakimakuraMod.getLogger().info("Sending " + dakis.size() + " dakis to client.");
+            buf.writeInt(dakis.size());
+            for (int j = 0; j < dakis.size(); j++) {
+                Daki daki = dakis.get(j);
+                ByteBufUtils.writeUTF8String(buf, daki.getDakiDirectoryName());
+                ByteBufUtils.writeUTF8String(buf, DakiJsonSerializer.serialize(daki).toString());
+            }
         }
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        dakiList = new ArrayList<Daki>();
-        int listSize = buf.readInt();
-        DakimakuraMod.getLogger().info("Getting " + listSize + " from server.");
-        for (int i = 0; i < listSize; i++) {
-            String path = ByteBufUtils.readUTF8String(buf);
-            String dakiJson = ByteBufUtils.readUTF8String(buf);
-            String[] pathSplit = path.split(":");
-            dakiList.add(DakiJsonSerializer.deserialize(dakiJson, pathSplit[0], pathSplit[1]));
+        packs = new ArrayList<IDakiPack>();
+        int packCount = buf.readInt();
+        DakimakuraMod.getLogger().info("Getting " + packCount + " packs from server.");
+        for (int i = 0; i < packCount; i++) {
+            String packName = ByteBufUtils.readUTF8String(buf);
+            IDakiPack dakiPack = new DakiPackClient(packName);
+            int dakiCount = buf.readInt();
+            DakimakuraMod.getLogger().info("Getting " + dakiCount + " dakis from server.");
+            for (int j = 0; j < dakiCount; j++) {
+                String path = ByteBufUtils.readUTF8String(buf);
+                String dakiJson = ByteBufUtils.readUTF8String(buf);
+                Daki daki = DakiJsonSerializer.deserialize(dakiJson, dakiPack.getResourceName(), path);
+                dakiPack.addDaki(daki);
+            }
+            packs.add(dakiPack);
         }
     }
 
     @Override
     public IMessage onMessage(MessageServerSendDakiList message, MessageContext ctx) {
-        DakimakuraMod.getProxy().setDakiList(message.dakiList);
+        DakimakuraMod.getProxy().setDakiList(message.packs);
         return null;
     }
 }
