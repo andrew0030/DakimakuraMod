@@ -1,18 +1,22 @@
 package moe.plushie.dakimakuramod.common.dakimakura.pack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
+import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
+import moe.plushie.dakimakuramod.common.dakimakura.DakiManager;
 
 public abstract class AbstractDakiPack implements IDakiPack {
     
+    protected final DakiManager dakiManager;
     private final String resourceName;
-    protected final HashMap<String, Daki> dakiMap;
+    protected final LinkedHashMap<String, Daki> dakiMap;
     
     protected AbstractDakiPack(String resourceName) {
+        dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
         this.resourceName = resourceName;
-        dakiMap = new HashMap<String, Daki>();
+        dakiMap = new LinkedHashMap<String, Daki>();
     }
     
     @Override

@@ -146,7 +146,7 @@ public class Daki implements Comparable<Daki> {
         IDakiPack dakiPack = dakiManager.getDakiPack(packDirectoryName);
         if (dakiPack != null) {
             int index =  dakiManager.getDakiIndexInPack(this) + 1;
-            int total = dakiManager.getNumberOfDakisInPack(packDirectoryName);
+            int total = dakiPack.getDakiCount();
             String textPack = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack";
             String textName = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name";
             list.add(StatCollector.translateToLocalFormatted(textPack, dakiPack.getName(), index, total));

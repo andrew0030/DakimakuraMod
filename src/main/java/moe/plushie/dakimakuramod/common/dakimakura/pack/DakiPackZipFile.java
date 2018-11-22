@@ -16,19 +16,15 @@ import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiJsonSerializer;
 
-public class DakiPackFile extends AbstractDakiPack {
+public class DakiPackZipFile extends AbstractDakiPack {
 
-    private final File file;
-    
-    public DakiPackFile(File file) {
-        super(file.getName());
-        this.file = file;
-        loadPack();
+    public DakiPackZipFile(String file) {
+        super(file);
     }
     
     @Override
     public String getName() {
-        return file.getName().substring(0, file.getName().length() - 4);
+        return getResourceName().substring(0, getResourceName().length() - 4);
     }
     
     @Override
@@ -37,7 +33,7 @@ public class DakiPackFile extends AbstractDakiPack {
         InputStream inputStream = null;
         byte[] data = null;
         try {
-            zipFile = new ZipFile(file, ZipFile.OPEN_READ);
+            zipFile = new ZipFile(new File(dakiManager.getPackFolder(), getResourceName()), ZipFile.OPEN_READ);
             ZipEntry zipEntry = zipFile.getEntry(path);
             if (zipEntry != null) {
                 inputStream = zipFile.getInputStream(zipEntry);
@@ -56,7 +52,7 @@ public class DakiPackFile extends AbstractDakiPack {
     public boolean resourceExists(String path) {
         ZipFile zipFile = null;
         try {
-            zipFile = new ZipFile(file, ZipFile.OPEN_READ);
+            zipFile = new ZipFile(new File(dakiManager.getPackFolder(), getResourceName()), ZipFile.OPEN_READ);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry zipEntry = entries.nextElement();
@@ -72,11 +68,11 @@ public class DakiPackFile extends AbstractDakiPack {
         return false;
     }
     
-    private void loadPack() {
+    public DakiPackZipFile loadPack() {
         DakimakuraMod.getLogger().info("Loading Pack: " + getResourceName());
         ZipFile zipFile = null;
         try {
-            zipFile = new ZipFile(file, ZipFile.OPEN_READ);
+            zipFile = new ZipFile(new File(dakiManager.getPackFolder(), getResourceName()), ZipFile.OPEN_READ);
             int depth = findDepth(zipFile);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
@@ -90,6 +86,7 @@ public class DakiPackFile extends AbstractDakiPack {
         } finally {
             IOUtils.closeQuietly(zipFile);
         }
+        return this;
     }
     
     private int findDepth(ZipFile zipFile) {
@@ -112,7 +109,7 @@ public class DakiPackFile extends AbstractDakiPack {
         dakiName = split[split.length - 1];
         
         dakiName = zipEntry.getName().substring(0, zipEntry.getName().length() - 1);
-        DakimakuraMod.getLogger().info("Loading Dakimakura: " + dakiName);
+        //DakimakuraMod.getLogger().info("Loading Dakimakura: " + dakiName);
         
         ZipEntry dakiJsonZipEntry = zipFile.getEntry(zipEntry.getName() + "daki-info.json");
         if (dakiJsonZipEntry != null) {

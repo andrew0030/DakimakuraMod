@@ -14,17 +14,13 @@ import net.minecraft.util.StringUtils;
 
 public class DakiPackFolder extends AbstractDakiPack {
     
-    private final File folder;
-    
-    public DakiPackFolder(File folder) {
-        super(folder.getName());
-        this.folder = folder;
-        loadPack(folder);
+    public DakiPackFolder(String folder) {
+        super(folder);
     }
     
     @Override
     public String getName() {
-        return folder.getName();
+        return getResourceName();
     }
     
     @Override
@@ -32,7 +28,7 @@ public class DakiPackFolder extends AbstractDakiPack {
         FileInputStream inputStream = null;
         byte[] data = null;
         try {
-            inputStream = new FileInputStream(new File(folder, path));
+            inputStream = new FileInputStream(new File(dakiManager.getPackFolder(), getResourceName() + "/" + path));
             data = IOUtils.toByteArray(inputStream);
             inputStream.close();
         } catch (Exception e) {
@@ -45,10 +41,11 @@ public class DakiPackFolder extends AbstractDakiPack {
     
     @Override
     public boolean resourceExists(String path) {
-        return new File(folder, path).exists();
+        return new File(dakiManager.getPackFolder(), getResourceName() + "/" + path).exists();
     }
     
-    private void loadPack(File dir) {
+    public DakiPackFolder loadPack() {
+        File dir = new File(dakiManager.getPackFolder(), getResourceName());
         DakimakuraMod.getLogger().info("Loading Pack: " + dir.getName());
         File[] files = dir.listFiles();
         for (int i = 0; i < files.length; i++) {
@@ -56,10 +53,11 @@ public class DakiPackFolder extends AbstractDakiPack {
                 loadDaki(dir, files[i]);
             }
         }
+        return this;
     }
     
     private void loadDaki(File packDir, File dakieDir) {
-        DakimakuraMod.getLogger().info("Loading Dakimakura: " + dakieDir.getName());
+        //DakimakuraMod.getLogger().info("Loading Dakimakura: " + dakieDir.getName());
         File dakiFile = new File(dakieDir, "daki-info.json");
         if (dakiFile.exists()) {
             String dakiJson = readStringFromFile(dakiFile);
@@ -95,5 +93,4 @@ public class DakiPackFolder extends AbstractDakiPack {
         }
         return data;
     }
-
 }
