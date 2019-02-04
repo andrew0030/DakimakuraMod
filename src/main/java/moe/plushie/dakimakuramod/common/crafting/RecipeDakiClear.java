@@ -19,9 +19,9 @@ public class RecipeDakiClear implements IRecipe {
         
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != ItemStack.EMPTY) {
+            if (!stack.isEmpty()) {
                 if (stack.getItem() == Item.getItemFromBlock(ModBlocks.blockDakimakura)) {
-                    if (stackDaki == ItemStack.EMPTY) {
+                    if (stackDaki.isEmpty()) {
                         stackDaki = stack;
                     } else {
                         return false;
@@ -32,7 +32,7 @@ public class RecipeDakiClear implements IRecipe {
             }
         }
         
-        if (stackDaki == ItemStack.EMPTY) {
+        if (stackDaki.isEmpty()) {
             return false;
         }
         
@@ -50,9 +50,9 @@ public class RecipeDakiClear implements IRecipe {
         
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != ItemStack.EMPTY) {
+            if (!stack.isEmpty()) {
                 if (stack.getItem() == Item.getItemFromBlock(ModBlocks.blockDakimakura)) {
-                    if (stackDaki == ItemStack.EMPTY) {
+                    if (stackDaki.isEmpty()) {
                         stackDaki = stack;
                     } else {
                         return ItemStack.EMPTY;
@@ -63,7 +63,7 @@ public class RecipeDakiClear implements IRecipe {
             }
         }
         
-        if (stackDaki == ItemStack.EMPTY) {
+        if (stackDaki.isEmpty()) {
             return ItemStack.EMPTY;
         }
         

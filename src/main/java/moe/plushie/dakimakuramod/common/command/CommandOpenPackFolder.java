@@ -11,7 +11,7 @@ import net.minecraft.server.MinecraftServer;
 public class CommandOpenPackFolder extends AbstractCommand {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "openPackFolder";
     }
 

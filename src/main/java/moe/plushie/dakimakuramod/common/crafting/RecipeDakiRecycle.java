@@ -21,16 +21,13 @@ public class RecipeDakiRecycle implements IRecipe {
         ItemStack stackDesign2 = ItemStack.EMPTY;
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != ItemStack.EMPTY) {
-                if (stack.getCount() > 1) {
-                    return false;
-                }
+            if (!stack.isEmpty()) {
                 if (stack.getItem() != ModItems.dakiDesign) {
                     return false;
                 }
-                if (stackDesign1 == ItemStack.EMPTY) {
+                if (stackDesign1.isEmpty()) {
                     stackDesign1 = stack;
-                } else if (stackDesign2 == ItemStack.EMPTY) {
+                } else if (stackDesign2.isEmpty()) {
                     stackDesign2 = stack;
                 } else {
                     return false;
@@ -38,10 +35,10 @@ public class RecipeDakiRecycle implements IRecipe {
             }
         }
         
-        if (stackDesign1 == ItemStack.EMPTY) {
+        if (stackDesign1.isEmpty()) {
             return false;
         }
-        if (stackDesign2 == ItemStack.EMPTY) {
+        if (stackDesign2.isEmpty()) {
             return false;
         }
         
@@ -65,16 +62,13 @@ public class RecipeDakiRecycle implements IRecipe {
         
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != ItemStack.EMPTY) {
-                if (stack.getCount() > 1) {
-                    return ItemStack.EMPTY;
-                }
+            if (!stack.isEmpty()) {
                 if (stack.getItem() != ModItems.dakiDesign) {
                     return ItemStack.EMPTY;
                 }
-                if (stackDesign1 == ItemStack.EMPTY) {
+                if (stackDesign1.isEmpty()) {
                     stackDesign1 = stack;
-                } else if (stackDesign2 == ItemStack.EMPTY) {
+                } else if (stackDesign2.isEmpty()) {
                     stackDesign2 = stack;
                 } else {
                     return ItemStack.EMPTY;
@@ -82,10 +76,10 @@ public class RecipeDakiRecycle implements IRecipe {
             }
         }
         
-        if (stackDesign1 == ItemStack.EMPTY) {
+        if (stackDesign1.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        if (stackDesign2 == ItemStack.EMPTY) {
+        if (stackDesign2.isEmpty()) {
             return ItemStack.EMPTY;
         }
         
@@ -113,16 +107,6 @@ public class RecipeDakiRecycle implements IRecipe {
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-        NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-        for (int i = 0; i < ret.size(); i++) {
-        	ItemStack stack = inv.getStackInSlot(i);
-        	if (stack != ItemStack.EMPTY) {
-            	if (stack.getCount() > 1) {
-            		ret.set(i, stack.copy());
-            		ret.get(i).shrink(1);
-            	}
-        	}
-        }
-        return ret;
+        return ForgeHooks.defaultRecipeGetRemainingItems(inv);
     }
 }
