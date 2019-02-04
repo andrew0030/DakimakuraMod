@@ -13,6 +13,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import moe.plushie.dakimakuramod.common.dakimakura.Daki;
 import moe.plushie.dakimakuramod.common.dakimakura.DakiImageData;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -32,7 +33,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
     private final ArrayList<DakiTexture> textureCleanup;
     
     public DakiTextureManagerClient() {
-        textureCache = CacheBuilder.newBuilder().removalListener(this).expireAfterAccess(20, TimeUnit.MINUTES).build();
+        textureCache = CacheBuilder.newBuilder().removalListener(this).expireAfterAccess(ConfigHandler.cacheTimeClient, TimeUnit.MINUTES).build();
         textureRequests = new AtomicInteger(0);
         textureCompletion = new ExecutorCompletionService<DakiImageData>(Executors.newFixedThreadPool(1));
         textureCleanup = new ArrayList<DakiTexture>();

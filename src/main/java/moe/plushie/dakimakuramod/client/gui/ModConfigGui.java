@@ -33,6 +33,10 @@ public class ModConfigGui extends GuiConfig {
         configs.addAll(new ConfigElement(ConfigHandler.config
                 .getCategory(ConfigHandler.CATEGORY_CLIENT))
                 .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_SERVER))
+                .getChildElements());
         return configs;
     }
 }
