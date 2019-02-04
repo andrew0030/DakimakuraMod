@@ -6,8 +6,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
 
@@ -17,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.config.ConfigHandler;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.IDakiPack;
 import moe.plushie.dakimakuramod.proxies.ClientProxy;
 
 public class DakiImageData implements Callable<DakiImageData> {
@@ -39,54 +38,33 @@ public class DakiImageData implements Callable<DakiImageData> {
     }
     
     public void load() {
-        //DakimakuraMod.getLogger().info("Loading daki from disk: " + daki);
-        File dir = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
-        
-        dir = new File(dir, daki.getPackDirectoryName());
-        dir = new File(dir, daki.getDakiDirectoryName());
-        
-        File fileFront = null;
-        File fileBack = null;
+        String pathFront = null;
+        String pathBack = null;
+        IDakiPack dakiPack = DakimakuraMod.getProxy().getDakimakuraManager().getDakiPack(daki.getPackDirectoryName());
         
         if (daki.getImageFront() != null) {
-            fileFront = new File(dir, daki.getImageFront());
+            pathFront = daki.getDakiDirectoryName() + "/" + daki.getImageFront();
         } else {
             for (int i = 0; i < VALID_FILE_EXT.length; i++) {
-                if (new File(dir, "front." + VALID_FILE_EXT[i]).exists()) {
-                    fileFront = new File(dir, "front." + VALID_FILE_EXT[i]);
+                if (dakiPack.resourceExists(daki.getDakiDirectoryName() + "/front." + VALID_FILE_EXT[i])) {
+                    pathFront = daki.getDakiDirectoryName() + "/front." + VALID_FILE_EXT[i];
                     break;
                 }
             }
         }
         if (daki.getImageBack() != null) {
-            fileBack = new File(dir, daki.getImageBack());
+            pathBack = daki.getDakiDirectoryName() + "/" + daki.getImageBack();
         } else {
             for (int i = 0; i < VALID_FILE_EXT.length; i++) {
-                if (new File(dir, "back." + VALID_FILE_EXT[i]).exists()) {
-                    fileBack = new File(dir, "back." + VALID_FILE_EXT[i]);
+                if (dakiPack.resourceExists(daki.getDakiDirectoryName() + "/front." + VALID_FILE_EXT[i])) {
+                    pathBack = daki.getDakiDirectoryName() + "/back." + VALID_FILE_EXT[i];
                     break;
                 }
             }
         }
         
-        InputStream inputstream = null;
-        try {
-            if (fileFront != null && fileFront.exists()) {
-                inputstream = new FileInputStream(fileFront);
-                textureFront = IOUtils.toByteArray(inputstream);
-                IOUtils.closeQuietly(inputstream);
-                inputstream.close();
-            }
-            if (fileBack != null && fileBack.exists()) {
-                inputstream = new FileInputStream(fileBack);
-                textureBack = IOUtils.toByteArray(inputstream);
-                inputstream.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(inputstream);
-        }
+        textureFront = dakiPack.getResource(pathFront);
+        textureBack = dakiPack.getResource(pathBack);
     }
     
     public Daki getDaki() {

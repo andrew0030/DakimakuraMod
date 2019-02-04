@@ -5,34 +5,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.FileUtils;
-
-import moe.plushie.dakimakuramod.DakimakuraMod;
-import moe.plushie.dakimakuramod.common.dakimakura.serialize.DakiJsonSerializer;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.DakiPackFolder;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.DakiPackZipFile;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.IDakiPack;
 import moe.plushie.dakimakuramod.common.network.PacketHandler;
 import moe.plushie.dakimakuramod.common.network.message.server.MessageServerSendDakiList;
-import net.minecraft.util.StringUtils;
 
 public class DakiManager {
     
+    private static final String PACK_FOLDER_NAME = "dakimakura-mod";
+    
     private final File packFolder;
-    private final HashMap<String, Daki> dakiMap;
+    private final HashMap<String, IDakiPack> dakiPacksMap;
     
     public DakiManager(File file) {
-        packFolder = new File(file, "dakimakura-mod");
+        packFolder = new File(file, PACK_FOLDER_NAME);
         if (!packFolder.exists()) {
             packFolder.mkdir();
         }
-        dakiMap = new HashMap<String, Daki>();
+        dakiPacksMap = new HashMap<String, IDakiPack>();
     }
 
     public void loadPacks(boolean sendToClients) {
-        dakiMap.clear();
-        File[] files = packFolder.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                loadPack(files[i]);
+        dakiPacksMap.clear();
+        for (File file : packFolder.listFiles()) {
+            String resourceName = file.getAbsolutePath().substring(packFolder.getAbsolutePath().length() + 1, file.getAbsolutePath().length());
+            if (file.isDirectory()) {
+                dakiPacksMap.put(resourceName, new DakiPackFolder(resourceName).loadPack());
+            }
+            if (file.isFile() & file.getName().endsWith(".zip")) {
+                dakiPacksMap.put(resourceName, new DakiPackZipFile(resourceName).loadPack());
             }
         }
         if (sendToClients) {
@@ -40,91 +42,44 @@ public class DakiManager {
         }
     }
     
-    private void loadPack(File dir) {
-        DakimakuraMod.getLogger().info("Loading Pack: " + dir.getName());
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                loadDaki(dir, files[i]);
-            }
-        }
-    }
-    
-    private void loadDaki(File packDir, File dakieDir) {
-        DakimakuraMod.getLogger().info("Loading Dakimakura: " + dakieDir.getName());
-        File dakiFile = new File(dakieDir, "daki-info.json");
-        if (dakiFile.exists()) {
-            String dakiJson = readStringFromFile(dakiFile);
-            if (!StringUtils.isNullOrEmpty(dakiJson)) {
-                Daki dakimakura = DakiJsonSerializer.deserialize(dakiJson, packDir.getName(), dakieDir.getName());
-                if (dakimakura != null) {
-                    addDakiToMap(dakimakura);
-                }
-            }
-        } else {
-            addDakiToMap(new Daki(packDir.getName(), dakieDir.getName()));
-        }
-    }
-    
-    private void addDakiToMap(Daki daki) {
-        dakiMap.put(daki.getPackDirectoryName() + ":" + daki.getDakiDirectoryName(), daki);
-    }
-    
     public Daki getDakiFromMap(String packDirName, String dakiDirName) {
-        return dakiMap.get(packDirName + ":" + dakiDirName);
+        IDakiPack dakiPack = dakiPacksMap.get(packDirName);
+        if (dakiPack != null) {
+            return dakiPack.getDaki(dakiDirName);
+        }
+        return null;
     }
     
-    private void writeStringToFile(File file, String data) {
-        try {
-            FileUtils.writeStringToFile(file, data, Charsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ArrayList<IDakiPack> getDakiPacksList() {
+        ArrayList<IDakiPack> packsList = new ArrayList<IDakiPack>();
+        for (IDakiPack dakiPack : dakiPacksMap.values()) {
+            packsList.add(dakiPack);
         }
-    }
-    
-    private String readStringFromFile(File file) {
-        String data = null;
-        try {
-            data = FileUtils.readFileToString(file, Charsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
+        return packsList;
     }
     
     public ArrayList<Daki> getDakiList() {
         ArrayList<Daki> dakimakuraList = new ArrayList<Daki>();
-        for (int i = 0; i < dakiMap.size(); i++) {
-            String key = (String) dakiMap.keySet().toArray()[i];
-            Daki daki = dakiMap.get(key);
-            if (daki != null) {
-                dakimakuraList.add(daki);
-            }
+        for (IDakiPack dakiPack : dakiPacksMap.values()) {
+            dakimakuraList.addAll(dakiPack.getDakisInPack());
         }
         Collections.sort(dakimakuraList);
         return dakimakuraList;
     }
     
-    public void setDakiList(ArrayList<Daki> dakiList) {
-        dakiMap.clear();
-        for (int i = 0; i < dakiList.size(); i++) {
-            addDakiToMap(dakiList.get(i));
+    public void setDakiList(ArrayList<IDakiPack> packs) {
+        dakiPacksMap.clear();
+        for (IDakiPack pack : packs) {
+            dakiPacksMap.put(pack.getResourceName(), pack);
         }
-    }
-    
-    public int getNumberOfDakisInPack(String packName) {
-        return getDakisInPack(packName).size();
     }
     
     public ArrayList<Daki> getDakisInPack(String packName) {
-        ArrayList<Daki> packList = new ArrayList<Daki>();
-        ArrayList<Daki> dakimakuraList = getDakiList();
-        for (int i = 0; i < dakimakuraList.size(); i++) {
-            if (dakimakuraList.get(i).getPackDirectoryName().equals(packName)) {
-                packList.add(dakimakuraList.get(i));
-            }
+        IDakiPack dakiPack = dakiPacksMap.get(packName);
+        if (dakiPack != null) {
+            return dakiPack.getDakisInPack();
         }
-        return packList;
+        return new ArrayList<Daki>();
     }
     
     public int getDakiIndexInPack(Daki daki) {
@@ -135,6 +90,10 @@ public class DakiManager {
             }
         }
         return -1;
+    }
+    
+    public IDakiPack getDakiPack(String packName) {
+        return dakiPacksMap.get(packName);
     }
     
     public File getPackFolder() {
