@@ -20,7 +20,9 @@ import moe.plushie.dakimakuramod.proxies.ClientProxy;
 
 public class DakiImageData implements Callable<DakiImageData> {
     
-    private final static String[] VALID_FILE_EXT = {"png", "jpg", "jpeg"};
+    private static final String[] VALID_FILE_EXT = {"png", "jpg", "jpeg"};
+    private static final String DEFAULT_NAME_FRONT = "front";
+    private static final String DEFAULT_NAME_BACK = "back";
     private final Daki daki;
     private BufferedImage bufferedImageFull;
     private byte[] textureFront;
@@ -46,8 +48,8 @@ public class DakiImageData implements Callable<DakiImageData> {
             pathFront = daki.getDakiDirectoryName() + "/" + daki.getImageFront();
         } else {
             for (int i = 0; i < VALID_FILE_EXT.length; i++) {
-                if (dakiPack.resourceExists(daki.getDakiDirectoryName() + "/front." + VALID_FILE_EXT[i])) {
-                    pathFront = daki.getDakiDirectoryName() + "/front." + VALID_FILE_EXT[i];
+                if (dakiPack.resourceExists(daki.getDakiDirectoryName() + "/" + DEFAULT_NAME_FRONT + "." + VALID_FILE_EXT[i])) {
+                    pathFront = daki.getDakiDirectoryName() + "/" + DEFAULT_NAME_FRONT + "." + VALID_FILE_EXT[i];
                     break;
                 }
             }
@@ -56,8 +58,8 @@ public class DakiImageData implements Callable<DakiImageData> {
             pathBack = daki.getDakiDirectoryName() + "/" + daki.getImageBack();
         } else {
             for (int i = 0; i < VALID_FILE_EXT.length; i++) {
-                if (dakiPack.resourceExists(daki.getDakiDirectoryName() + "/front." + VALID_FILE_EXT[i])) {
-                    pathBack = daki.getDakiDirectoryName() + "/back." + VALID_FILE_EXT[i];
+                if (dakiPack.resourceExists(daki.getDakiDirectoryName() + "/" + DEFAULT_NAME_BACK + "." + VALID_FILE_EXT[i])) {
+                    pathBack = daki.getDakiDirectoryName() + "/" + DEFAULT_NAME_BACK + "." + VALID_FILE_EXT[i];
                     break;
                 }
             }
