@@ -14,10 +14,11 @@ import net.minecraft.util.math.BlockPos;
 public class CommandDakimakura extends CommandBase {
     
     private final ArrayList<AbstractCommand> subCommands;
-
+    
     public CommandDakimakura() {
         subCommands = new ArrayList<AbstractCommand>();
         subCommands.add(new CommandReload());
+        subCommands.add(new CommandOpenPackFolder());
     }
     
     @Override
@@ -29,7 +30,7 @@ public class CommandDakimakura extends CommandBase {
     public String getCommandName() {
         return "dakimakura";
     }
-
+    
     @Override
     public String getCommandUsage(ICommandSender commandSender) {
         return "commands.dakimakura.usage";

@@ -54,6 +54,9 @@ chat.dakimakuramod:invalidJarDownloadTooltip=Click to open the download page.
 chat.dakimakuramod:invalidJarStopModReposts=[here]
 chat.dakimakuramod:invalidJarStopModRepostsTooltip=Click to open Stop Mod Reposts page.
 
+# Command
+commands.dakimakura.usage=/dakimakura <reload | openPackFolder>
+
 # Config
 config.dakimakuramod:enableRecipe=Enable crafting recipe.
 config.dakimakuramod:enableRecipe.tooltip=Enable the crafting recipe for dakimakuras.
@@ -84,3 +87,9 @@ config.dakimakuramod:dakiRenderDist.tooltip=The maximum distance away in blocks 
 
 config.dakimakuramod:checkForUpdates=Check for updates?
 config.dakimakuramod:checkForUpdates.tooltip=Should the mod check for newer versions?
+
+config.dakimakuramod:cacheTimeClient=Cache time client.
+config.dakimakuramod:cacheTimeClient.tooltip=How long in minutes dakimakuras can be loaded into the clients memory without getting used.\nLower values will reduce memory use while higher values will reduce bandwidth usage.
+
+config.dakimakuramod:cacheTimeServer=Cache time server.
+config.dakimakuramod:cacheTimeServer.tooltip=How long in minutes dakimakuras can be loaded into the servers memory without getting used.\nLower values will reduce memory use while higher values will reduce disk access.

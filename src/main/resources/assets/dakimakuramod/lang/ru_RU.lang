@@ -44,7 +44,6 @@ item.dakimakuramod:dakiDesign.tooltip.usage=Совместите этот диз
 # Creative tab
 itemGroup.dakimakuramod=Dakimakura Mod
 
-=======
 # Chat messages
 chat.dakimakuramod:updateAvailable=Доступно обновление %s для мода Dakimakura Mod.
 chat.dakimakuramod:updateDownload=[Загрузить]
@@ -54,6 +53,9 @@ chat.dakimakuramod:invalidJarDownload=[сюда]
 chat.dakimakuramod:invalidJarDownloadTooltip=Нажмите, чтобы перейти на страницу загрузки.
 chat.dakimakuramod:invalidJarStopModReposts=[сюда]
 chat.dakimakuramod:invalidJarStopModRepostsTooltip=Нажмите, чтобы посетить страницу проекта Stop Mod Reposts.
+
+# Command
+commands.dakimakura.usage=/dakimakura <reload | openPackFolder>
 
 # Config
 config.dakimakuramod:enableRecipe=Позволить крафтить дакимакуры.
@@ -84,4 +86,10 @@ config.dakimakuramod:dakiRenderDist=Максимальная дальность 
 config.dakimakuramod:dakiRenderDist.tooltip=Максимальная длинна блоков на которой дакимакуры будут отрисовываться.
 
 config.dakimakuramod:checkForUpdates=Проверять наличие обновлений?
-config.dakimakuramod:checkForUpdates.tooltip=Позволить моду проверять наличие новых версий?\n(Рекомендуется включить)
+config.dakimakuramod:checkForUpdates.tooltip=Производить ли проверку на наличие новых версий?
+
+config.dakimakuramod:cacheTimeClient=Время жизни кэша клиента.
+config.dakimakuramod:cacheTimeClient.tooltip=Сколько минут дакимакуры остаются в памяти клиента (без использования).\nБолее низкие и высокие значения уменьшат использование памяти и трафика соответсвенно.
+
+config.dakimakuramod:cacheTimeServer=Время жизни кэша сервера.
+config.dakimakuramod:cacheTimeServer.tooltip=Сколько минут дакимакуры остаются в памяти клиента (без использования).\nБолее низкие и высокие значения уменьшат использование памяти и нагрузку на жесткий диск сервера соответсвенно.
