@@ -65,19 +65,19 @@ public class ObjModel {
                 Vector3f vn2 = vn[face.vn2 - 1];
                 Vector3f vn3 = vn[face.vn3 - 1];
                 
-                tess.getBuffer().pos(v1.x, v1.y, v1.z);
-                tess.getBuffer().tex(vt1.x, vt1.y);
-                tess.getBuffer().normal(vn1.x, vn1.y, vn1.z);
+                tess.getBuffer().pos(-v1.x, -v1.y, v1.z);
+                tess.getBuffer().tex(vt1.x, -vt1.y);
+                tess.getBuffer().normal(-vn1.x, -vn1.y, vn1.z);
                 tess.getBuffer().endVertex();
                 
-                tess.getBuffer().pos(v2.x, v2.y, v2.z);
-                tess.getBuffer().tex(vt2.x, vt2.y);
-                tess.getBuffer().normal(vn2.x, vn2.y, vn2.z);
+                tess.getBuffer().pos(-v2.x, -v2.y, v2.z);
+                tess.getBuffer().tex(vt2.x, -vt2.y);
+                tess.getBuffer().normal(-vn2.x, -vn2.y, vn2.z);
                 tess.getBuffer().endVertex();
                 
-                tess.getBuffer().pos(v3.x, v3.y, v3.z);
-                tess.getBuffer().tex(vt3.x, vt3.y);
-                tess.getBuffer().normal(vn3.x, vn3.y, vn3.z);
+                tess.getBuffer().pos(-v3.x, -v3.y, v3.z);
+                tess.getBuffer().tex(vt3.x, -vt3.y);
+                tess.getBuffer().normal(-vn3.x, -vn3.y, vn3.z);
                 tess.getBuffer().endVertex();
             }
         } catch (Exception e) {
