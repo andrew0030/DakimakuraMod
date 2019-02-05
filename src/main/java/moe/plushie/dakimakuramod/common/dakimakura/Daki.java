@@ -4,6 +4,7 @@ import java.util.List;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.block.ModBlocks;
+import moe.plushie.dakimakuramod.common.dakimakura.pack.IDakiPack;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
@@ -79,7 +80,12 @@ public class Daki implements Comparable<Daki> {
         if (!StringUtils.isNullOrEmpty(name)) {
             return name;
         } else {
-            return dakiDirectoryName;
+            if (dakiDirectoryName.contains("/")) {
+                String[] split = dakiDirectoryName.split("/");
+                return split[split.length - 1];
+            } else {
+                return dakiDirectoryName;
+            }
         }
     }
     
@@ -136,12 +142,15 @@ public class Daki implements Comparable<Daki> {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, List list) {
         DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
-        int index = dakiManager.getDakiIndexInPack(this) + 1;
-        int total = dakiManager.getNumberOfDakisInPack(packDirectoryName);
-        String textPack = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack";
-        String textName = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name";
-        list.add(I18n.format(textPack, getPackDirectoryName(), index, total));
-        list.add(I18n.format(textName, getDisplayName()));
+        IDakiPack dakiPack = dakiManager.getDakiPack(packDirectoryName);
+        if (dakiPack != null) {
+            int index =  dakiManager.getDakiIndexInPack(this) + 1;
+            int total = dakiPack.getDakiCount();
+            String textPack = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack";
+            String textName = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name";
+            list.add(I18n.format(textPack, dakiPack.getName(), index, total));
+            list.add(I18n.format(textName, getDisplayName()));
+        }
         if (!StringUtils.isNullOrEmpty(getFlavourText())) {
             String textFlavour = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.flavour";
             list.add(I18n.format(textFlavour, getFlavourText()));

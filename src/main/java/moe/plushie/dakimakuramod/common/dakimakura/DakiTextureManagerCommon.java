@@ -7,6 +7,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
+import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class DakiTextureManagerCommon implements Runnable {
@@ -17,7 +18,7 @@ public class DakiTextureManagerCommon implements Runnable {
     private volatile Thread threadTextureManager = null;
     
     public DakiTextureManagerCommon() {
-        dakiImageCache = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
+        dakiImageCache = CacheBuilder.newBuilder().expireAfterAccess(ConfigHandler.cacheTimeServer, TimeUnit.MINUTES).build();
         waitingClients = new ArrayList<WaitingClient>();
         dakiLoadQueue = new ArrayList<Daki>();
     }

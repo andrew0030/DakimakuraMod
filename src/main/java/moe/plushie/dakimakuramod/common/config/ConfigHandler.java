@@ -4,6 +4,7 @@ import java.io.File;
 
 import moe.plushie.dakimakuramod.DakimakuraMod;
 import moe.plushie.dakimakuramod.common.lib.LibModInfo;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -15,13 +16,11 @@ public class ConfigHandler {
     public static final String CATEGORY_RECIPE = "recipe";
     public static final String CATEGORY_LOOT = "loot";
     public static final String CATEGORY_CLIENT = "client";
+    public static final String CATEGORY_SERVER = "server";
     public static final String CATEGORY_OTHER = "other";
     private static final String LANG_KEY_PREFIX = "config." + LibModInfo.ID + ":";
     
     public static Configuration config;
-    
-    // General
-    public static boolean onlyUnlockNewSkins;
     
     // Recipes
     public static boolean enableRecipe;
@@ -37,6 +36,10 @@ public class ConfigHandler {
     // Client
     public static int textureMaxSize;
     public static int dakiRenderDist;
+    public static int cacheTimeClient;
+    
+    // Server
+    public static int cacheTimeServer;
     
     // Other
     public static String lastVersion;
@@ -78,7 +81,7 @@ public class ConfigHandler {
     public void loadConfigFile() {
         loadCategoryCommon();
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            loadCategoryClient();
+            loadCategoryClient(config.getCategory(CATEGORY_CLIENT));
         }
         if (config.hasChanged()) {
             config.save();
@@ -86,33 +89,39 @@ public class ConfigHandler {
     }
     
     private void loadCategoryCommon() {
-        loadCategoryRecipe();
-        loadCategoryLoot();
+        loadCategoryRecipe(config.getCategory(CATEGORY_RECIPE));
+        loadCategoryLoot(config.getCategory(CATEGORY_LOOT));
+        loadCategoryServer(config.getCategory(CATEGORY_SERVER));
         lastVersion = config.getString("lastVersion", CATEGORY_OTHER, "0.0", "Used by the mod to check if it has been updated.");
     }
     
-    private void loadCategoryRecipe() {
+    private void loadCategoryRecipe(ConfigCategory category) {
         enableRecipe = config.getBoolean("enableRecipe", CATEGORY_RECIPE, true,
                 "Enable the crafting recipe for dakimakuras.",
                 LANG_KEY_PREFIX + "enableRecipe");
+        category.get("enableRecipe").setRequiresMcRestart(true);
         
         useAltRecipe = config.getBoolean("useAltRecipe", CATEGORY_RECIPE, false,
                 "Changes the crafting recipe from 6 wool to 3 wool and 6 string.",
                 LANG_KEY_PREFIX + "useAltRecipe");
+        category.get("useAltRecipe").setRequiresMcRestart(true);
         
         enableRecycleRecipe = config.getBoolean("enableRecycleRecipe", CATEGORY_RECIPE, true,
                 "Allow getting a new dakimakura design by crafting 2 unwanted designs together.",
                 LANG_KEY_PREFIX + "enableRecycleRecipe");
+        category.get("enableRecycleRecipe").setRequiresMcRestart(true);
         
         enableClearingRecipe = config.getBoolean("enableClearingRecipe", CATEGORY_RECIPE, true,
                 "Allow crafting a dakimakura to clear its design.",
-                LANG_KEY_PREFIX + "enableClearingRecipe"); 
+                LANG_KEY_PREFIX + "enableClearingRecipe");
+        category.get("enableClearingRecipe").setRequiresMcRestart(true);
     }
     
-    private void loadCategoryLoot() {
+    private void loadCategoryLoot(ConfigCategory category) {
         addUnlockToLootChests = config.getBoolean("addUnlockToLootChests", CATEGORY_LOOT, false,
                 "Add the dakimakura design items to loot chests around the world.",
                 LANG_KEY_PREFIX + "addUnlockToLootChests");
+        category.get("addUnlockToLootChests").setRequiresMcRestart(true);
         
         mobDropChance = config.getFloat("mobDropChance", CATEGORY_LOOT, 1F, 0F, 100F,
                 "Percentage chance of mobs dropping a dakimakura design. 0 disables mob drops.",
@@ -125,7 +134,7 @@ public class ConfigHandler {
         
     }
     
-    private void loadCategoryClient() {
+    private void loadCategoryClient(ConfigCategory category) {
         textureMaxSize = config.getInt("textureMaxSize", CATEGORY_CLIENT, 1024, 32, 8192,
                 "Max texture size for dakimakuras.\n"
                 + "This will be rounded up to the nearest power of 2.\n"
@@ -136,6 +145,20 @@ public class ConfigHandler {
                 "The maximum distance away in blocks dakimakuras will render.",
                 LANG_KEY_PREFIX + "dakiRenderDist");
         dakiRenderDist = dakiRenderDist * dakiRenderDist;
+        
+        cacheTimeClient = config.getInt("cacheTime", CATEGORY_CLIENT, 20, 1, Integer.MAX_VALUE,
+                "How long in minutes dakimakuras can be loaded into the clients memory without getting used.\n"
+                + "Lower values will reduce memory use while higher values will reduce bandwidth usage.",
+                LANG_KEY_PREFIX + "cacheTimeClient");
+        category.get("cacheTime").setRequiresMcRestart(true);
+    }
+    
+    private void loadCategoryServer(ConfigCategory category) {
+        cacheTimeServer = config.getInt("cacheTime", CATEGORY_SERVER, 30, 1, Integer.MAX_VALUE,
+                "How long in minutes dakimakuras can be loaded into the servers memory without getting used.\n"
+                + "Lower values will reduce memory use while higher values will reduce disk access.",
+                LANG_KEY_PREFIX + "cacheTimeServer");
+        category.get("cacheTime").setRequiresMcRestart(true);
     }
     
     private int versionCompare(String str1, String str2) {

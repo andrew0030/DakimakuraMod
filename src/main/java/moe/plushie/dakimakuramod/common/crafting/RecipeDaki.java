@@ -11,6 +11,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
@@ -25,20 +26,18 @@ public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRe
         ItemStack stackDaki = ItemStack.EMPTY;
         ItemStack stackDesign = ItemStack.EMPTY;
         
+        
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != ItemStack.EMPTY) {
-                if (stack.getCount() > 1) {
-                    return false;
-                }
+            if (!stack.isEmpty()) {
                 if (stack.getItem() == ModItems.dakiDesign) {
-                    if (stackDesign == ItemStack.EMPTY) {
+                    if (stackDesign.isEmpty()) {
                         stackDesign = stack;
                     } else {
                         return false;
                     }
                 } else if (stack.getItem() == Item.getItemFromBlock(ModBlocks.blockDakimakura)) {
-                    if (stackDaki == ItemStack.EMPTY) {
+                    if (stackDaki.isEmpty()) {
                         stackDaki = stack;
                     } else {
                         return false;
@@ -49,10 +48,10 @@ public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRe
             }
         }
         
-        if (stackDesign == ItemStack.EMPTY) {
+        if (stackDesign.isEmpty()) {
             return false;
         }
-        if (stackDaki == ItemStack.EMPTY) {
+        if (stackDaki.isEmpty()) {
             return false;
         }
         
@@ -75,18 +74,15 @@ public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRe
         
         for (int slotId = 0; slotId < inventoryCrafting.getSizeInventory(); slotId++) {
             ItemStack stack = inventoryCrafting.getStackInSlot(slotId);
-            if (stack != ItemStack.EMPTY) {
-                if (stack.getCount() > 1) {
-                    return ItemStack.EMPTY;
-                }
+            if (!stack.isEmpty()) {
                 if (stack.getItem() == ModItems.dakiDesign) {
-                    if (stackDesign == ItemStack.EMPTY) {
+                    if (stackDesign.isEmpty()) {
                         stackDesign = stack;
                     } else {
                         return ItemStack.EMPTY;
                     }
                 } else if (stack.getItem() == Item.getItemFromBlock(ModBlocks.blockDakimakura)) {
-                    if (stackDaki == ItemStack.EMPTY) {
+                    if (stackDaki.isEmpty()) {
                         stackDaki = stack;
                     } else {
                         return ItemStack.EMPTY;
@@ -97,10 +93,10 @@ public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRe
             }
         }
         
-        if (stackDesign == ItemStack.EMPTY) {
+        if (stackDesign.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        if (stackDaki == ItemStack.EMPTY) {
+        if (stackDaki.isEmpty()) {
             return ItemStack.EMPTY;
         }
         
@@ -125,14 +121,7 @@ public class RecipeDaki extends IForgeRegistryEntry.Impl<IRecipe> implements IRe
     
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-        NonNullList<ItemStack> ret = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-        for (int i = 0; i < ret.size(); i++) {
-        	ItemStack stack = inv.getStackInSlot(i);
-        	if (stack.getItem() == ModItems.dakiDesign) {
-        		ret.set(i, stack.copy());
-        	}
-        }
-        return ret;
+        return ForgeHooks.defaultRecipeGetRemainingItems(inv);
     }
     
     @Override
