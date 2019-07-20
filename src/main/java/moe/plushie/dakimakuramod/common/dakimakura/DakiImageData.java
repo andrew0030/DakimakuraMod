@@ -116,16 +116,17 @@ public class DakiImageData implements Callable<DakiImageData> {
             bufferedimageFront = resize(bufferedimageFront, textureSize / 2, textureSize, daki.isSmooth());
             bufferedimageBack = resize(bufferedimageBack, textureSize / 2, textureSize, daki.isSmooth());
             
+            BufferedImage bufferedimageBackFlipped = new BufferedImage(bufferedimageBack.getWidth(), bufferedimageBack.getHeight(), bufferedimageBack.getType());
             AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
             tx.translate(-bufferedimageBack.getWidth(null), 0);
             AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-            bufferedimageBack = op.filter(bufferedimageBack, null);
+            bufferedimageBackFlipped = op.filter(bufferedimageBack, bufferedimageBackFlipped);
             
             bufferedImageFull = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_RGB);
             
             Graphics2D g2d = bufferedImageFull.createGraphics();
             g2d.drawImage(bufferedimageFront, 0, 0, null);
-            g2d.drawImage(bufferedimageBack, textureSize / 2, 0, null);
+            g2d.drawImage(bufferedimageBackFlipped, textureSize / 2, 0, null);
             g2d.dispose();
             
             textureFront = null;
