@@ -14,7 +14,7 @@ public final class DakiExtractor {
     
     private static final String DAKI_ASSETS_LOCATION = "assets/dakimakuramod/dakis/";
 
-    private static final String[] README_LIST = new String[] {"en", "de_DE"};
+    private static final String[] README_LIST = new String[] {"en_GB", "de_DE"};
 
     private static final String DAKI_PACK_ANDREWS = "Andrew's Vanilla Mobs";
     private static final String[] DAKI_PACK_ANDREWS_LIST = new String[] {

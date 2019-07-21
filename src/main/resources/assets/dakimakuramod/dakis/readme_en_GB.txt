@@ -53,7 +53,7 @@ A daki-info.json file can be created inside each dakimakura directory. (all elem
 name: Name of the Dakimakura. If not added the directory name is used.
 author: Name of the author. Will not be shown if none is provided.
 image-front: File name of the front image. If not provided the mod will look for front.png, front.jpg or front.jpeg
-image-back: File name of the back image. If not provided the mod will look for front.png, front.jpg or front.jpeg
+image-back: File name of the back image. If not provided the mod will look for back.png, back.jpg or back.jpeg
 flavour-text: Flavour text that will be shown at the bottom of the item tool-tip. Will not be shown if none is provided.
 smooth: Should the image be smoothed when resized. Normally it's better to use true for photo realistic images and false for pixel art. Default is true.
 
