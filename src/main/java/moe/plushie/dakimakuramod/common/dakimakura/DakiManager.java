@@ -20,9 +20,6 @@ public class DakiManager {
     
     public DakiManager(File file) {
         packFolder = new File(file, PACK_FOLDER_NAME);
-        if (!packFolder.exists()) {
-            packFolder.mkdir();
-        }
         dakiPacksMap = new HashMap<String, IDakiPack>();
     }
 
