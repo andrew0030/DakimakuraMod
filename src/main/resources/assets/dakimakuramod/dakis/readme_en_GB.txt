@@ -6,7 +6,7 @@ Quick Start
 --------------
 1. Inside the dakimakura-mod directory create a pack directory that will hold all your dakimakura's.
 2. Create a directory for your dakimakura inside the pack directory.
-3. Copy the images for you dakimakura into the folder making sure they are named front.png and back.png.
+3. Copy the images for you dakimakura into the folder making sure they are named front.png and back.png or front.jpg and back.jpg.
 4. Start the game and your dakimakura should be listed in the Dakimakura Mod creative tab.
 
 The directory structure should look like this.
@@ -53,7 +53,7 @@ A daki-info.json file can be created inside each dakimakura directory. (all elem
 name: Name of the Dakimakura. If not added the directory name is used.
 author: Name of the author. Will not be shown if none is provided.
 image-front: File name of the front image. If not provided the mod will look for front.png, front.jpg or front.jpeg
-image-back: File name of the back image. If not provided the mod will look for front.png, front.jpg or front.jpeg
+image-back: File name of the back image. If not provided the mod will look for back.png, back.jpg or back.jpeg
 flavour-text: Flavour text that will be shown at the bottom of the item tool-tip. Will not be shown if none is provided.
 smooth: Should the image be smoothed when resized. Normally it's better to use true for photo realistic images and false for pixel art. Default is true.
 
@@ -62,6 +62,13 @@ smooth: Should the image be smoothed when resized. Normally it's better to use t
 Tips & Ticks
 --------------
 The command "/dakimakura reload" can be used to reload all dakimakura packs without restarting the game.
+The command "/dakimakura openPackFolder" can be used to open the folder that holds the dakimakura images.
 The hard coded max size for dakimakura images is 4096*8192 for each side. Using bigger images is just a waste of space.
-Deleting this readme will cause the "Andrew's Vanilla Mobs" pack to be reset.
+Deleting the dakimakura-mod folder will cause the "Andrew's Vanilla Mobs" pack to be reset.
 If you are playing on a server new dakimakura's only need to be installed on the server, they will be sent to the clients when they connect.
+
+
+
+Contact
+--------------
+If you have any question or issues please come by the discord server https://discord.gg/5Z3KKvU 
