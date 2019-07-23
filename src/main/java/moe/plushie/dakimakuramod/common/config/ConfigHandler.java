@@ -66,15 +66,20 @@ public class ConfigHandler {
         if (LibModInfo.isDevelopmentVersion()) {
             return;
         }
-        if (versionCompare(lastVersion.replaceAll("-", "."), localVersion.replaceAll("-", ".")) < 0) {
-            DakimakuraMod.getLogger().info(String.format("Updated from version %s to version %s.", lastVersion, localVersion));
-            config.getCategory(CATEGORY_OTHER).get("lastVersion").set(localVersion);
-            if (config.hasChanged()) {
-                config.save();
+        try {
+            if (versionCompare(lastVersion.replaceAll("-", "."), localVersion.replaceAll("-", ".")) < 0) {
+                DakimakuraMod.getLogger().info(String.format("Updated from version %s to version %s.", lastVersion, localVersion));
+                config.getCategory(CATEGORY_OTHER).get("lastVersion").set(localVersion);
+                if (config.hasChanged()) {
+                    config.save();
+                }
+                hasUpdated = true;
+            } else {
+                hasUpdated = false;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
             hasUpdated = true;
-        } else {
-            hasUpdated = false;
         }
     }
 

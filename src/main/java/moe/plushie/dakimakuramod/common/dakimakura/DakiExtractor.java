@@ -13,7 +13,9 @@ import moe.plushie.dakimakuramod.common.config.ConfigHandler;
 public final class DakiExtractor {
     
     private static final String DAKI_ASSETS_LOCATION = "assets/dakimakuramod/dakis/";
-    
+
+    private static final String[] README_LIST = new String[] {"en_GB", "de_DE"};
+
     private static final String DAKI_PACK_ANDREWS = "Andrew's Vanilla Mobs";
     private static final String[] DAKI_PACK_ANDREWS_LIST = new String[] {
             "Alex",
@@ -54,13 +56,34 @@ public final class DakiExtractor {
     
     public static void extractDakis() {
         File packFolder = DakimakuraMod.getProxy().getDakimakuraManager().getPackFolder();
-        if (new File(packFolder, "readme.txt").exists()) {
+        
+        if (packFolder.exists()) {
             if (!ConfigHandler.hasUpdated) {
                 return;
             }
         }
-        extractResource("readme.txt", new File(packFolder, "readme.txt"), true);
+        
+        if (!packFolder.exists()) {
+            packFolder.mkdirs();
+        }
+        
+        File oldReadme = new File(packFolder, "readme.txt");
+        if (oldReadme.exists()) {
+            try {
+                oldReadme.delete();
+            } catch (Exception e) {
+            }
+        }
+        
+        extractReadmeFiles(packFolder);
         extractDakiPack(packFolder, DAKI_PACK_ANDREWS, DAKI_PACK_ANDREWS_LIST);
+    }
+    
+    private static void extractReadmeFiles(File packFolder) {
+        for (String langCode : README_LIST) {
+            String readmeName = "readme_" + langCode + ".txt";
+            extractResource(readmeName, new File(packFolder, readmeName), true);
+        }
     }
     
     private static void extractDakiPack(File packFolder, String packName, String[] packFiles) {
