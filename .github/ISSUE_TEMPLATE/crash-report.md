@@ -20,5 +20,8 @@ Please link your crash log using a site like https://pastebin.com/
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+**Loader and Mod versions**
+The Loader and Mod Versions you used.
+
 **Additional context**
 Add any other context about the problem here.
