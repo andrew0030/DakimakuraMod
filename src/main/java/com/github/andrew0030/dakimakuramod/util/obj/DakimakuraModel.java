@@ -1,7 +1,6 @@
-package com.github.andrew0030.dakimakuramod.util;
+package com.github.andrew0030.dakimakuramod.util.obj;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.resources.ResourceLocation;
@@ -19,14 +18,14 @@ public class DakimakuraModel
         DAKIMAKURA_MODEL = ObjModel.loadModel(new ResourceLocation(DakimakuraMod.MODID, MODEL_PATH));
     }
 
-    public void render(PoseStack stack, VertexConsumer buffer)
+    public void render(PoseStack stack, VertexConsumer buffer, int packedLight)
     {
         stack.pushPose();
         stack.translate(0.5F, 0.5F, 0.5F);
         stack.scale(0.55F, 0.55F, 0.55F);
 //        stack.translate(0, 0.35F, 0);
         stack.scale(1F, -1F, -1F);//TODO: maybe: -1 -1 1
-        DAKIMAKURA_MODEL.render(stack, buffer, 1.0F, 1.0F, 1.0F, 14680064);
+        DAKIMAKURA_MODEL.render(stack, buffer, packedLight);
         stack.popPose();
     }
 }

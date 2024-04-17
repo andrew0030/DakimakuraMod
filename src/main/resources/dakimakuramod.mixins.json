@@ -5,10 +5,8 @@
   "refmap": "draconics.refmap.json",
   "minVersion": "0.8",
   "mixins": [
-
   ],
   "client": [
-
   ],
   "injectors": {
     "defaultRequire": 1
