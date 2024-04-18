@@ -21,10 +21,8 @@ public class DakimakuraModel
     public void render(PoseStack stack, VertexConsumer buffer, int packedLight)
     {
         stack.pushPose();
-        stack.translate(0.5F, 0.5F, 0.5F);
         stack.scale(0.55F, 0.55F, 0.55F);
-//        stack.translate(0, 0.35F, 0);
-        stack.scale(1F, -1F, -1F);//TODO: maybe: -1 -1 1
+        stack.scale(-1F, 1F, -1F);
         DAKIMAKURA_MODEL.render(stack, buffer, packedLight);
         stack.popPose();
     }

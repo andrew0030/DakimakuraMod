@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import org.apache.commons.compress.utils.IOUtils;
-import org.joml.Math;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -17,26 +16,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class ObjModel
+public record ObjModel(Vector3f[] v, Vec2[] vt, Vector3f[] vn, Face[] faces)
 {
-    private final Vector3f[] v;
-    private final Vec2[] vt;
-    private final Vector3f[] vn;
-    private final Face[] faces;
-
-    private ObjModel(Vector3f[] v, Vec2[] vt, Vector3f[] vn, Face[] faces)
-    {
-        this.v = v;
-        this.vt = vt;
-        this.vn = vn;
-        this.faces = faces;
-    }
-
     public void render(PoseStack stack, VertexConsumer buffer, int packedLight)
     {
         try
         {
-            for(Face face : this.faces)
+            for (Face face : this.faces)
             {
                 Vector3f v1 = v[face.v1 - 1];
                 Vector3f v2 = v[face.v2 - 1];
@@ -55,7 +41,7 @@ public class ObjModel
                 this.addVertex(stack, buffer, v3.x(), v3.y(), v3.z(), vt3.x, -vt3.y, packedLight, vn3.x(), vn3.y(), vn3.z());
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -77,9 +63,9 @@ public class ObjModel
         // Calling 'buffer.pos(matrix4f, x, y, z)' allocates a Vector4f
         // To avoid allocating so many short-lived vectors we do the transform ourselves instead
         float w = 1.0F;
-        float tx = Math.fma(matrix4f.m00(), x, Math.fma(matrix4f.m10(), y, Math.fma(matrix4f.m20(), z, matrix4f.m30() * w)));
-        float ty = Math.fma(matrix4f.m01(), x, Math.fma(matrix4f.m11(), y, Math.fma(matrix4f.m21(), z, matrix4f.m31() * w)));
-        float tz = Math.fma(matrix4f.m02(), x, Math.fma(matrix4f.m12(), y, Math.fma(matrix4f.m22(), z, matrix4f.m32() * w)));
+        float tx = java.lang.Math.fma(matrix4f.m00(), x, java.lang.Math.fma(matrix4f.m10(), y, java.lang.Math.fma(matrix4f.m20(), z, matrix4f.m30() * w)));
+        float ty = java.lang.Math.fma(matrix4f.m01(), x, java.lang.Math.fma(matrix4f.m11(), y, java.lang.Math.fma(matrix4f.m21(), z, matrix4f.m31() * w)));
+        float tz = java.lang.Math.fma(matrix4f.m02(), x, java.lang.Math.fma(matrix4f.m12(), y, java.lang.Math.fma(matrix4f.m22(), z, matrix4f.m32() * w)));
 
         buffer.vertex(tx, ty, tz);
     }
@@ -88,9 +74,9 @@ public class ObjModel
     {
         // Calling 'bufferBuilder.normal(matrix3f, x, y, z)' allocates a Vector3f
         // To avoid allocating so many short-lived vectors we do the transform ourselves instead
-        float nx = Math.fma(matrix3f.m00(), x, Math.fma(matrix3f.m10(), y, matrix3f.m20() * z));
-        float ny = Math.fma(matrix3f.m01(), x, Math.fma(matrix3f.m11(), y, matrix3f.m21() * z));
-        float nz = Math.fma(matrix3f.m02(), x, Math.fma(matrix3f.m12(), y, matrix3f.m22() * z));
+        float nx = java.lang.Math.fma(matrix3f.m00(), x, java.lang.Math.fma(matrix3f.m10(), y, matrix3f.m20() * z));
+        float ny = java.lang.Math.fma(matrix3f.m01(), x, java.lang.Math.fma(matrix3f.m11(), y, matrix3f.m21() * z));
+        float nz = java.lang.Math.fma(matrix3f.m02(), x, Math.fma(matrix3f.m12(), y, matrix3f.m22() * z));
 
         bufferBuilder.normal(nx, ny, nz);
     }
@@ -106,7 +92,7 @@ public class ObjModel
         ArrayList<Vector3f> vnList = new ArrayList<>();
         ArrayList<Face> faceList = new ArrayList<>();
 
-        for(String line : modelLines)
+        for (String line : modelLines)
         {
             String[] lineSpit = line.split(" ");
             switch (lineSpit[0])
@@ -115,7 +101,8 @@ public class ObjModel
                 case "vt" -> vtList.add(new Vec2(Float.parseFloat(lineSpit[1]), Float.parseFloat(lineSpit[2])));
                 case "vn" -> vnList.add(new Vector3f(Float.parseFloat(lineSpit[1]), Float.parseFloat(lineSpit[2]), Float.parseFloat(lineSpit[3])));
                 case "f" -> faceList.add(new Face(lineSpit[1], lineSpit[2], lineSpit[3]));
-                default -> {}
+                default -> {
+                }
             }
         }
 
@@ -131,9 +118,10 @@ public class ObjModel
     {
         InputStream input = null;
         ByteArrayOutputStream output = null;
-        try {
+        try
+        {
             input = ObjModel.class.getClassLoader().getResourceAsStream("assets/" + DakimakuraMod.MODID + "/" + resourceLocation.getPath());
-            if(input != null)
+            if (input != null)
             {
                 output = new ByteArrayOutputStream();
                 IOUtils.copy(input, output);
@@ -141,7 +129,7 @@ public class ObjModel
                 return output.toByteArray();
             }
         }
-        catch(IOException e)
+        catch (IOException e)
         {
             e.printStackTrace();
         }
