@@ -5,6 +5,7 @@ import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.AABB;
 
 public class DakimakuraBlockEntity extends BlockEntity
@@ -21,7 +22,7 @@ public class DakimakuraBlockEntity extends BlockEntity
         BlockState state = this.getBlockState();
         if(state.getValue(DakimakuraBlock.TOP))
             return aabb;
-        if (state.getValue(DakimakuraBlock.STANDING))
+        if (state.getValue(DakimakuraBlock.FACE).equals(AttachFace.WALL))
             return aabb.expandTowards(0D, 0.9375D, 0D);
         return switch (state.getValue(DakimakuraBlock.FACING))
         {
