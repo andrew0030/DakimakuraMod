@@ -2,6 +2,7 @@ package com.github.andrew0030.dakimakuramod;
 
 import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
+import com.github.andrew0030.dakimakuramod.registries.DMEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMItems;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,6 +29,7 @@ public class DakimakuraMod
 
         DMBlocks.BLOCKS.register(modEventBus);
         DMItems.ITEMS.register(modEventBus);
+        DMEntities.ENTITIES.register(modEventBus);
         DMBlockEntities.BLOCK_ENTITY_TYPES.register(modEventBus);
     }
 

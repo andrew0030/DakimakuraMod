@@ -8,7 +8,7 @@ A Minecraft mod that allows players to place Dakimakuras on their beds and aroun
 
 ### Current versions:
 
-TBD, for now LGPLv3 but may swap to CC BY-NC-SA 4.0 Deed, I will look into it later!
+Dakimakura Mod by andrew0030 is licensed under a [GNU Lesser General Public License v3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 ### 1.12.2 and older:
 
