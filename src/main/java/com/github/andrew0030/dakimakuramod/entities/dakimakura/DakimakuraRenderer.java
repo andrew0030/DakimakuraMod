@@ -1,8 +1,10 @@
 package com.github.andrew0030.dakimakuramod.entities.dakimakura;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
+import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiNbtSerializer;
 import com.github.andrew0030.dakimakuramod.util.DMRenderTypes;
 import com.github.andrew0030.dakimakuramod.util.obj.DakimakuraModel;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,8 +27,17 @@ public class DakimakuraRenderer extends EntityRenderer<Dakimakura>
     public void render(Dakimakura entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight)
     {
         poseStack.pushPose();
-        poseStack.translate(0.0F, 0.5F -0.380F, -0.5F);
+        switch(entity.getRotation())
+        {
+            default -> {}
+            case SOUTH -> poseStack.mulPose(Axis.YN.rotationDegrees(180.0F));
+            case WEST -> poseStack.mulPose(Axis.YN.rotationDegrees(270.0F));
+            case EAST -> poseStack.mulPose(Axis.YN.rotationDegrees(90.0F));
+        }
+        poseStack.translate(0.0F, 0.12F, -0.5F);
         poseStack.mulPose(Axis.XN.rotationDegrees(90));
+        if (entity.isFlipped())
+            poseStack.mulPose(Axis.YN.rotationDegrees(180));
         this.dakimakuraModel.render(poseStack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(this.getTextureLocation(entity))), packedLight);
         poseStack.popPose();
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
