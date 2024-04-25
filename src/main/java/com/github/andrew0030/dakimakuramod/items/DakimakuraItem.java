@@ -1,7 +1,7 @@
 package com.github.andrew0030.dakimakuramod.items;
 
 import com.github.andrew0030.dakimakuramod.block_entities.util.DMBlockEntityWithoutLevelRenderer;
-import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiNbtSerializer;
+import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
 import com.github.andrew0030.dakimakuramod.entities.dakimakura.Dakimakura;
 import com.github.andrew0030.dakimakuramod.items.util.BEWLRBlockItem;
 import com.github.andrew0030.dakimakuramod.registries.DMEntities;
@@ -39,7 +39,7 @@ public class DakimakuraItem extends BEWLRBlockItem
     {
         if (itemStack == null || !itemStack.hasTag())
             return false;
-        return DakiNbtSerializer.isFlipped(itemStack.getTag());
+        return DakiTagSerializer.isFlipped(itemStack.getTag());
     }
 
     public static ItemStack setFlipped(ItemStack itemStack, boolean flipped)
@@ -48,7 +48,7 @@ public class DakimakuraItem extends BEWLRBlockItem
             return null;
         CompoundTag compound = itemStack.getTag() != null ? itemStack.getTag() : new CompoundTag();
         itemStack.setTag(compound);
-        DakiNbtSerializer.setFlipped(compound, flipped);
+        DakiTagSerializer.setFlipped(compound, flipped);
         return itemStack;
     }
 
@@ -76,7 +76,7 @@ public class DakimakuraItem extends BEWLRBlockItem
 
         if(!level.isClientSide() && state.isBed(level, pos, null))
         {
-//            Daki daki = DakiNbtSerializer.deserialize(itemStack.getTagCompound());
+//            Daki daki = DakiTagSerializer.deserialize(itemStack.getTagCompound());
             Dakimakura dakimakura = new Dakimakura(DMEntities.DAKIMAKURA.get(), level);
             dakimakura.setPos(pos.getX() + 0.5D, pos.getY() + 0.5625D, pos.getZ() + 0.5D);
 //            dakimakura.setDaki(daki);
@@ -98,7 +98,7 @@ public class DakimakuraItem extends BEWLRBlockItem
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag)
     {
         super.appendHoverText(stack, level, tooltip, flag);
-//        Daki daki = DakiNbtSerializer.deserialize(stack.getTagCompound()); TODO: update tooltip properly
+//        Daki daki = DakiTagSerializer.deserialize(stack.getTagCompound()); TODO: update tooltip properly
 //        if (daki != null) {
 //            String textFlip = I18n.format(stack.getUnlocalizedName() + ".tooltip.flip");
 //            tooltip.add(I18n.format(textFlip));

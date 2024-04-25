@@ -1,7 +1,7 @@
 package com.github.andrew0030.dakimakuramod.entities.dakimakura;
 
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
-import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiNbtSerializer;
+import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -36,24 +36,24 @@ public class Dakimakura extends Entity
     @Override
     protected void addAdditionalSaveData(CompoundTag compound)
     {
-        compound.putInt(DakiNbtSerializer.TAG_FACING, this.getRotationInt());
-        compound.putBoolean(DakiNbtSerializer.TAG_FLIPPED, this.isFlipped());
+        compound.putInt(DakiTagSerializer.FACING_KEY, this.getRotationInt());
+        compound.putBoolean(DakiTagSerializer.FLIPPED_KEY, this.isFlipped());
 //        if (!StringUtil.isNullOrEmpty(this.getEntityData().get(PACK_DIR_NAME)) && !StringUtil.isNullOrEmpty(this.getEntityData().get(DAKI_DIR_NAME)))
 //        {
-        compound.putString(DakiNbtSerializer.TAG_DAKI_PACK_NAME, this.getEntityData().get(PACK_DIR_NAME));
-        compound.putString(DakiNbtSerializer.TAG_DAKI_DIR_NAME, this.getEntityData().get(DAKI_DIR_NAME));
+        compound.putString(DakiTagSerializer.PACK_NAME_KEY, this.getEntityData().get(PACK_DIR_NAME));
+        compound.putString(DakiTagSerializer.DIR_NAME_KEY, this.getEntityData().get(DAKI_DIR_NAME));
 //        }
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound)
     {
-        this.setRotationInt(compound.getInt(DakiNbtSerializer.TAG_FACING));
-        this.setFlipped(compound.getBoolean(DakiNbtSerializer.TAG_FLIPPED));
-//        if (compound.contains(DakiNbtSerializer.TAG_DAKI_PACK_NAME, Tag.TAG_STRING) && compound.contains(DakiNbtSerializer.TAG_DAKI_DIR_NAME, Tag.TAG_STRING))
+        this.setRotationInt(compound.getInt(DakiTagSerializer.FACING_KEY));
+        this.setFlipped(compound.getBoolean(DakiTagSerializer.FLIPPED_KEY));
+//        if (compound.contains(DakiTagSerializer.TAG_DAKI_PACK_NAME, Tag.TAG_STRING) && compound.contains(DakiTagSerializer.TAG_DAKI_DIR_NAME, Tag.TAG_STRING))
 //        {
-        this.getEntityData().set(PACK_DIR_NAME, compound.getString(DakiNbtSerializer.TAG_DAKI_PACK_NAME));
-        this.getEntityData().set(DAKI_DIR_NAME, compound.getString(DakiNbtSerializer.TAG_DAKI_DIR_NAME));
+        this.getEntityData().set(PACK_DIR_NAME, compound.getString(DakiTagSerializer.PACK_NAME_KEY));
+        this.getEntityData().set(DAKI_DIR_NAME, compound.getString(DakiTagSerializer.DIR_NAME_KEY));
 //        }
     }
 

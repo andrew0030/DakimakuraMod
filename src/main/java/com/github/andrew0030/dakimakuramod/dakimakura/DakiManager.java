@@ -1,8 +1,10 @@
 package com.github.andrew0030.dakimakuramod.dakimakura;
 
-import com.github.andrew0030.dakimakuramod.dakimakura.pack.DakiPackZipFile;
+import com.github.andrew0030.dakimakuramod.dakimakura.pack.DakiPackZip;
 import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
 import com.github.andrew0030.dakimakuramod.dakimakura.pack.DakiPackFolder;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,8 +13,8 @@ import java.util.HashMap;
 
 public class DakiManager
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final String PACK_FOLDER_NAME = "dakimakura-mod";
-
     private final File packFolder;
     private final HashMap<String, IDakiPack> dakiPacksMap;
 
@@ -24,18 +26,23 @@ public class DakiManager
 
     public void loadPacks(boolean sendToClients)
     {
+        File[] files = this.packFolder.listFiles();
+        if (files == null) {
+            LOGGER.warn("Failed loading packs, because files are null!");
+            return;
+        }
+        // If files aren't null we clear the packs map and repopulate it
         this.dakiPacksMap.clear();
-        for (File file : this.packFolder.listFiles())
-        {
+        for (File file : files) {
             String resourceName = file.getAbsolutePath().substring(this.packFolder.getAbsolutePath().length() + 1);
-            if (file.isDirectory())
+            if (file.isDirectory()) // Folders
                 this.dakiPacksMap.put(resourceName, new DakiPackFolder(resourceName).loadPack());
-            if (file.isFile() && file.getName().endsWith(".zip"))
-                this.dakiPacksMap.put(resourceName, new DakiPackZipFile(resourceName).loadPack());
+            if (file.isFile() && file.getName().endsWith(".zip")) // Zip Files
+                this.dakiPacksMap.put(resourceName, new DakiPackZip(resourceName).loadPack());
         }
-        if (sendToClients) {
+        // Makes the Server send the currently loaded DakiPacks to all clients
+        if (sendToClients)
             this.sendDakiListToClients();
-        }
     }
 
     public Daki getDakiFromMap(String packDirName, String dakiDirName)
@@ -72,12 +79,12 @@ public class DakiManager
         IDakiPack dakiPack = this.dakiPacksMap.get(packName);
         if (dakiPack != null)
             return dakiPack.getDakisInPack();
-        return new ArrayList<Daki>();
+        return new ArrayList<>();
     }
 
     public int getDakiIndexInPack(Daki daki)
     {
-        ArrayList<Daki> packList = getDakisInPack(daki.getPackDirectoryName());
+        ArrayList<Daki> packList = this.getDakisInPack(daki.getPackDirectoryName());
         for (int i = 0; i < packList.size(); i++)
             if (daki.equals(packList.get(i)))
                 return i;

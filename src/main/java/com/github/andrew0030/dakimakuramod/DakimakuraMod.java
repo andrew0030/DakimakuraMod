@@ -1,5 +1,6 @@
 package com.github.andrew0030.dakimakuramod;
 
+import com.github.andrew0030.dakimakuramod.dakimakura.DakiExtractor;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiManager;
 import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
@@ -23,7 +24,7 @@ public class DakimakuraMod
 {
     public static final String MODID = "dakimakuramod";
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static DakiManager dakimakuraManager;
+    private static DakiManager dakiManager;
 
     public DakimakuraMod()
     {
@@ -44,7 +45,10 @@ public class DakimakuraMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        DakimakuraMod.dakimakuraManager = new DakiManager(Minecraft.getInstance().gameDirectory);
+        // Initializes the DakiManager, this should only happen once per Mod
+        DakimakuraMod.dakiManager = new DakiManager(Minecraft.getInstance().gameDirectory);
+        // Loads the default DakiPack/s into the dakimakura-mod folder if needed
+        DakiExtractor.extractDakis();
     }
 
     private void serverStarting(final ServerStartingEvent event)
@@ -58,10 +62,10 @@ public class DakimakuraMod
     }
 
     /**
-     * @return A DakimakuraManager Instance
+     * @return The {@link DakiManager} Singleton
      */
     public static DakiManager getDakimakuraManager()
     {
-        return DakimakuraMod.dakimakuraManager;
+        return DakimakuraMod.dakiManager;
     }
 }

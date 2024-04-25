@@ -1,10 +1,8 @@
 package com.github.andrew0030.dakimakuramod.entities.dakimakura;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
-import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiNbtSerializer;
 import com.github.andrew0030.dakimakuramod.util.DMRenderTypes;
 import com.github.andrew0030.dakimakuramod.util.obj.DakimakuraModel;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;

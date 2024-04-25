@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.github.andrew0030.dakimakuramod.mixins",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "draconics.refmap.json",
+  "refmap": "dakimakuramod.refmap.json",
   "minVersion": "0.8",
   "mixins": [
   ],

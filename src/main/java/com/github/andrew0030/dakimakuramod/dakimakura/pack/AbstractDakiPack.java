@@ -3,8 +3,6 @@ package com.github.andrew0030.dakimakuramod.dakimakura.pack;
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiManager;
-import com.mojang.logging.LogUtils;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,12 +28,6 @@ public abstract class AbstractDakiPack implements IDakiPack
     }
 
     @Override
-    public int getDakiCount()
-    {
-        return this.dakiMap.size();
-    }
-
-    @Override
     public Daki getDaki(String dakiDirName)
     {
         return this.dakiMap.get(this.getResourceName() + ":" + dakiDirName);
@@ -45,6 +37,12 @@ public abstract class AbstractDakiPack implements IDakiPack
     public void addDaki(Daki daki)
     {
         this.dakiMap.put(this.getResourceName() + ":" + daki.getDakiDirectoryName(), daki);
+    }
+
+    @Override
+    public int getDakiCount()
+    {
+        return this.dakiMap.size();
     }
 
     @Override

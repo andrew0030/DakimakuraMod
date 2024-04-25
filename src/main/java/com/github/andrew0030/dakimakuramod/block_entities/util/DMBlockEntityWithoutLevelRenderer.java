@@ -23,7 +23,7 @@ public class DMBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRe
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
     {
-//        this.blockEntity.get().setFlipped(DakiNbtSerializer.isFlipped(stack.getTag()));
+//        this.blockEntity.get().setFlipped(DakiTagSerializer.isFlipped(stack.getTag()));
         Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(this.blockEntity.get(), poseStack, buffer, packedLight, packedOverlay);
     }
 }

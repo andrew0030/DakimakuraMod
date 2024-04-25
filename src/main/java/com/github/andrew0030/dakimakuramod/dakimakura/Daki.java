@@ -82,16 +82,6 @@ public class Daki implements Comparable<Daki>
         this.flavourText = flavourText;
     }
 
-    public String getDisplayName()
-    {
-        if (!StringUtil.isNullOrEmpty(name))
-            return name;
-        int lastSlashIndex = dakiDirectoryName.lastIndexOf('/');
-        if (lastSlashIndex != -1)
-            return dakiDirectoryName.substring(lastSlashIndex + 1);
-        return dakiDirectoryName;
-    }
-
     public boolean isSmooth()
     {
         return this.smooth;
@@ -135,6 +125,16 @@ public class Daki implements Comparable<Daki>
     public String toString()
     {
         return "Daki [packDirectoryName=" + packDirectoryName + ", dakiDirectoryName=" + dakiDirectoryName + "]";
+    }
+
+    public String getDisplayName()
+    {
+        if (!StringUtil.isNullOrEmpty(this.name))
+            return this.name;
+        int lastSlashIndex = this.dakiDirectoryName.lastIndexOf('/');
+        if (lastSlashIndex != -1)
+            return dakiDirectoryName.substring(lastSlashIndex + 1);
+        return dakiDirectoryName;
     }
 
 //    public void addInformation(ItemStack itemStack, List list)

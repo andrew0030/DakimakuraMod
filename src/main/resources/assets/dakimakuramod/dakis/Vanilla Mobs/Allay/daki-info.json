@@ -1,0 +1,8 @@
+{
+	"name":"Allay",
+	"author":"Apprentice Necromancer",
+	"image-front":"front.png",
+	"image-back":"back.png",
+	"flavour-text":"Sleep as peaceful as Allay glides.",
+	"smooth":false
+}

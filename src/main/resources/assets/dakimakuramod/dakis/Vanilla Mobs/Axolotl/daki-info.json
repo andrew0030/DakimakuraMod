@@ -1,0 +1,8 @@
+{
+	"name":"Axolotl",
+	"author":"Apprentice Necromancer",
+	"image-front":"front.png",
+	"image-back":"back.png",
+	"flavour-text":"Rest like an Axolotl, calm and carefree.",
+	"smooth":false
+}
