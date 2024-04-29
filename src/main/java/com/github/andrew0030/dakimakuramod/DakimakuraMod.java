@@ -1,15 +1,20 @@
 package com.github.andrew0030.dakimakuramod;
 
+import com.github.andrew0030.dakimakuramod.commands.DakiCommand;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiExtractor;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiManager;
+import com.github.andrew0030.dakimakuramod.dakimakura.DakiTextureManagerCommon;
+import com.github.andrew0030.dakimakuramod.netwok.DMNetwork;
 import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
 import com.github.andrew0030.dakimakuramod.registries.DMEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMItems;
+import com.google.common.graph.Network;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -25,6 +30,7 @@ public class DakimakuraMod
     public static final String MODID = "dakimakuramod";
     private static final Logger LOGGER = LogUtils.getLogger();
     private static DakiManager dakiManager;
+    private static DakiTextureManagerCommon dakiTextureManagerCommon;
 
     public DakimakuraMod()
     {
@@ -32,6 +38,7 @@ public class DakimakuraMod
         IEventBus eventBus = MinecraftForge.EVENT_BUS;
 
         modEventBus.addListener(this::commonSetup);
+        eventBus.addListener(this::registerCommands);
         eventBus.addListener(this::serverStarting);
         eventBus.addListener(this::serverStopping);
         if (FMLEnvironment.dist == Dist.CLIENT)
@@ -43,29 +50,41 @@ public class DakimakuraMod
         DMBlockEntities.BLOCK_ENTITY_TYPES.register(modEventBus);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
+    private void commonSetup(FMLCommonSetupEvent event)
     {
         // Initializes the DakiManager, this should only happen once per Mod
         DakimakuraMod.dakiManager = new DakiManager(Minecraft.getInstance().gameDirectory);
+        // Initializes the DakiTextureManagerCommon
+        DakimakuraMod.dakiTextureManagerCommon = new DakiTextureManagerCommon();
         // Loads the default DakiPack/s into the dakimakura-mod folder if needed
         DakiExtractor.extractDakis();
+        // Registers Network Messages
+        DMNetwork.registerMessages();
     }
 
-    private void serverStarting(final ServerStartingEvent event)
+    private void registerCommands(RegisterCommandsEvent event)
+    {
+        DakiCommand.createCommand(event.getDispatcher(), event.getBuildContext());
+    }
+
+    private void serverStarting(ServerStartingEvent event)
     {
         DakimakuraMod.getDakimakuraManager().loadPacks(false);
+        DakimakuraMod.getTextureManagerCommon().serverStarted();
     }
 
-    private void serverStopping(final ServerStoppingEvent event)
+    private void serverStopping(ServerStoppingEvent event)
     {
-
+        DakimakuraMod.getTextureManagerCommon().serverStopped();
     }
 
-    /**
-     * @return The {@link DakiManager} Singleton
-     */
     public static DakiManager getDakimakuraManager()
     {
         return DakimakuraMod.dakiManager;
+    }
+
+    public static DakiTextureManagerCommon getTextureManagerCommon()
+    {
+        return DakimakuraMod.dakiTextureManagerCommon;
     }
 }

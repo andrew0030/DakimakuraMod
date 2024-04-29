@@ -3,17 +3,10 @@ package com.github.andrew0030.dakimakuramod.dakimakura;
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.DakimakuraModClient;
 import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
-import com.mojang.datafixers.util.Pair;
-import org.apache.commons.io.IOUtils;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBImageResize;
 import org.lwjgl.system.MemoryUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +24,7 @@ public class DakiImageData implements Callable<DakiImageData>
     private final Daki daki;
     private byte[] textureFront;
     private byte[] textureBack;
-    private ByteBuffer imageBuffer;
+    private ByteBuffer imageBuffer;//TODO move logic to client
 
     public DakiImageData(Daki daki)
     {
@@ -51,11 +44,17 @@ public class DakiImageData implements Callable<DakiImageData>
         return this.daki;
     }
 
+    /**
+     * @return The Front Texture byte array
+     */
     public byte[] getTextureFront()
     {
         return this.textureFront;
     }
 
+    /**
+     * @return The Back Texture byte array
+     */
     public byte[] getTextureBack()
     {
         return this.textureBack;
