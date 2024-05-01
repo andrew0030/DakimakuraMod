@@ -1,5 +1,7 @@
 package com.github.andrew0030.dakimakuramod;
 
+import com.github.andrew0030.dakimakuramod.dakimakura.DakiTextureManagerCommon;
+import com.github.andrew0030.dakimakuramod.dakimakura.client.DakiTextureManagerClient;
 import com.github.andrew0030.dakimakuramod.entities.dakimakura.DakimakuraRenderer;
 import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMEntities;
@@ -14,6 +16,7 @@ public class DakimakuraModClient
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static int maxGpuTextureSize;
+    private static DakiTextureManagerClient dakiTextureManagerClient;
 
     public static void init(IEventBus modEventBus)
     {
@@ -23,6 +26,8 @@ public class DakimakuraModClient
 
     private static void setupClient(FMLClientSetupEvent event)
     {
+        dakiTextureManagerClient = new DakiTextureManagerClient();
+
         event.enqueueWork(() -> {
             DMBlockEntities.registerBlockEntityRenderers();
             // Gets the max size an image can be
@@ -43,5 +48,10 @@ public class DakimakuraModClient
     public static int getMaxGpuTextureSize()
     {
         return DakimakuraModClient.maxGpuTextureSize;
+    }
+
+    public static DakiTextureManagerClient getDakiTextureManager()
+    {
+        return DakimakuraModClient.dakiTextureManagerClient;
     }
 }
