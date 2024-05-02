@@ -4,12 +4,9 @@ import com.github.andrew0030.dakimakuramod.commands.DakiCommand;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiExtractor;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiManager;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiTextureManagerCommon;
+import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
 import com.github.andrew0030.dakimakuramod.netwok.DMNetwork;
-import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
-import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
-import com.github.andrew0030.dakimakuramod.registries.DMEntities;
-import com.github.andrew0030.dakimakuramod.registries.DMItems;
-import com.google.common.graph.Network;
+import com.github.andrew0030.dakimakuramod.registries.*;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,6 +20,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
+
+import java.util.ArrayList;
 
 @Mod(DakimakuraMod.MODID)
 public class DakimakuraMod
@@ -48,6 +47,7 @@ public class DakimakuraMod
         DMItems.ITEMS.register(modEventBus);
         DMEntities.ENTITIES.register(modEventBus);
         DMBlockEntities.BLOCK_ENTITY_TYPES.register(modEventBus);
+        DMCreativeTab.TABS.register(modEventBus);
     }
 
     private void commonSetup(FMLCommonSetupEvent event)
@@ -86,5 +86,10 @@ public class DakimakuraMod
     public static DakiTextureManagerCommon getTextureManagerCommon()
     {
         return DakimakuraMod.dakiTextureManagerCommon;
+    }
+
+    public static void setDakiList(ArrayList<IDakiPack> packs)
+    {
+        DakimakuraMod.getDakimakuraManager().setDakiList(packs);
     }
 }

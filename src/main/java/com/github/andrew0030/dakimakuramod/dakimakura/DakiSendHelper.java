@@ -1,9 +1,9 @@
 package com.github.andrew0030.dakimakuramod.dakimakura;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraModClient;
+import com.github.andrew0030.dakimakuramod.netwok.NetworkUtil;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -27,8 +27,7 @@ public class DakiSendHelper
         int sizeBack = textureBack != null ? textureBack.length : 0;
         // If there is no texture data to send, we return
         if (sizeFront == 0 && sizeBack == 0) {
-            MessageServerSendTextures message = new MessageServerSendTextures(daki, sizeFront, sizeBack, null);
-            PacketHandler.NETWORK_WRAPPER.sendTo(message, serverPlayer);
+            NetworkUtil.sendTextures(serverPlayer, daki, sizeFront, sizeBack, null);
             return;
         }
         // Combines front and back textures into a single byte array
@@ -45,8 +44,7 @@ public class DakiSendHelper
             int length = Math.min(MAX_PACKET_SIZE, totalBytes.length - offset);
             byte[] messageData = new byte[length];
             System.arraycopy(totalBytes, offset, messageData, 0, length);
-            MessageServerSendTextures message = new MessageServerSendTextures(daki, sizeFront, sizeBack, messageData);
-            PacketHandler.NETWORK_WRAPPER.sendTo(message, serverPlayer);
+            NetworkUtil.sendTextures(serverPlayer, daki, sizeFront, sizeBack, messageData);
             offset += length;
         }
     }

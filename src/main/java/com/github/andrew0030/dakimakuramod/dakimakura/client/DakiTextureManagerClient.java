@@ -7,6 +7,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 
@@ -40,7 +41,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
      */
     public DakiTexture getTextureForDaki(Daki daki)
     {
-        DakiTexture dakiTexture  = null;
+        DakiTexture dakiTexture;
         dakiTexture = this.textureCache.getIfPresent(daki);
         if (dakiTexture == null)
         {
@@ -51,7 +52,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event)
+    public void onClientTick(ClientTickEvent event)
     {
         if (event.side == LogicalSide.CLIENT && event.type == TickEvent.Type.CLIENT && event.phase == TickEvent.Phase.END)
         {
@@ -65,7 +66,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
                     {
                         DakiTexture dakiTexture = this.textureCache.getIfPresent(dakiImageData.getDaki());
                         if (dakiTexture != null)
-                            dakiTexture.setBufferedImageFull(dakiImageData.getImageBuffer());
+                            dakiTexture.createImageBuffer(dakiImageData);
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
@@ -90,7 +91,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
             for (DakiTexture texture : this.textureCleanup)
                 if (texture != null)
                     texture.releaseId();
-//                    texture.deleteGlTexture();
+//                  texture.deleteGlTexture();
             this.textureCleanup.clear();
         }
     }
@@ -103,7 +104,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
     public void serverSentTextures(DakiImageData imageData)
     {
         this.textureRequests.decrementAndGet();
-        this.textureCompletion.submit(imageData);
+        this.textureCompletion.submit(() -> imageData);
     }
 
     @Override

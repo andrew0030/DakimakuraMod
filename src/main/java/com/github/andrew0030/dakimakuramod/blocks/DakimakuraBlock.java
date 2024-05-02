@@ -1,6 +1,9 @@
 package com.github.andrew0030.dakimakuramod.blocks;
 
 import com.github.andrew0030.dakimakuramod.block_entities.dakimakura.DakimakuraBlockEntity;
+import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
+import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
+import com.github.andrew0030.dakimakuramod.entities.dakimakura.Dakimakura;
 import com.github.andrew0030.dakimakuramod.util.VoxelShapeTransformer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -73,6 +76,15 @@ public class DakimakuraBlock extends BaseEntityBlock
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
+        // Sets the Daki for the block entity
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        Daki daki = DakiTagSerializer.deserialize(stack.getTag());
+        if (blockEntity instanceof DakimakuraBlockEntity dakiBlockEntity)
+        {
+            dakiBlockEntity.setDaki(daki);
+//            dakiBlockEntity.setFlipped(ItemBlockDakimakura.isFlipped(itemStack));
+        }
+        // Creates "top" Block
         if (!level.isClientSide())
         {
             boolean isWall = state.getValue(FACE).equals(AttachFace.WALL);

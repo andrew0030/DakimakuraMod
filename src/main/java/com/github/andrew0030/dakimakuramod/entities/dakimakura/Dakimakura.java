@@ -1,5 +1,6 @@
 package com.github.andrew0030.dakimakuramod.entities.dakimakura;
 
+import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
 import net.minecraft.core.Direction;
@@ -57,12 +58,6 @@ public class Dakimakura extends Entity
 //        }
     }
 
-    public void setDaki(Daki daki)
-    {
-        this.getEntityData().set(PACK_DIR_NAME, (daki != null) ? daki.getPackDirectoryName() : "");
-        this.getEntityData().set(DAKI_DIR_NAME, (daki != null) ? daki.getDakiDirectoryName() : "");
-    }
-
     @Override
     public void tick()
     {
@@ -80,10 +75,16 @@ public class Dakimakura extends Entity
 //        }
     }
 
-//    public Daki getDaki()
-//    {
-//        return DakimakuraMod.getProxy().getDakimakuraManager().getDakiFromMap(packDirName, dakiDirName);
-//    }
+    public void setDaki(Daki daki)
+    {
+        this.getEntityData().set(PACK_DIR_NAME, (daki != null) ? daki.getPackDirectoryName() : "");
+        this.getEntityData().set(DAKI_DIR_NAME, (daki != null) ? daki.getDakiDirectoryName() : "");
+    }
+
+    public Daki getDaki()
+    {
+        return DakimakuraMod.getDakimakuraManager().getDakiFromMap(this.getEntityData().get(PACK_DIR_NAME), this.getEntityData().get(DAKI_DIR_NAME));
+    }
 
     public boolean isFlipped()
     {

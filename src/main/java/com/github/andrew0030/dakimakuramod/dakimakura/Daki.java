@@ -1,7 +1,16 @@
 package com.github.andrew0030.dakimakuramod.dakimakura;
 
+import com.github.andrew0030.dakimakuramod.DakimakuraMod;
+import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
+import com.github.andrew0030.dakimakuramod.util.TranslationHelper;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
+import net.minecraft.world.item.ItemStack;
+import org.checkerframework.checker.i18nformatter.qual.I18nChecksFormat;
 
+import java.awt.*;
+import java.util.List;
 import java.util.Objects;
 
 public class Daki implements Comparable<Daki>
@@ -137,21 +146,20 @@ public class Daki implements Comparable<Daki>
         return dakiDirectoryName;
     }
 
-//    public void addInformation(ItemStack itemStack, List list)
-//    {
-//        DakiManager dakiManager = DakimakuraMod.getProxy().getDakimakuraManager();
-//        IDakiPack dakiPack = dakiManager.getDakiPack(packDirectoryName);
-//        if (dakiPack != null) {
-//            int index =  dakiManager.getDakiIndexInPack(this) + 1;
-//            int total = dakiPack.getDakiCount();
-//            String textPack = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.pack";
-//            String textName = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.name";
-//            list.add(I18n.format(textPack, dakiPack.getName(), index, total));
-//            list.add(I18n.format(textName, getDisplayName()));
-//        }
-//        if (!StringUtils.isNullOrEmpty(getFlavourText())) {
-//            String textFlavour = ModBlocks.blockDakimakura.getUnlocalizedName() + ".tooltip.flavour";
-//            list.add(I18n.format(textFlavour, getFlavourText()));
-//        }
-//    }
+    public void addInformation(ItemStack itemStack, List<Component> tooltip)
+    {
+        DakiManager dakiManager = DakimakuraMod.getDakimakuraManager();
+        IDakiPack dakiPack = dakiManager.getDakiPack(this.packDirectoryName);
+        if (dakiPack != null)
+        {
+            int index =  dakiManager.getDakiIndexInPack(this) + 1;
+            int total = dakiPack.getDakiCount();
+            TranslationHelper.getToolTipWithArgs(tooltip, "tooltip.dakimakuramod.dakimakura.pack", dakiPack.getName(), index, total);
+            TranslationHelper.getToolTipWithArgs(tooltip, "tooltip.dakimakuramod.dakimakura.name", this.getDisplayName());
+        }
+        if (!StringUtil.isNullOrEmpty(this.getFlavourText()))
+        {
+            TranslationHelper.getToolTipWithArgs(tooltip, "tooltip.dakimakuramod.dakimakura.flavour", this.getFlavourText());
+        }
+    }
 }

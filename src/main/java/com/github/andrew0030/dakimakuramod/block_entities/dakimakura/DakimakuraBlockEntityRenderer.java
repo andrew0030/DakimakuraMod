@@ -15,8 +15,6 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class DakimakuraBlockEntityRenderer implements BlockEntityRenderer<DakimakuraBlockEntity>
 {
-    // Base Texture
-    private static final ResourceLocation TEXTURE_BLANK = new ResourceLocation(DakimakuraMod.MODID, "textures/obj/blank.png");
     private final DakimakuraModel dakimakuraModel;
 
     public DakimakuraBlockEntityRenderer(BlockEntityRendererProvider.Context context)
@@ -59,7 +57,7 @@ public class DakimakuraBlockEntityRenderer implements BlockEntityRenderer<Dakima
             poseStack.translate(0.0F, 0.5F, -0.380F);
         }
 
-        this.dakimakuraModel.render(poseStack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(TEXTURE_BLANK)), packedLight);
+        this.dakimakuraModel.render(poseStack, buffer, packedLight, blockEntity.getDaki());
         poseStack.popPose();
     }
 }

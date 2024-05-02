@@ -25,4 +25,16 @@ public class DMRenderTypes extends RenderStateShard
                 .createCompositeState(true);
         return RenderType.create(DakimakuraMod.MODID + "dakimakura", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, false, state);
     }
+
+    public static RenderType getSpecialDakimakuraType(int id)
+    {
+        RenderType.CompositeState state = RenderType.CompositeState.builder()
+                .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                .setTextureState(new DMRenderStateShard(id))
+                .setTransparencyState(NO_TRANSPARENCY)
+                .setLightmapState(LIGHTMAP)
+                .setOverlayState(OVERLAY)
+                .createCompositeState(true);
+        return RenderType.create(DakimakuraMod.MODID + "dakimakura", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, false, state);
+    }
 }

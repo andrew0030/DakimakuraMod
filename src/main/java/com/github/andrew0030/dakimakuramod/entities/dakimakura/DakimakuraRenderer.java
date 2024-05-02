@@ -36,7 +36,7 @@ public class DakimakuraRenderer extends EntityRenderer<Dakimakura>
         poseStack.mulPose(Axis.XN.rotationDegrees(90));
         if (entity.isFlipped())
             poseStack.mulPose(Axis.YN.rotationDegrees(180));
-        this.dakimakuraModel.render(poseStack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(this.getTextureLocation(entity))), packedLight);
+        this.dakimakuraModel.render(poseStack, buffer, packedLight, entity.getDaki());
         poseStack.popPose();
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
     }
