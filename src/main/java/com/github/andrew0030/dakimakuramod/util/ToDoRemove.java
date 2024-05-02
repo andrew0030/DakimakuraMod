@@ -11,8 +11,10 @@ import com.github.andrew0030.dakimakuramod.netwok.NetworkUtil;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.animal.allay.Allay;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL11C;
@@ -91,6 +93,7 @@ public class ToDoRemove
             System.out.println("Byte Array Front Length: " + this.textureFront.length);
             System.out.println("Byte Array Back Length: " + this.textureBack.length);
             System.out.println(this.imageBuffer.toString());
+            System.out.println("Path Front: " + Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\dakimakura-mod\\Vanilla Mobs\\Allay\\front.png");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,8 +168,8 @@ public class ToDoRemove
         // We get the Daki Pack from the DakiManager
 //        IDakiPack dakiPack = DakimakuraMod.getDakimakuraManager().getDakiPack(this.daki.getPackDirectoryName());
         // We retrieve paths for the front and back Image of this Daki
-        String pathFront = "D:\\DakimakuraMod\\DakimakuraMod\\run\\.\\dakimakura-mod\\Vanilla Mobs\\Allay\\front.png";
-        String pathBack = "D:\\DakimakuraMod\\DakimakuraMod\\run\\.\\dakimakura-mod\\Vanilla Mobs\\Allay\\back.png";
+        String pathFront = Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\dakimakura-mod\\Vanilla Mobs\\Allay\\front.png";
+        String pathBack = Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\dakimakura-mod\\Vanilla Mobs\\Allay\\back.png";
         // We convert the found files to byte arrays
         this.textureFront = getResource(pathFront);
         this.textureBack = getResource(pathBack);
