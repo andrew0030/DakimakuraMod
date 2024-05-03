@@ -36,9 +36,9 @@ public record ObjModel(Vector3f[] v, Vec2[] vt, Vector3f[] vn, Face[] faces)
                 Vector3f vn2 = vn[face.vn2 - 1];
                 Vector3f vn3 = vn[face.vn3 - 1];
 
-                this.addVertex(stack, buffer, v1.x(), v1.y(), v1.z(), vt1.x, -vt1.y, packedLight, vn1.x(), vn1.y(), vn1.z());
-                this.addVertex(stack, buffer, v2.x(), v2.y(), v2.z(), vt2.x, -vt2.y, packedLight, vn2.x(), vn2.y(), vn2.z());
-                this.addVertex(stack, buffer, v3.x(), v3.y(), v3.z(), vt3.x, -vt3.y, packedLight, vn3.x(), vn3.y(), vn3.z());
+                this.addVertex(stack, buffer, v1.x(), v1.y(), v1.z(), vt1.x, vt1.y, packedLight, vn1.x(), vn1.y(), vn1.z());
+                this.addVertex(stack, buffer, v2.x(), v2.y(), v2.z(), vt2.x, vt2.y, packedLight, vn2.x(), vn2.y(), vn2.z());
+                this.addVertex(stack, buffer, v3.x(), v3.y(), v3.z(), vt3.x, vt3.y, packedLight, vn3.x(), vn3.y(), vn3.z());
             }
         }
         catch (Exception e)

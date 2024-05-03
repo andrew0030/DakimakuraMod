@@ -1,28 +1,17 @@
 package com.github.andrew0030.dakimakuramod.util;
 
-import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.DakimakuraModClient;
-import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
-import com.github.andrew0030.dakimakuramod.dakimakura.DakiImageData;
 import com.github.andrew0030.dakimakuramod.dakimakura.client.DakiTexture;
-import com.github.andrew0030.dakimakuramod.dakimakura.client.DakiTextureManagerClient;
-import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
-import com.github.andrew0030.dakimakuramod.netwok.NetworkUtil;
-import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.platform.TextureUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.entity.animal.allay.Allay;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL11C;
 import org.lwjgl.stb.STBImage;
-import org.lwjgl.stb.STBImageResize;
 import org.lwjgl.system.MemoryUtil;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class ToDoRemove
@@ -76,13 +65,15 @@ public class ToDoRemove
             return false;
 
         try {
+
+
             int texture = GL11.glGenTextures();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, size, size, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 12, 36, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
             this.id = texture;
             //TODO make sure this is ok here I guess?
 //            MemoryUtil.memFree(this.imageBuffer);
@@ -118,36 +109,40 @@ public class ToDoRemove
 
     private ByteBuffer resize(ByteBuffer imgBuffer, int oldWidth, int oldHeight, int newWidth, int newHeight, boolean isSmooth)
     {
-        // Allocates memory for the resized image
-        ByteBuffer resizedBuffer = ByteBuffer.allocateDirect(newWidth * newHeight * 3); // 3 channels (RGB)
-        // Resizes the image using STBImageResize
-        //TODO: maybe look into using 16 for this for potentially better textures
-//        STBImageResize.stbir_resize_uint16_generic();
-        STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
-        // Frees the memory associated with the original input ByteBuffer
-        MemoryUtil.memFree(imgBuffer);
-        // Returns the resized image data ByteBuffer
-        return resizedBuffer;
+//        // Allocates memory for the resized image
+//        ByteBuffer resizedBuffer = ByteBuffer.allocateDirect(newWidth * newHeight * 3); // 3 channels (RGB)
+//        // Resizes the image using STBImageResize
+//        //TODO: maybe look into using 16 for this for potentially better textures
+////        STBImageResize.stbir_resize_uint16_generic();
+//        STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
+//        // Frees the memory associated with the original input ByteBuffer
+//        MemoryUtil.memFree(imgBuffer);
+//        // Returns the resized image data ByteBuffer
+//        return resizedBuffer;
+
+        return imgBuffer;
     }
 
     private ByteBuffer combineImages(ByteBuffer imageBufferFront, ByteBuffer imageBufferBack, int textureSize)
     {
-        // Allocate memory for the combined image buffer
-        ByteBuffer combinedBuffer = ByteBuffer.allocateDirect(textureSize * textureSize * 3); // 3 channels (RGB)
-        // Copy front image to the left side of combined image
-        imageBufferFront.rewind(); // Resets position to start
-        combinedBuffer.put(imageBufferFront);
-        // Copy back image to the right side of combined image
-        imageBufferBack.rewind(); // Resets position to start
-        combinedBuffer.position(textureSize / 2 * 3); // Start writing at the middle of the buffer
-        combinedBuffer.put(imageBufferBack);
-        // Reset position to start of the combined buffer
-        combinedBuffer.rewind();
-
-        MemoryUtil.memFree(imageBufferFront);
+//        // Allocate memory for the combined image buffer
+//        ByteBuffer combinedBuffer = ByteBuffer.allocateDirect(textureSize * textureSize * 3); // 3 channels (RGB)
+//        // Copy front image to the left side of combined image
+//        imageBufferFront.rewind(); // Resets position to start
+//        combinedBuffer.put(imageBufferFront);
+//        // Copy back image to the right side of combined image
+//        imageBufferBack.rewind(); // Resets position to start
+//        combinedBuffer.position(textureSize / 2 * 3); // Start writing at the middle of the buffer
+//        combinedBuffer.put(imageBufferBack);
+//        // Reset position to start of the combined buffer
+//        combinedBuffer.rewind();
+//
+//        MemoryUtil.memFree(imageBufferFront);
         MemoryUtil.memFree(imageBufferBack);
+//
+//        return combinedBuffer;
 
-        return combinedBuffer;
+        return imageBufferFront;
     }
 
     private int getMaxTextureSize()

@@ -1,7 +1,8 @@
 package com.github.andrew0030.dakimakuramod.util;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.RenderStateShard;
-import org.lwjgl.opengl.GL11;
+
 
 public class DMRenderStateShard extends RenderStateShard.EmptyTextureStateShard
 {
@@ -10,7 +11,7 @@ public class DMRenderStateShard extends RenderStateShard.EmptyTextureStateShard
     public DMRenderStateShard(int id) {
         super(
                 () -> {
-                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, id);
+                    RenderSystem.setShaderTexture(0, id);
                 },
                 () -> {}
         );
