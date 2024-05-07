@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.stb.STBImageResize;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.ByteArrayInputStream;
@@ -45,15 +46,14 @@ public class ToDoRemove
             textureSize = Math.min(textureSize, maxTexture);
 
             // Resize images if needed
-            // TODO make images scale to width size/3 to fix scaling issue son low res
-            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 2, textureSize, false);
-            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 2, textureSize, false);
+            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 3, textureSize, false);
+            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 3, textureSize, false);
 
             // Stores the combines front and back images into one buffer
             this.imageBuffer = this.combineImages(imageBufferFront, imageBufferBack, textureSize);
             this.size = textureSize;
-//            this.textureFront = null;
-//            this.textureBack = null;
+            this.textureFront = null;
+            this.textureBack = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,27 +65,16 @@ public class ToDoRemove
             return false;
 
         try {
-
-
             int texture = GL11.glGenTextures();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 12, 36, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST); // LINEAR for smooth
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 12, 36 * 2, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
             this.id = texture;
             //TODO make sure this is ok here I guess?
-//            MemoryUtil.memFree(this.imageBuffer);
-
-            System.out.println("LOADING IMAGE");
-            System.out.println("Image Size: " + this.size);
-            System.out.println("Image Id: " + this.id);
-            System.out.println("Byte Array Front Length: " + this.textureFront.length);
-            System.out.println("Byte Array Back Length: " + this.textureBack.length);
-            System.out.println(this.imageBuffer.toString());
-            System.out.println("Path Front: " + Minecraft.getInstance().gameDirectory.getAbsolutePath() + "\\dakimakura-mod\\Vanilla Mobs\\Allay\\front.png");
-
+            MemoryUtil.memFree(this.imageBuffer);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -109,40 +98,37 @@ public class ToDoRemove
 
     private ByteBuffer resize(ByteBuffer imgBuffer, int oldWidth, int oldHeight, int newWidth, int newHeight, boolean isSmooth)
     {
-//        // Allocates memory for the resized image
-//        ByteBuffer resizedBuffer = ByteBuffer.allocateDirect(newWidth * newHeight * 3); // 3 channels (RGB)
-//        // Resizes the image using STBImageResize
-//        //TODO: maybe look into using 16 for this for potentially better textures
-////        STBImageResize.stbir_resize_uint16_generic();
-//        STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
-//        // Frees the memory associated with the original input ByteBuffer
-//        MemoryUtil.memFree(imgBuffer);
-//        // Returns the resized image data ByteBuffer
-//        return resizedBuffer;
+        // Allocates memory for the resized image
+        ByteBuffer resizedBuffer = MemoryUtil.memAlloc(newWidth * newHeight * 3); // 3 channels (RGB)
+        // Resizes the image using STBImageResize
+        //TODO: maybe look into using 16 for this for potentially better textures
 
-        return imgBuffer;
+        // STBImageResize.stbir_resize_uint16_generic();
+        STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
+        // Frees the memory associated with the original input ByteBuffer
+        MemoryUtil.memFree(imgBuffer);
+        // Returns the resized image data ByteBuffer
+        return resizedBuffer;
     }
 
     private ByteBuffer combineImages(ByteBuffer imageBufferFront, ByteBuffer imageBufferBack, int textureSize)
     {
-//        // Allocate memory for the combined image buffer
-//        ByteBuffer combinedBuffer = ByteBuffer.allocateDirect(textureSize * textureSize * 3); // 3 channels (RGB)
-//        // Copy front image to the left side of combined image
-//        imageBufferFront.rewind(); // Resets position to start
-//        combinedBuffer.put(imageBufferFront);
-//        // Copy back image to the right side of combined image
-//        imageBufferBack.rewind(); // Resets position to start
-//        combinedBuffer.position(textureSize / 2 * 3); // Start writing at the middle of the buffer
-//        combinedBuffer.put(imageBufferBack);
-//        // Reset position to start of the combined buffer
-//        combinedBuffer.rewind();
-//
-//        MemoryUtil.memFree(imageBufferFront);
-        MemoryUtil.memFree(imageBufferBack);
-//
-//        return combinedBuffer;
+        // Allocate memory for the combined image buffer
+        ByteBuffer combinedBuffer = MemoryUtil.memAlloc(textureSize * textureSize * 3); // 3 channels (RGB)
+        // Copy front image to the left side of combined image
+        imageBufferFront.rewind(); // Resets position to start
+        combinedBuffer.put(imageBufferFront);
+        // Copy back image to the right side of combined image
+        imageBufferBack.rewind(); // Resets position to start
+        combinedBuffer.position(imageBufferFront.capacity()); // Start writing at the middle of the buffer
+        combinedBuffer.put(imageBufferBack);
+        // Reset position to start of the combined buffer
+        combinedBuffer.rewind();
 
-        return imageBufferFront;
+        MemoryUtil.memFree(imageBufferFront);
+        MemoryUtil.memFree(imageBufferBack);
+
+        return combinedBuffer;
     }
 
     private int getMaxTextureSize()

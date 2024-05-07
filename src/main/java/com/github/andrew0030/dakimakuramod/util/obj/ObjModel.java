@@ -9,6 +9,7 @@ import net.minecraft.world.phys.Vec2;
 import org.apache.commons.compress.utils.IOUtils;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.io.ByteArrayOutputStream;
@@ -28,17 +29,41 @@ public record ObjModel(Vector3f[] v, Vec2[] vt, Vector3f[] vn, Face[] faces)
                 Vector3f v2 = v[face.v2 - 1];
                 Vector3f v3 = v[face.v3 - 1];
 
-                Vec2 vt1 = vt[face.vt1 - 1];
-                Vec2 vt2 = vt[face.vt2 - 1];
-                Vec2 vt3 = vt[face.vt3 - 1];
+                Vector2f vt1 = new Vector2f(vt[face.vt1 - 1].x, vt[face.vt1 - 1].y);
+                Vector2f vt2 = new Vector2f(vt[face.vt2 - 1].x, vt[face.vt2 - 1].y);
+                Vector2f vt3 = new Vector2f(vt[face.vt3 - 1].x, vt[face.vt3 - 1].y);
 
                 Vector3f vn1 = vn[face.vn1 - 1];
                 Vector3f vn2 = vn[face.vn2 - 1];
                 Vector3f vn3 = vn[face.vn3 - 1];
 
-                this.addVertex(stack, buffer, v1.x(), v1.y(), v1.z(), vt1.x, vt1.y, packedLight, vn1.x(), vn1.y(), vn1.z());
-                this.addVertex(stack, buffer, v2.x(), v2.y(), v2.z(), vt2.x, vt2.y, packedLight, vn2.x(), vn2.y(), vn2.z());
-                this.addVertex(stack, buffer, v3.x(), v3.y(), v3.z(), vt3.x, vt3.y, packedLight, vn3.x(), vn3.y(), vn3.z());
+                vt1.x *= 2;
+                vt2.x *= 2;
+                vt3.x *= 2;
+                vt1.y /= 2;
+                vt2.y /= 2;
+                vt3.y /= 2;
+                if (vt1.x > 1) {
+                    vt1.x -= 1;
+                    vt1.y -= 0.5;
+                } else {
+                    vt1.y += 0.5;
+                }
+                if (vt2.x > 1) {
+                    vt2.x -= 1;
+                    vt2.y -= 0.5f;
+                } else {
+                    vt2.y += 0.5f;
+                }
+                if (vt3.x > 1) {
+                    vt3.x -= 1;
+                    vt3.y -= 0.5f;
+                } else {
+                    vt3.y += 0.5f;
+                }
+                this.addVertex(stack, buffer, v1.x(), v1.y(), v1.z(), vt1.x, 1-vt1.y, packedLight, vn1.x(), vn1.y(), vn1.z());
+                this.addVertex(stack, buffer, v2.x(), v2.y(), v2.z(), vt2.x, 1-vt2.y, packedLight, vn2.x(), vn2.y(), vn2.z());
+                this.addVertex(stack, buffer, v3.x(), v3.y(), v3.z(), vt3.x, 1-vt3.y, packedLight, vn3.x(), vn3.y(), vn3.z());
             }
         }
         catch (Exception e)

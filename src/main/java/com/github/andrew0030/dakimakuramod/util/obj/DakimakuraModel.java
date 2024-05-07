@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class DakimakuraModel
 {
@@ -30,7 +31,7 @@ public class DakimakuraModel
     public void render(PoseStack stack, MultiBufferSource buffer, int packedLight, Daki daki)
     {
         stack.pushPose();
-        stack.scale(0.6F, 0.6F, 0.6F);// 0.55
+        stack.scale(0.6F, 0.6F, 0.6F);
         stack.scale(-1F, 1F, -1F);
 
 //        if(daki != null)

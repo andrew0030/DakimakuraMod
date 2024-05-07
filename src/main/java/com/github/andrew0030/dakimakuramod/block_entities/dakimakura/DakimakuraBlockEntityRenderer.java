@@ -1,8 +1,6 @@
 package com.github.andrew0030.dakimakuramod.block_entities.dakimakura;
 
-import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.blocks.DakimakuraBlock;
-import com.github.andrew0030.dakimakuramod.util.DMRenderTypes;
 import com.github.andrew0030.dakimakuramod.util.obj.DakimakuraModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -10,7 +8,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class DakimakuraBlockEntityRenderer implements BlockEntityRenderer<DakimakuraBlockEntity>
