@@ -45,19 +45,16 @@ public record ObjModel(Vector3f[] v, Vec2[] vt, Vector3f[] vn, Face[] faces)
                 vt3.y /= 2;
                 if (vt1.x > 1) {
                     vt1.x -= 1;
-                    vt1.y -= 0.5;
                 } else {
                     vt1.y += 0.5;
                 }
                 if (vt2.x > 1) {
                     vt2.x -= 1;
-                    vt2.y -= 0.5f;
                 } else {
                     vt2.y += 0.5f;
                 }
                 if (vt3.x > 1) {
                     vt3.x -= 1;
-                    vt3.y -= 0.5f;
                 } else {
                     vt3.y += 0.5f;
                 }
