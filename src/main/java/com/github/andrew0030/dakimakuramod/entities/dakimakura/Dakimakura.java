@@ -135,16 +135,4 @@ public class Dakimakura extends Entity
     {
         return this.getEntityData().get(FACING);
     }
-
-//    public boolean isDakiOverBlock(BlockPos blockPos) {
-//        BlockPos pos = new BlockPos(posX, posY - 1, posZ);
-//        if (pos.equals(blockPos)) {
-//            return true;
-//        }
-//        pos = pos.offset(rotation);
-//        if (pos.equals(blockPos)) {
-//            return true;
-//        }
-//        return false;
-//    }
 }
