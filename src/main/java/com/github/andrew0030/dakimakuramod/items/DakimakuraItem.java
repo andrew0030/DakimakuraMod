@@ -38,23 +38,6 @@ public class DakimakuraItem extends BEWLRBlockItem
         ctx.registerRenderer(DMBlockEntityWithoutLevelRenderer::new);
     }
 
-    public static boolean isFlipped(ItemStack itemStack)
-    {
-        if (itemStack == null || !itemStack.hasTag())
-            return false;
-        return DakiTagSerializer.isFlipped(itemStack.getTag());
-    }
-
-    public static ItemStack setFlipped(ItemStack itemStack, boolean flipped)
-    {
-        if (itemStack == null)
-            return null;
-        CompoundTag compound = itemStack.getTag() != null ? itemStack.getTag() : new CompoundTag();
-        itemStack.setTag(compound);
-        DakiTagSerializer.setFlipped(compound, flipped);
-        return itemStack;
-    }
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
     {
@@ -63,9 +46,9 @@ public class DakimakuraItem extends BEWLRBlockItem
         {
             boolean flipped = DakimakuraItem.isFlipped(itemStack);
             itemStack = DakimakuraItem.setFlipped(itemStack, !flipped);
-            return InteractionResultHolder.success(itemStack);
+            return InteractionResultHolder.consume(itemStack);
         }
-        return super.use(level, player, hand);
+        return InteractionResultHolder.pass(itemStack);
     }
 
     @Override
@@ -111,5 +94,22 @@ public class DakimakuraItem extends BEWLRBlockItem
         {
             tooltip.add(Component.translatable("tooltip.dakimakuramod.dakimakura.blank"));
         }
+    }
+
+    public static boolean isFlipped(ItemStack itemStack)
+    {
+        if (itemStack == null || !itemStack.hasTag())
+            return false;
+        return DakiTagSerializer.isFlipped(itemStack.getTag());
+    }
+
+    public static ItemStack setFlipped(ItemStack itemStack, boolean flipped)
+    {
+        if (itemStack == null)
+            return null;
+        CompoundTag compound = itemStack.getTag() != null ? itemStack.getTag() : new CompoundTag();
+        itemStack.setTag(compound);
+        DakiTagSerializer.setFlipped(compound, flipped);
+        return itemStack;
     }
 }

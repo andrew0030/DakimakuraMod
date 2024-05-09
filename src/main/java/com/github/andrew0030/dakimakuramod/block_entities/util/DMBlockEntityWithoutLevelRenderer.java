@@ -1,6 +1,7 @@
 package com.github.andrew0030.dakimakuramod.block_entities.util;
 
 import com.github.andrew0030.dakimakuramod.block_entities.dakimakura.DakimakuraBlockEntity;
+import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
 import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,8 @@ public class DMBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRe
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
     {
-//        this.blockEntity.get().setFlipped(DakiTagSerializer.isFlipped(stack.getTag()));
-        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(this.blockEntity.get(), poseStack, buffer, packedLight, packedOverlay);
+        DakimakuraBlockEntity dakiBlockEntity = this.blockEntity.get();
+        dakiBlockEntity.setFlipped(DakiTagSerializer.isFlipped(stack.getTag()));
+        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(dakiBlockEntity, poseStack, buffer, packedLight, packedOverlay);
     }
 }

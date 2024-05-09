@@ -26,13 +26,14 @@ public class DakimakuraBlockEntity extends BlockEntity
 {
     private String packDirName;
     private String dakiDirName;
+    private boolean flipped;
 
     public DakimakuraBlockEntity(BlockPos pos, BlockState blockState)
     {
         super(DMBlockEntities.DAKIMAKURA.get(), pos, blockState);
     }
 
-    // Used to synchronize the TileEntity with the client when the chunk it is in is loaded
+    /** Used to synchronize the TileEntity with the client when the chunk it is in is loaded */
     @Override
     public CompoundTag getUpdateTag()
     {
@@ -41,7 +42,7 @@ public class DakimakuraBlockEntity extends BlockEntity
         return compound;
     }
 
-    // Used to synchronize the TileEntity with the client when the chunk it is in is loaded
+    /** Used to synchronize the TileEntity with the client when the chunk it is in is loaded */
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket()
     {
@@ -63,9 +64,7 @@ public class DakimakuraBlockEntity extends BlockEntity
         this.loadFromNBT(compound);
     }
 
-    /**
-     * Used to save data to the NBT
-     */
+    /** Used to save data to the NBT */
     private void saveToNBT(CompoundTag compound)
     {
         if (this.packDirName != null && this.dakiDirName != null)
@@ -73,11 +72,10 @@ public class DakimakuraBlockEntity extends BlockEntity
             compound.putString(DakiTagSerializer.PACK_NAME_KEY, this.packDirName);
             compound.putString(DakiTagSerializer.DIR_NAME_KEY, this.dakiDirName);
         }
+        DakiTagSerializer.setFlipped(compound, this.flipped);
     }
 
-    /**
-     * Used to load data from the NBT
-     */
+    /** Used to load data from the NBT */
     private void loadFromNBT(CompoundTag compound)
     {
         if (compound.contains(DakiTagSerializer.PACK_NAME_KEY, Tag.TAG_STRING) && compound.contains(DakiTagSerializer.DIR_NAME_KEY, Tag.TAG_STRING))
@@ -85,6 +83,7 @@ public class DakimakuraBlockEntity extends BlockEntity
             this.packDirName = compound.getString(DakiTagSerializer.PACK_NAME_KEY);
             this.dakiDirName = compound.getString(DakiTagSerializer.DIR_NAME_KEY);
         }
+        this.flipped = DakiTagSerializer.isFlipped(compound);
     }
 
     @Override
@@ -105,6 +104,11 @@ public class DakimakuraBlockEntity extends BlockEntity
         };
     }
 
+    public Daki getDaki()
+    {
+        return DakimakuraMod.getDakimakuraManager().getDakiFromMap(this.packDirName, this.dakiDirName);
+    }
+
     public void setDaki(Daki daki)
     {
         this.packDirName = daki != null ? daki.getPackDirectoryName() : null;
@@ -113,30 +117,35 @@ public class DakimakuraBlockEntity extends BlockEntity
         this.syncWithClients();
     }
 
-    public Daki getDaki()
+    public boolean isFlipped()
     {
-        return DakimakuraMod.getDakimakuraManager().getDakiFromMap(this.packDirName, this.dakiDirName);
+        return this.flipped;
+    }
+
+    public void setFlipped(boolean flipped)
+    {
+        this.flipped = flipped;
+        this.setChanged();
+        this.syncWithClients();
+    }
+
+    public void flip()
+    {
+        this.setFlipped(!this.flipped);
     }
 
     public void syncWithClients()
     {
         if (this.getLevel() != null && !this.getLevel().isClientSide())
-            DakimakuraBlockEntity.syncWithNearbyPlayers(this);
+            DakimakuraBlockEntity.syncWithNearbyPlayers(this.getLevel(), this);
     }
 
-    public static void syncWithNearbyPlayers(BlockEntity blockEntity)
+    public static void syncWithNearbyPlayers(Level level, BlockEntity blockEntity)
     {
-        Level level = blockEntity.getLevel();
         List<Player> players = new ArrayList<>(level.players());
         for (Player player : players)
-        {
             if (player instanceof ServerPlayer serverPlayer)
-            {
                 if (serverPlayer.distanceToSqr(blockEntity.getBlockPos().getX(), blockEntity.getBlockPos().getY(), blockEntity.getBlockPos().getZ()) < 64)
-                {
                     serverPlayer.connection.send(blockEntity.getUpdatePacket());
-                }
-            }
-        }
     }
 }

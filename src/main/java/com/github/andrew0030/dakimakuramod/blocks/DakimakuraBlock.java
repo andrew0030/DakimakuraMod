@@ -3,10 +3,12 @@ package com.github.andrew0030.dakimakuramod.blocks;
 import com.github.andrew0030.dakimakuramod.block_entities.dakimakura.DakimakuraBlockEntity;
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
-import com.github.andrew0030.dakimakuramod.entities.dakimakura.Dakimakura;
+import com.github.andrew0030.dakimakuramod.items.DakimakuraItem;
 import com.github.andrew0030.dakimakuramod.util.VoxelShapeTransformer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -41,13 +44,29 @@ public class DakimakuraBlock extends BaseEntityBlock
     // Block Properties
     public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
     public static final BooleanProperty TOP = BooleanProperty.create("top");
 
     public DakimakuraBlock(Properties properties)
     {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(FLIPPED, false).setValue(TOP, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(TOP, false));
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit)
+    {
+        // If the top Block of the Daki was interacted with, we offset the BlockPos to the bottom Block
+        if (state.getValue(TOP))
+            pos = state.getValue(FACE).equals(AttachFace.WALL) ?
+                    pos.relative(Direction.DOWN) :
+                    pos.relative(state.getValue(FACING).getOpposite());
+        // We get the BlockEntity at the position
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if(player.isShiftKeyDown() && blockEntity instanceof DakimakuraBlockEntity dakiBlockEntity) {
+            dakiBlockEntity.flip();
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -82,7 +101,7 @@ public class DakimakuraBlock extends BaseEntityBlock
         if (blockEntity instanceof DakimakuraBlockEntity dakiBlockEntity)
         {
             dakiBlockEntity.setDaki(daki);
-//            dakiBlockEntity.setFlipped(ItemBlockDakimakura.isFlipped(itemStack));
+            dakiBlockEntity.setFlipped(DakimakuraItem.isFlipped(stack));
         }
         // Creates "top" Block
         if (!level.isClientSide())
@@ -94,6 +113,7 @@ public class DakimakuraBlock extends BaseEntityBlock
         }
     }
 
+    //TODO: probably maybe look into the non player method for destruction
     @Override
     public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
     {
@@ -139,7 +159,7 @@ public class DakimakuraBlock extends BaseEntityBlock
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
-        builder.add(FACE, FACING, FLIPPED, TOP);
+        builder.add(FACE, FACING, TOP);
     }
 
     @Override

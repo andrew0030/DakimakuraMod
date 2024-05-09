@@ -22,6 +22,7 @@ public class DakimakuraBlockEntityRenderer implements BlockEntityRenderer<Dakima
     @Override
     public void render(DakimakuraBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
     {
+        // Debug Rendering, used to render the "RenderBoundingBox" of this BlockEntity
 //        if(!blockEntity.getBlockState().getValue(DakimakuraBlock.TOP) && blockEntity.hasLevel())
 //        {
 //            poseStack.pushPose();
@@ -53,6 +54,9 @@ public class DakimakuraBlockEntityRenderer implements BlockEntityRenderer<Dakima
                 poseStack.mulPose(Axis.YN.rotationDegrees(180));
             poseStack.translate(0.0F, 0.5F, -0.380F);
         }
+
+        if(blockEntity.isFlipped())
+            poseStack.mulPose(Axis.YN.rotationDegrees(180));
 
         this.dakimakuraModel.render(poseStack, buffer, packedLight, blockEntity.getDaki());
         poseStack.popPose();
