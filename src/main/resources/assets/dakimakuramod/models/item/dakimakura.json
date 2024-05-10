@@ -6,9 +6,9 @@
   },
   "display": {
     "gui": {
-      "rotation": [ 30, -30, 0 ],
+      "rotation": [ -45, 5, -25 ],
       "translation": [ 0, 0, 0 ],
-      "scale":[ 0.7, 0.7, 0.7 ]
+      "scale":[ 0.72, 0.72, 0.72 ]
     },
     "ground": {
       "rotation": [ 0, 0, 0 ],

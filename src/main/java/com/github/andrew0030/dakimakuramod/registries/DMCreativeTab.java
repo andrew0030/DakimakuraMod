@@ -28,6 +28,7 @@ public class DMCreativeTab
                     ItemStack itemStack = new ItemStack(DMBlocks.DAKIMAKURA.get());
                     itemStack.setTag(new CompoundTag());
                     DakiTagSerializer.serialize(daki, itemStack.getTag());
+                    DakiTagSerializer.setFlipped(itemStack.getTag(), false);
                     output.accept(itemStack);
                 }
             }).build()

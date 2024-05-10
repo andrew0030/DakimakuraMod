@@ -7,6 +7,7 @@ import com.github.andrew0030.dakimakuramod.items.DakimakuraItem;
 import com.github.andrew0030.dakimakuramod.util.VoxelShapeTransformer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -67,6 +69,30 @@ public class DakimakuraBlock extends BaseEntityBlock
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player)
+    {
+        ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+        // If the Top part is picked we need to offset the position to get the BlockEntity from the Bottom part
+        if (state.getValue(TOP))
+            pos = state.getValue(FACE).equals(AttachFace.WALL) ?
+                    pos.relative(Direction.DOWN) :
+                    pos.relative(state.getValue(FACING).getOpposite());
+
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof DakimakuraBlockEntity dakiBlockEntity)
+        {
+            Daki daki = dakiBlockEntity.getDaki();
+            if (daki != null)
+            {
+                stack.setTag(new CompoundTag());
+                DakiTagSerializer.serialize(daki, stack.getTag());
+                DakiTagSerializer.setFlipped(stack.getTag(), dakiBlockEntity.isFlipped());
+            }
+        }
+        return stack;
     }
 
     @Override

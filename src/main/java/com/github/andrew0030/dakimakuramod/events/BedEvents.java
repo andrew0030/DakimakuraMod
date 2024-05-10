@@ -1,6 +1,7 @@
 package com.github.andrew0030.dakimakuramod.events;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
+import com.github.andrew0030.dakimakuramod.blocks.DakimakuraBlock;
 import com.github.andrew0030.dakimakuramod.entities.dakimakura.Dakimakura;
 import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,8 @@ public class BedEvents
                     if (bottomPos.distanceToSqr(pos.getCenter()) <= 1 || topPos.distanceToSqr(pos.getCenter()) <= 1)
                     {
                         // Removes Entity and adds Item
-                        dakimakura.dropAsItem();
+                        if (!player.isCreative())
+                            dakimakura.dropAsItem();
                         dakimakura.setRemoved(Entity.RemovalReason.DISCARDED);
                         // Adds Break Sound
                         level.playSound(player, pos, SoundType.WOOL.getBreakSound(), SoundSource.BLOCKS, (SoundType.WOOL.getVolume() + 1.0F) / 2.0F, SoundType.WOOL.getPitch() * 0.8F);
@@ -50,10 +52,11 @@ public class BedEvents
                         BlockPos offsetPos = bottomPos.distanceToSqr(pos.getCenter()) <= 1 ?
                                 pos.relative(dakimakura.getRotation()) :
                                 pos.relative(dakimakura.getRotation().getOpposite());
-                        level.addDestroyBlockEffect(pos.above(), DMBlocks.DAKIMAKURA.get().defaultBlockState());
-                        level.addDestroyBlockEffect(offsetPos.above(), DMBlocks.DAKIMAKURA.get().defaultBlockState());
+                        level.addDestroyBlockEffect(pos.above(), DMBlocks.DAKIMAKURA.get().defaultBlockState().setValue(DakimakuraBlock.FACING, dakimakura.getRotation()));
+                        level.addDestroyBlockEffect(offsetPos.above(), DMBlocks.DAKIMAKURA.get().defaultBlockState().setValue(DakimakuraBlock.FACING, dakimakura.getRotation().getOpposite()));
                         // Cancels the event so the BedBlock doesn't get broken
-                        event.setCanceled(true);
+                        if (player.isCreative())
+                            event.setCanceled(true);
                     }
                 }
             }
