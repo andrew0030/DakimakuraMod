@@ -1,7 +1,10 @@
 package com.github.andrew0030.dakimakuramod.dakimakura.client;
 
+import com.github.andrew0030.dakimakuramod.DakimakuraMod;
+import com.github.andrew0030.dakimakuramod.DakimakuraModClient;
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiImageData;
+import com.github.andrew0030.dakimakuramod.entities.dakimakura.Dakimakura;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -76,9 +79,7 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
         }
     }
 
-    /**
-     * Used to clear the {@link DakiTextureManagerClient} cache.
-     */
+    /** Used to clear the {@link DakiTextureManagerClient} cache. */
     public void reloadTextures()
     {
         this.textureCache.asMap().clear();
@@ -91,7 +92,6 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
             for (DakiTexture texture : this.textureCleanup)
                 if (texture != null)
                     texture.releaseId();
-//                  texture.deleteGlTexture();
             this.textureCleanup.clear();
         }
     }

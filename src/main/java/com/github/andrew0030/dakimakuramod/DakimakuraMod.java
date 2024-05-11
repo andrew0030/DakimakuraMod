@@ -5,6 +5,7 @@ import com.github.andrew0030.dakimakuramod.dakimakura.DakiExtractor;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiManager;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiTextureManagerCommon;
 import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
+import com.github.andrew0030.dakimakuramod.events.LoggedInEvent;
 import com.github.andrew0030.dakimakuramod.netwok.DMNetwork;
 import com.github.andrew0030.dakimakuramod.registries.*;
 import com.mojang.logging.LogUtils;
@@ -40,6 +41,7 @@ public class DakimakuraMod
         eventBus.addListener(this::registerCommands);
         eventBus.addListener(this::serverStarting);
         eventBus.addListener(this::serverStopping);
+        eventBus.register(new LoggedInEvent());
         if (FMLEnvironment.dist == Dist.CLIENT)
             DakimakuraModClient.init(modEventBus);
 
@@ -88,8 +90,9 @@ public class DakimakuraMod
         return DakimakuraMod.dakiTextureManagerCommon;
     }
 
-    public static void setDakiList(ArrayList<IDakiPack> packs)
-    {
-        DakimakuraMod.getDakimakuraManager().setDakiList(packs);
-    }
+    //TODO probably remove this since we only have this in client now...
+//    public static void setDakiList(ArrayList<IDakiPack> packs)
+//    {
+//        DakimakuraMod.getDakimakuraManager().setDakiList(packs);
+//    }
 }

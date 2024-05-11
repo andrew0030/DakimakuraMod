@@ -25,6 +25,7 @@ public class DMBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRe
     public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay)
     {
         DakimakuraBlockEntity dakiBlockEntity = this.blockEntity.get();
+        dakiBlockEntity.setDaki(DakiTagSerializer.deserialize(stack.getTag()));
         dakiBlockEntity.setFlipped(DakiTagSerializer.isFlipped(stack.getTag()));
         Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(dakiBlockEntity, poseStack, buffer, packedLight, packedOverlay);
     }

@@ -29,7 +29,7 @@ public class ClientPacketHandler
 
     public static void handleSendDakiList(SendDakiListClientMessage msg)
     {
-        DakimakuraMod.setDakiList(msg.packs);
+        DakimakuraMod.getDakimakuraManager().setDakiList(msg.packs);
         DakimakuraModClient.getDakiTextureManager().reloadTextures();
     }
 }

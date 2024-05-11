@@ -25,6 +25,11 @@ public class NetworkUtil
         DMNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new SendDakiListClientMessage());
     }
 
+    public static void sendDakiList(ServerPlayer serverPlayer)
+    {
+        DMNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SendDakiListClientMessage());
+    }
+
     public static void clientRequestTextures(Daki daki)
     {
         DMNetwork.CHANNEL.sendToServer(new RequestTexturesServerMessage(daki));

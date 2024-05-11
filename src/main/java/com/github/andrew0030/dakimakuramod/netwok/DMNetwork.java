@@ -2,6 +2,7 @@ package com.github.andrew0030.dakimakuramod.netwok;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.netwok.client.CommandClientMessage;
+import com.github.andrew0030.dakimakuramod.netwok.client.SendDakiListClientMessage;
 import com.github.andrew0030.dakimakuramod.netwok.client.SendTexturesClientMessage;
 import com.github.andrew0030.dakimakuramod.netwok.server.RequestTexturesServerMessage;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ public class DMNetwork
         //Client Messages
         CHANNEL.registerMessage(++id, CommandClientMessage.class, CommandClientMessage::serialize, CommandClientMessage::deserialize, CommandClientMessage::handle);
         CHANNEL.registerMessage(++id, SendTexturesClientMessage.class, SendTexturesClientMessage::serialize, SendTexturesClientMessage::deserialize, SendTexturesClientMessage::handle);
+        CHANNEL.registerMessage(++id, SendDakiListClientMessage.class, SendDakiListClientMessage::serialize, SendDakiListClientMessage::deserialize, SendDakiListClientMessage::handle);
         //Server Messages
         CHANNEL.registerMessage(++id, RequestTexturesServerMessage.class, RequestTexturesServerMessage::serialize, RequestTexturesServerMessage::deserialize, RequestTexturesServerMessage::handle);
     }

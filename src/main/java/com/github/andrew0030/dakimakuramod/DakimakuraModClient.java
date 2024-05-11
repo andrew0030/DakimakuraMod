@@ -1,12 +1,10 @@
 package com.github.andrew0030.dakimakuramod;
 
-import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
-import com.github.andrew0030.dakimakuramod.dakimakura.DakiImageData;
 import com.github.andrew0030.dakimakuramod.dakimakura.client.DakiTextureManagerClient;
+import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
 import com.github.andrew0030.dakimakuramod.entities.dakimakura.DakimakuraRenderer;
 import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMEntities;
-import com.github.andrew0030.dakimakuramod.util.ToDoRemove;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,40 +13,32 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+
 public class DakimakuraModClient
 {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static int maxGpuTextureSize;
     private static DakiTextureManagerClient dakiTextureManagerClient;
-    //TODO remove
-    public static int id;
 
     public static void init(IEventBus modEventBus)
     {
-//        IEventBus eventBus = MinecraftForge.EVENT_BUS;
-
         modEventBus.addListener(DakimakuraModClient::setupClient);
         modEventBus.addListener(DakimakuraModClient::registerEntityRenderers);
 
-//        eventBus.register(new DakiTextureManagerClient());
+        IEventBus eventBus = MinecraftForge.EVENT_BUS;
+        eventBus.register(dakiTextureManagerClient = new DakiTextureManagerClient());
     }
 
     private static void setupClient(FMLClientSetupEvent event)
     {
-//        dakiTextureManagerClient = new DakiTextureManagerClient();
+//        DakimakuraModClient.dakiTextureManagerClient = new DakiTextureManagerClient();
 
         event.enqueueWork(() -> {
             DMBlockEntities.registerBlockEntityRenderers();
             // Gets the max size an image can be
-            maxGpuTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
-            LOGGER.info(String.format("Max GPU texture size: %d.", maxGpuTextureSize));
-
-
-            ToDoRemove texture = new ToDoRemove();
-            texture.loadData();
-            texture.createImageBuffer();
-            texture.load();
-            DakimakuraModClient.id = texture.id;
+            DakimakuraModClient.maxGpuTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE);
+            LOGGER.info(String.format("Max GPU texture size: %d.", DakimakuraModClient.maxGpuTextureSize));
         });
     }
 
@@ -70,4 +60,11 @@ public class DakimakuraModClient
     {
         return DakimakuraModClient.dakiTextureManagerClient;
     }
+
+    //TODO maybe remove? I moved this into ClientPacketHandler since its the only spot that calls it
+//    public static void setDakiList(ArrayList<IDakiPack> packs)
+//    {
+//        DakimakuraMod.getDakimakuraManager().setDakiList(packs);
+//        DakimakuraModClient.getDakiTextureManager().reloadTextures();
+//    }
 }

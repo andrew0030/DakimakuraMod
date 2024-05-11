@@ -24,8 +24,8 @@ public class Dakimakura extends Entity
 {
     private static final EntityDataAccessor<Integer> FACING = SynchedEntityData.defineId(Dakimakura.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> FLIPPED = SynchedEntityData.defineId(Dakimakura.class, EntityDataSerializers.BOOLEAN);
-    private String packName;
-    private String dirName;
+    private static final EntityDataAccessor<String> PACK_NAME = SynchedEntityData.defineId(Dakimakura.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> DIR_NAME = SynchedEntityData.defineId(Dakimakura.class, EntityDataSerializers.STRING);
 
     public Dakimakura(EntityType<?> entityType, Level level)
     {
@@ -37,6 +37,8 @@ public class Dakimakura extends Entity
     {
         this.getEntityData().define(FACING, 2); // 2: North in Direction
         this.getEntityData().define(FLIPPED, false);
+        this.getEntityData().define(PACK_NAME, "");
+        this.getEntityData().define(DIR_NAME, "");
     }
 
     @Override
@@ -44,10 +46,10 @@ public class Dakimakura extends Entity
     {
         compound.putInt(DakiTagSerializer.FACING_KEY, this.getRotationInt());
         compound.putBoolean(DakiTagSerializer.FLIPPED_KEY, this.isFlipped());
-        if (this.packName != null && this.dirName != null)
+        if (!this.getEntityData().get(PACK_NAME).equals("") && !this.getEntityData().get(DIR_NAME).equals(""))
         {
-            compound.putString(DakiTagSerializer.PACK_NAME_KEY, this.packName);
-            compound.putString(DakiTagSerializer.DIR_NAME_KEY, this.dirName);
+            compound.putString(DakiTagSerializer.PACK_NAME_KEY, this.getEntityData().get(PACK_NAME));
+            compound.putString(DakiTagSerializer.DIR_NAME_KEY, this.getEntityData().get(DIR_NAME));
         }
     }
 
@@ -58,8 +60,8 @@ public class Dakimakura extends Entity
         this.setFlipped(compound.getBoolean(DakiTagSerializer.FLIPPED_KEY));
         if (compound.contains(DakiTagSerializer.PACK_NAME_KEY, Tag.TAG_STRING) && compound.contains(DakiTagSerializer.DIR_NAME_KEY, Tag.TAG_STRING))
         {
-            this.packName =  compound.getString(DakiTagSerializer.PACK_NAME_KEY);
-            this.dirName =  compound.getString(DakiTagSerializer.DIR_NAME_KEY);
+            this.getEntityData().set(PACK_NAME, compound.getString(DakiTagSerializer.PACK_NAME_KEY));
+            this.getEntityData().set(DIR_NAME, compound.getString(DakiTagSerializer.DIR_NAME_KEY));
         }
     }
 
@@ -97,13 +99,13 @@ public class Dakimakura extends Entity
 
     public void setDaki(Daki daki)
     {
-        this.packName = (daki != null) ? daki.getPackDirectoryName() : null;
-        this.dirName = (daki != null) ? daki.getDakiDirectoryName() : null;
+        this.getEntityData().set(PACK_NAME, (daki != null) ? daki.getPackDirectoryName() : "");
+        this.getEntityData().set(DIR_NAME, (daki != null) ? daki.getDakiDirectoryName() : "");
     }
 
     public Daki getDaki()
     {
-        return DakimakuraMod.getDakimakuraManager().getDakiFromMap(this.packName, this.dirName);
+        return DakimakuraMod.getDakimakuraManager().getDakiFromMap(this.getEntityData().get(PACK_NAME), this.getEntityData().get(DIR_NAME));
     }
 
     public boolean isFlipped()

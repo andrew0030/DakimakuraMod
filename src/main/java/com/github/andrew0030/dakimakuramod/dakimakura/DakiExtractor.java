@@ -13,7 +13,7 @@ public final class DakiExtractor
     private static final String DAKI_ASSETS_LOCATION = "assets/" + DakimakuraMod.MODID + "/dakis/";
     private static final String[] README_LIST = new String[] {"en_GB", "de_DE"};
     private static final String DEFAULT_DAKI_PACK = "Vanilla Mobs";
-    private static final String[] DEFAULT_DAKI_LIST = new String[] {"Allay", "Axolotl", "Horse"};
+    private static final String[] DEFAULT_DAKI_LIST = new String[] {"Allay", "Axolotl", "Camel", "Horse"};
 
     /**
      * Creates the daki folder in the game directory, and then extracts the default dakis and README's into it

@@ -34,22 +34,18 @@ public class DakimakuraModel
         stack.scale(0.6F, 0.6F, 0.6F);
         stack.scale(-1F, 1F, -1F);
 
-//        if(daki != null)
-//        {
-//            DakiTexture dakiTexture = DakimakuraModClient.getDakiTextureManager().getTextureForDaki(daki);
-//            if (dakiTexture.isLoaded())
-//                DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getSpecialDakimakuraType(dakiTexture.getId())), packedLight);
-//            else
-//                DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(TEXTURE_BLANK)), packedLight);
-//        }
-//        else
-//        {
-//            DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(TEXTURE_BLANK)), packedLight);
-//        }
-
-//        DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(TEXTURE_BLANK)), packedLight);
-
-        DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getSpecialDakimakuraType(DakimakuraModClient.id)), packedLight);
+        if(daki != null)
+        {
+            DakiTexture dakiTexture = DakimakuraModClient.getDakiTextureManager().getTextureForDaki(daki);
+            if (dakiTexture.isLoaded())
+                DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getSpecialDakimakuraType(dakiTexture.getId())), packedLight);
+            else
+                DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(TEXTURE_BLANK)), packedLight);
+        }
+        else
+        {
+            DAKIMAKURA_MODEL.render(stack, buffer.getBuffer(DMRenderTypes.getDakimakuraType(TEXTURE_BLANK)), packedLight);
+        }
 
         stack.popPose();
     }

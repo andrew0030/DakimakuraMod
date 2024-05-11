@@ -4,10 +4,7 @@ import com.github.andrew0030.dakimakuramod.DakimakuraModClient;
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiImageData;
 import com.github.andrew0030.dakimakuramod.netwok.NetworkUtil;
-import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.platform.TextureUtil;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.server.packs.resources.ResourceManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.stb.STBImageResize;
 import org.lwjgl.system.MemoryUtil;
@@ -17,12 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-public class DakiTexture extends AbstractTexture
+public class DakiTexture implements AutoCloseable
 {
+    private final Daki daki;
+    private int id = -1;
     private static long lastLoad;
     private boolean requested = false;
-    private final Daki daki;
-//    private BufferedImage bufferedImageFull;
     private ByteBuffer imageBuffer;
 
     public DakiTexture(Daki daki)
@@ -32,16 +29,13 @@ public class DakiTexture extends AbstractTexture
 
     public boolean isLoaded()
     {
-        if (this.id == -1) //TODO maybe change this?
+        if (this.id == -1)
         {
             if (DakiTexture.lastLoad + 25 < System.currentTimeMillis())
             {
-                if (this.load())
-                {
-                    lastLoad = System.currentTimeMillis();
-                }
-                else
-                {
+                if (this.load()) {
+                    DakiTexture.lastLoad = System.currentTimeMillis();
+                } else {
                     if (!this.requested)
                     {
                         DakiTextureManagerClient textureManager = DakimakuraModClient.getDakiTextureManager();
@@ -51,7 +45,7 @@ public class DakiTexture extends AbstractTexture
                             textureManager.getTextureRequests().incrementAndGet();
                             if (this.daki != null)
                             {
-                                requested = true;
+                                this.requested = true;
                                 NetworkUtil.clientRequestTextures(daki);
                             }
                         }
@@ -89,9 +83,8 @@ public class DakiTexture extends AbstractTexture
             textureSize = Math.min(textureSize, maxTexture);
 
             // Resize images if needed
-            // TODO make images scale to width size/3 to fix scaling issue son low res
-            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 2, textureSize, this.daki.isSmooth());
-            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 2, textureSize, this.daki.isSmooth());
+            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 3, textureSize, this.daki.isSmooth());
+            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 3, textureSize, this.daki.isSmooth());
 
             // Stores the combines front and back images into one buffer
             this.imageBuffer = this.combineImages(imageBufferFront, imageBufferBack, textureSize);
@@ -108,29 +101,21 @@ public class DakiTexture extends AbstractTexture
         this.releaseId();
     }
 
-    @Override
-    public void load(ResourceManager resourceManager) {}
-
     private boolean load()
     {
-        if (this.imageBuffer == null)
-            return false;
+        // If the ImageBuffer is null we can't load the image
+        if (this.imageBuffer == null) return false;
+        this.releaseId(); // We remove former textures
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getId());
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST); // LINEAR for smooth
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 12, 36 * 2, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
 
-        this.releaseId();
-        try {
-            //TODO make sure this works? Probably replace with a cleaner implementation
-            NativeImage image = NativeImage.read(NativeImage.Format.RGB, this.imageBuffer);
-            TextureUtil.prepareImage(NativeImage.InternalGlFormat.RGB, this.getId(), 0, image.getWidth(), image.getHeight());
-            this.bind();
-            image.upload(0, 0, 0, false);
-
-            //TODO make sure this is ok here I guess?
-            MemoryUtil.memFree(this.imageBuffer);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        // Frees the memory associated with the Image Buffer
+//        MemoryUtil.memFree(this.imageBuffer);
+//        this.imageBuffer = null; TODO: maybe we clear it? I mean we need to at some point but doing it here likely breaks the logic in isLoaded
         return true;
     }
 
@@ -151,44 +136,33 @@ public class DakiTexture extends AbstractTexture
     private ByteBuffer resize(ByteBuffer imgBuffer, int oldWidth, int oldHeight, int newWidth, int newHeight, boolean isSmooth)
     {
         // Allocates memory for the resized image
-        ByteBuffer resizedBuffer = ByteBuffer.allocateDirect(newWidth * newHeight * 3); // 3 channels (RGB)
+        ByteBuffer resizedBuffer = MemoryUtil.memAlloc(newWidth * newHeight * 3); // 3 channels (RGB)
+
+        // TODO: maybe look into using 16 for this for potentially better textures
+        // STBImageResize.stbir_resize_uint16_generic();
+
         // Resizes the image using STBImageResize
-        //TODO: maybe look into using 16 for this for potentially better textures
-//        STBImageResize.stbir_resize_uint16_generic();
         STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
-        // Frees the memory associated with the original input ByteBuffer
-        MemoryUtil.memFree(imgBuffer);
-        // Returns the resized image data ByteBuffer
-        return resizedBuffer;
+        MemoryUtil.memFree(imgBuffer); // Frees the memory associated with the original input ByteBuffer
+        return resizedBuffer; // Returns the resized image data ByteBuffer
     }
 
     private ByteBuffer combineImages(ByteBuffer imageBufferFront, ByteBuffer imageBufferBack, int textureSize)
     {
         // Allocate memory for the combined image buffer
-        ByteBuffer combinedBuffer = ByteBuffer.allocateDirect(textureSize * textureSize * 3); // 3 channels (RGB)
-        // Copy front image to the left side of combined image
+        ByteBuffer combinedBuffer = MemoryUtil.memAlloc(textureSize * textureSize * 3); // 3 channels (RGB)
         imageBufferFront.rewind(); // Resets position to start
         combinedBuffer.put(imageBufferFront);
-        // Copy back image to the right side of combined image
         imageBufferBack.rewind(); // Resets position to start
-        combinedBuffer.position(textureSize / 2 * 3); // Start writing at the middle of the buffer
+        combinedBuffer.position(imageBufferFront.capacity()); // Start writing at the middle of the buffer
         combinedBuffer.put(imageBufferBack);
-        // Reset position to start of the combined buffer
-        combinedBuffer.rewind();
+        combinedBuffer.rewind(); // Reset position to start of the combined buffer
 
+        // Frees the memory associated with the original input ByteBuffers
         MemoryUtil.memFree(imageBufferFront);
         MemoryUtil.memFree(imageBufferBack);
 
         return combinedBuffer;
-    }
-
-    /**
-     * @param value The value for which to calculate the next power of 2.
-     * @return The next power of 2 greater than or equal to the given value.
-     */
-    private int getNextPowerOf2(int value)
-    {
-        return (int) Math.pow(2, 32 - Integer.numberOfLeadingZeros(value - 1));
     }
 
     /**
@@ -208,5 +182,30 @@ public class DakiTexture extends AbstractTexture
     private InputStream getMissingTexture()
     {
         return DakiTexture.class.getClassLoader().getResourceAsStream("assets/dakimakuramod/textures/obj/missing.png");
+    }
+
+    /**
+     * @param value The value for which to calculate the next power of 2.
+     * @return The next power of 2 greater than or equal to the given value.
+     */
+    private int getNextPowerOf2(int value)
+    {
+        return (int) Math.pow(2, 32 - Integer.numberOfLeadingZeros(value - 1));
+    }
+
+    public int getId()
+    {
+        if (this.id == -1)
+            this.id = GL11.glGenTextures();
+        return this.id;
+    }
+
+    public void releaseId()
+    {
+        if (this.id != -1)
+        {
+            GL11.glDeleteTextures(this.id);
+            this.id = -1;
+        }
     }
 }
