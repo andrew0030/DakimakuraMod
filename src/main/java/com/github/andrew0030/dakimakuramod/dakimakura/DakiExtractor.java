@@ -15,9 +15,7 @@ public final class DakiExtractor
     private static final String DEFAULT_DAKI_PACK = "Vanilla Mobs";
     private static final String[] DEFAULT_DAKI_LIST = new String[] {"Allay", "Axolotl", "Camel", "Horse"};
 
-    /**
-     * Creates the daki folder in the game directory, and then extracts the default dakis and README's into it
-     */
+    /** Creates the daki folder in the game directory, and then extracts the default dakis and README's into it */
     public static void extractDakis()
     {
         File packFolder = DakimakuraMod.getDakimakuraManager().getPackFolder();

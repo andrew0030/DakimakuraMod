@@ -33,6 +33,9 @@ public class DakiPackZip extends AbstractDakiPack
     @Override
     public byte[] getResource(String path)
     {
+        // If the given path is null we return null and don't run further logic
+        if(path == null) return null;
+
         try (ZipFile zipFile = new ZipFile(new File(this.dakiManager.getPackFolder(), this.getResourceName()), ZipFile.OPEN_READ)) {
             ZipEntry zipEntry = zipFile.getEntry(path);
             if (zipEntry != null) {
@@ -63,7 +66,7 @@ public class DakiPackZip extends AbstractDakiPack
      */
     public DakiPackZip loadPack()
     {
-        LOGGER.info(String.format("Loading Zip Pack: '%s'", this.getName()));
+        LOGGER.info(String.format("Loading Pack: '%s'", this.getResourceName()));
         try (ZipFile zipFile = new ZipFile(new File(this.dakiManager.getPackFolder(), this.getResourceName()), ZipFile.OPEN_READ)) {
             int depth = this.findDepth(zipFile);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -120,7 +123,7 @@ public class DakiPackZip extends AbstractDakiPack
         {
             try (InputStream inputStream = zipFile.getInputStream(dakiJsonZipEntry)) {
                 String dakiJson = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-                Daki daki = DakiJsonSerializer.deserialize(dakiJson, this.getResourceName(), split[split.length - 1]);
+                Daki daki = DakiJsonSerializer.deserialize(dakiJson, this.getResourceName(), dakiName);
                 if (daki != null)
                 {
                     LOGGER.info(String.format("Loading Dakimakura: '%s'", split[split.length - 1]));
@@ -133,7 +136,7 @@ public class DakiPackZip extends AbstractDakiPack
         else
         {
             // TODO test this fallback generation and maybe move the logger above up or add a new one here
-            this.addDaki(new Daki(this.getResourceName(), split[split.length - 1]));
+            this.addDaki(new Daki(this.getResourceName(), dakiName));
         }
     }
 }

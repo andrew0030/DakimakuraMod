@@ -31,13 +31,15 @@ public class DakiPackFolder extends AbstractDakiPack
     @Override
     public byte[] getResource(String path)
     {
-        byte[] data = null;
+        // If the given path is null we return null and don't run further logic
+        if(path == null) return null;
+
         try (FileInputStream inputStream = new FileInputStream(new File(this.dakiManager.getPackFolder(), this.getResourceName() + "/" + path))) {
-            data = IOUtils.toByteArray(inputStream);
+            return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return data;
+        return null;
     }
 
     @Override

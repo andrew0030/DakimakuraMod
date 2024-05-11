@@ -12,6 +12,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DMCreativeTab
 {
@@ -23,6 +24,7 @@ public class DMCreativeTab
             .displayItems((params, output) -> {
                 output.accept(DMBlocks.DAKIMAKURA.get());
                 ArrayList<Daki> dakiList = DakimakuraMod.getDakimakuraManager().getDakiList();
+                Collections.sort(dakiList); // Sorts the list in ascending order
                 for(Daki daki : dakiList)
                 {
                     ItemStack itemStack = new ItemStack(DMBlocks.DAKIMAKURA.get());
