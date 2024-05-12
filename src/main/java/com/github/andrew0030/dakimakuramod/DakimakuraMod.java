@@ -20,8 +20,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 
 @Mod(DakimakuraMod.MODID)
@@ -55,7 +57,7 @@ public class DakimakuraMod
     private void commonSetup(FMLCommonSetupEvent event)
     {
         // Initializes the DakiManager, this should only happen once per Mod
-        DakimakuraMod.dakiManager = new DakiManager(Minecraft.getInstance().gameDirectory);
+        DakimakuraMod.dakiManager = new DakiManager(FMLPaths.GAMEDIR.get().toFile());
         // Initializes the DakiTextureManagerCommon
         DakimakuraMod.dakiTextureManagerCommon = new DakiTextureManagerCommon();
         // Loads the default DakiPack/s into the dakimakura-mod folder if needed

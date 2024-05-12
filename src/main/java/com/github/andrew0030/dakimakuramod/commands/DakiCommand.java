@@ -2,6 +2,7 @@ package com.github.andrew0030.dakimakuramod.commands;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.netwok.NetworkUtil;
+import com.github.andrew0030.dakimakuramod.registries.DMCreativeTab;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandBuildContext;
@@ -30,6 +31,7 @@ public class DakiCommand
                 .executes(cs -> {
                     DakimakuraMod.getDakimakuraManager().loadPacks(true);
                     DakimakuraMod.getTextureManagerCommon().clear();
+                    DMCreativeTab.reloadTabContents();
                     return 1;
                 }))
         );
