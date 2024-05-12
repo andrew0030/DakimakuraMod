@@ -5,7 +5,9 @@
   "refmap": "dakimakuramod.refmap.json",
   "minVersion": "0.8",
   "mixins": [],
-  "client": [],
+  "client": [
+    "CreativeModeInventoryScreenMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

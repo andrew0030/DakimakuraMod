@@ -26,18 +26,14 @@ public class DakiTextureManagerCommon implements Runnable
         this.dakiLoadQueue = new ArrayList<>();
     }
 
-    /**
-     * Starts a new Common Texture Manager Thread
-     */
+    /** Starts a new Common Texture Manager Thread */
     public void serverStarted()
     {
         this.threadTextureManager = new Thread(this, "Dakimakura Mod texture manager thread");
         this.threadTextureManager.start();
     }
 
-    /**
-     * Ends the Common Texture Manager Thread
-     */
+    /** Ends the Common Texture Manager Thread */
     public void serverStopped()
     {
         this.threadTextureManager = null;

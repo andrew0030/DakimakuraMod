@@ -19,7 +19,7 @@ public class DakiCommand
         String reloadArg = "reload";
 
         LiteralCommandNode<CommandSourceStack> source = dispatcher.register(Commands.literal(commandString)
-                // .requires((permission) -> permission.hasPermission(2)) //TODO add permission check to reload
+//                 .requires((permission) -> permission.hasPermission(2)) //TODO add permission check to reload
                 .then(Commands.literal(openPackFolderArg)
                 .executes(cs -> {
                     Entity entity = cs.getSource().getEntity();

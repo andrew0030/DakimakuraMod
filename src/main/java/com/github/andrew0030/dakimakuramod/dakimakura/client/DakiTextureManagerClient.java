@@ -1,10 +1,7 @@
 package com.github.andrew0030.dakimakuramod.dakimakura.client;
 
-import com.github.andrew0030.dakimakuramod.DakimakuraMod;
-import com.github.andrew0030.dakimakuramod.DakimakuraModClient;
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiImageData;
-import com.github.andrew0030.dakimakuramod.entities.dakimakura.Dakimakura;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -52,6 +49,11 @@ public class DakiTextureManagerClient implements RemovalListener<Daki, DakiTextu
             this.textureCache.put(daki, dakiTexture);
         }
         return dakiTexture;
+    }
+
+    public ArrayList<Daki> getCachedDakis()
+    {
+        return new ArrayList<>(textureCache.asMap().keySet());
     }
 
     @SubscribeEvent
