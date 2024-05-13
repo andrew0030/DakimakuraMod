@@ -20,11 +20,47 @@ public class DakiTexture implements AutoCloseable
     private int id = -1;
     private static long lastLoad;
     private boolean requested = false;
+    private int textureSize = 0;
     private ByteBuffer imageBuffer;
 
     public DakiTexture(Daki daki)
     {
         this.daki = daki;
+    }
+
+    public void createImageBuffer(DakiImageData imageData)
+    {
+        boolean isFrontMissing = imageData.getTextureFront() == null;
+        boolean isBackMissing = imageData.getTextureBack() == null;
+        try (InputStream inputStreamFront = isFrontMissing ? this.getMissingTexture() : new ByteArrayInputStream(imageData.getTextureFront());
+             InputStream inputStreamBack = isBackMissing ? this.getMissingTexture() : new ByteArrayInputStream(imageData.getTextureBack())) {
+
+            // Load images using STBImage
+            int[] frontWidth = new int[1];
+            int[] frontHeight = new int[1];
+            int[] frontComp = new int[1];
+            int[] backWidth = new int[1];
+            int[] backHeight = new int[1];
+            int[] backComp = new int[1];
+            ByteBuffer imageBufferFront = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamFront), frontWidth, frontHeight, frontComp, 3);
+            ByteBuffer imageBufferBack = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamBack), backWidth, backHeight, backComp, 3);
+
+            // We determine the bigger size to use, and make sure the size is within max size
+            int biggerTexture = Math.max(frontHeight[0], backHeight[0]);
+            int maxTextureSize = this.getMaxTextureSize();
+            this.textureSize = Math.min(biggerTexture, maxTextureSize);// TODO atm height is x2 because the images are stacked, either deal with this or ignore if fixed
+
+            // Resize images if needed
+            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 3, textureSize, !isFrontMissing && this.daki.isSmooth());
+            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 3, textureSize, !isBackMissing && this.daki.isSmooth());
+
+            // Stores the combines front and back images into one buffer
+            this.imageBuffer = this.combineImages(imageBufferFront, imageBufferBack, textureSize / 3, textureSize);
+
+            imageData.clearTextureData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isLoaded()
@@ -62,60 +98,23 @@ public class DakiTexture implements AutoCloseable
         return true;
     }
 
-    public void createImageBuffer(DakiImageData imageData)
-    {
-        try (InputStream inputStreamFront = imageData.getTextureFront() != null ? new ByteArrayInputStream(imageData.getTextureFront()) : this.getMissingTexture();
-             InputStream inputStreamBack = imageData.getTextureBack() != null ? new ByteArrayInputStream(imageData.getTextureBack()) : this.getMissingTexture()) {
-
-            // Load images using STBImage
-            int[] frontWidth = new int[1];
-            int[] frontHeight = new int[1];
-            int[] frontComp = new int[1];
-            int[] backWidth = new int[1];
-            int[] backHeight = new int[1];
-            int[] backComp = new int[1];
-            ByteBuffer imageBufferFront = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamFront), frontWidth, frontHeight, frontComp, 3);
-            ByteBuffer imageBufferBack = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamBack), backWidth, backHeight, backComp, 3);
-
-            // We determine make sure the daki is within max size
-            int maxTexture = Math.max(frontHeight[0], backHeight[0]);
-            int textureSize = this.getMaxTextureSize();
-            textureSize = Math.min(textureSize, maxTexture);
-
-            // Resize images if needed
-            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 3, textureSize, this.daki.isSmooth());
-            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 3, textureSize, this.daki.isSmooth());
-
-            // Stores the combines front and back images into one buffer
-            this.imageBuffer = this.combineImages(imageBufferFront, imageBufferBack, textureSize);
-
-            imageData.clearTextureData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void close()
-    {
-        this.releaseId();
-    }
-
     private boolean load()
     {
         // If the ImageBuffer is null we can't load the image
         if (this.imageBuffer == null) return false;
-        this.releaseId(); // We remove former textures
+        this.releaseId(); // We remove former textures if there are any
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getId());
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST); // LINEAR for smooth
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, 12, 36 * 2, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        // TODO update the values bellow for width and height once images are no longer on top of each other
+        // Note: both images are resized by this time, so its safe to assume they are the same size
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, this.textureSize / 3, this.textureSize * 2, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
 
         // Frees the memory associated with the Image Buffer
 //        MemoryUtil.memFree(this.imageBuffer);
-//        this.imageBuffer = null; TODO: maybe we clear it? I mean we need to at some point but doing it here likely breaks the logic in isLoaded
+//        this.imageBuffer = null;// TODO: maybe we clear it? I mean we need to at some point but doing it here likely breaks the logic in isLoaded
         return true;
     }
 
@@ -135,22 +134,48 @@ public class DakiTexture implements AutoCloseable
 
     private ByteBuffer resize(ByteBuffer imgBuffer, int oldWidth, int oldHeight, int newWidth, int newHeight, boolean isSmooth)
     {
+        // If no resizing is needed we return the given image buffer
+        if (oldWidth == newWidth && oldHeight == newHeight) return imgBuffer;
+
         // Allocates memory for the resized image
         ByteBuffer resizedBuffer = MemoryUtil.memAlloc(newWidth * newHeight * 3); // 3 channels (RGB)
-
-        // TODO: maybe look into using 16 for this for potentially better textures
-        // STBImageResize.stbir_resize_uint16_generic();
-
-        // Resizes the image using STBImageResize
-        STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
-        MemoryUtil.memFree(imgBuffer); // Frees the memory associated with the original input ByteBuffer
-        return resizedBuffer; // Returns the resized image data ByteBuffer
+        if (isSmooth) {
+            STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
+        } else {
+            this.scaleNearestNeighbor(imgBuffer, oldWidth, oldHeight, resizedBuffer, newWidth, newHeight, false);
+        }
+        // Frees the memory associated with the original input ByteBuffer
+        MemoryUtil.memFree(imgBuffer);
+        return resizedBuffer;
     }
 
-    private ByteBuffer combineImages(ByteBuffer imageBufferFront, ByteBuffer imageBufferBack, int textureSize)
+    private void scaleNearestNeighbor(ByteBuffer srcBuffer, int srcWidth, int srcHeight, ByteBuffer destBuffer, int destWidth, int destHeight, boolean useAlpha)
+    {
+        float xScale = (float) srcWidth / destWidth;
+        float yScale = (float) srcHeight / destHeight;
+
+        for (int y = 0; y < destHeight; y++)
+        {
+            for (int x = 0; x < destWidth; x++)
+            {
+                int srcX = (int) (x * xScale);
+                int srcY = (int) (y * yScale);
+                int srcIndex = (srcY * srcWidth + srcX) * 3;
+
+                int destIndex = (y * destWidth + x) * 3;
+
+                // Copy pixel values from source buffer to destination buffer
+                for (int c = 0; c < 3; c++)
+                    destBuffer.put(destIndex + c, srcBuffer.get(srcIndex + c));
+            }
+        }
+    }
+
+    private ByteBuffer combineImages(ByteBuffer imageBufferFront, ByteBuffer imageBufferBack, int imagesWidth, int imagesHeight)
     {
         // Allocate memory for the combined image buffer
-        ByteBuffer combinedBuffer = MemoryUtil.memAlloc(textureSize * textureSize * 3); // 3 channels (RGB)
+        ByteBuffer combinedBuffer = MemoryUtil.memAlloc(imagesWidth * imagesHeight * 2 * 3); // 3 channels (RGB)
+
         imageBufferFront.rewind(); // Resets position to start
         combinedBuffer.put(imageBufferFront);
         imageBufferBack.rewind(); // Resets position to start
@@ -184,15 +209,7 @@ public class DakiTexture implements AutoCloseable
         return DakiTexture.class.getClassLoader().getResourceAsStream("assets/dakimakuramod/textures/obj/missing.png");
     }
 
-    /**
-     * @param value The value for which to calculate the next power of 2.
-     * @return The next power of 2 greater than or equal to the given value.
-     */
-    private int getNextPowerOf2(int value)
-    {
-        return (int) Math.pow(2, 32 - Integer.numberOfLeadingZeros(value - 1));
-    }
-
+    /** Gets or creates a new id referencing to the texture location on the GPU. */
     public int getId()
     {
         if (this.id == -1)
@@ -200,6 +217,7 @@ public class DakiTexture implements AutoCloseable
         return this.id;
     }
 
+    /** Deletes textures associated with the id of this {@link DakiTexture} object from the GPU and resets the id. */
     public void releaseId()
     {
         if (this.id != -1)
@@ -207,5 +225,11 @@ public class DakiTexture implements AutoCloseable
             GL11.glDeleteTextures(this.id);
             this.id = -1;
         }
+    }
+
+    @Override
+    public void close()
+    {
+        this.releaseId();
     }
 }
