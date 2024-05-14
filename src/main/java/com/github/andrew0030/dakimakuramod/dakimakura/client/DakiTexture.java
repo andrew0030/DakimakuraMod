@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 public class DakiTexture implements AutoCloseable
 {
     private final Daki daki;
-    private int id = -1;
+    private int id = 0;
     private static long lastLoad;
     private boolean requested = false;
     private int textureSize = 0;
@@ -42,8 +42,8 @@ public class DakiTexture implements AutoCloseable
             int[] backWidth = new int[1];
             int[] backHeight = new int[1];
             int[] backComp = new int[1];
-            ByteBuffer imageBufferFront = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamFront), frontWidth, frontHeight, frontComp, 3);
-            ByteBuffer imageBufferBack = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamBack), backWidth, backHeight, backComp, 3);
+            ByteBuffer imageBufferFront = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamFront), frontWidth, frontHeight, frontComp, 4);
+            ByteBuffer imageBufferBack = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamBack), backWidth, backHeight, backComp, 4);
 
             // We determine the bigger size to use, and make sure the size is within max size
             int biggerTexture = Math.max(frontHeight[0], backHeight[0]);
@@ -65,7 +65,7 @@ public class DakiTexture implements AutoCloseable
 
     public boolean isLoaded()
     {
-        if (this.id == -1)
+        if (this.id == 0)
         {
             if (DakiTexture.lastLoad + 25 < System.currentTimeMillis())
             {
@@ -110,7 +110,7 @@ public class DakiTexture implements AutoCloseable
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         // TODO update the values bellow for width and height once images are no longer on top of each other
         // Note: both images are resized by this time, so its safe to assume they are the same size
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, this.textureSize / 3, this.textureSize * 2, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.textureSize / 3, this.textureSize * 2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
 
         // Frees the memory associated with the Image Buffer
 //        MemoryUtil.memFree(this.imageBuffer);
@@ -138,35 +138,33 @@ public class DakiTexture implements AutoCloseable
         if (oldWidth == newWidth && oldHeight == newHeight) return imgBuffer;
 
         // Allocates memory for the resized image
-        ByteBuffer resizedBuffer = MemoryUtil.memAlloc(newWidth * newHeight * 3); // 3 channels (RGB)
+        ByteBuffer resizedBuffer = MemoryUtil.memAlloc(newWidth * newHeight * 4); // 4 channels (RGBA)
         if (isSmooth) {
-            STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 3); // 3 channels (RGB)
+            STBImageResize.stbir_resize_uint8(imgBuffer, oldWidth, oldHeight, 0, resizedBuffer, newWidth, newHeight, 0, 4); // 4 channels (RGBA)
         } else {
-            this.scaleNearestNeighbor(imgBuffer, oldWidth, oldHeight, resizedBuffer, newWidth, newHeight, false);
+            this.scaleNearestNeighborRGBA(imgBuffer, oldWidth, oldHeight, resizedBuffer, newWidth, newHeight);
         }
         // Frees the memory associated with the original input ByteBuffer
         MemoryUtil.memFree(imgBuffer);
         return resizedBuffer;
     }
 
-    private void scaleNearestNeighbor(ByteBuffer srcBuffer, int srcWidth, int srcHeight, ByteBuffer destBuffer, int destWidth, int destHeight, boolean useAlpha)
+    private void scaleNearestNeighborRGBA(ByteBuffer srcBuffer, int srcWidth, int srcHeight, ByteBuffer destBuffer, int destWidth, int destHeight)
     {
-        float xScale = (float) srcWidth / destWidth;
-        float yScale = (float) srcHeight / destHeight;
+        float scaleX = (float) srcWidth / destWidth;
+        float scaleY = (float) srcHeight / destHeight;
 
         for (int y = 0; y < destHeight; y++)
         {
             for (int x = 0; x < destWidth; x++)
             {
-                int srcX = (int) (x * xScale);
-                int srcY = (int) (y * yScale);
-                int srcIndex = (srcY * srcWidth + srcX) * 3;
+                int srcX = (int) (x * scaleX);
+                int srcY = (int) (y * scaleY);
+                int srcIndex = (srcY * srcWidth + srcX) * 4;
+                int destIndex = (y * destWidth + x) * 4;
 
-                int destIndex = (y * destWidth + x) * 3;
-
-                // Copy pixel values from source buffer to destination buffer
-                for (int c = 0; c < 3; c++)
-                    destBuffer.put(destIndex + c, srcBuffer.get(srcIndex + c));
+                for (int i = 0; i < 4; i++)
+                    destBuffer.put(destIndex + i, srcBuffer.get(srcIndex + i));
             }
         }
     }
@@ -174,7 +172,7 @@ public class DakiTexture implements AutoCloseable
     private ByteBuffer combineImages(ByteBuffer imageBufferFront, ByteBuffer imageBufferBack, int imagesWidth, int imagesHeight)
     {
         // Allocate memory for the combined image buffer
-        ByteBuffer combinedBuffer = MemoryUtil.memAlloc(imagesWidth * imagesHeight * 2 * 3); // 3 channels (RGB)
+        ByteBuffer combinedBuffer = MemoryUtil.memAlloc(imagesWidth * imagesHeight * 2 * 4); // 4 channels (RGBA)
 
         imageBufferFront.rewind(); // Resets position to start
         combinedBuffer.put(imageBufferFront);
@@ -212,7 +210,7 @@ public class DakiTexture implements AutoCloseable
     /** Gets or creates a new id referencing to the texture location on the GPU. */
     public int getId()
     {
-        if (this.id == -1)
+        if (this.id == 0)
             this.id = GL11.glGenTextures();
         return this.id;
     }
@@ -220,10 +218,10 @@ public class DakiTexture implements AutoCloseable
     /** Deletes textures associated with the id of this {@link DakiTexture} object from the GPU and resets the id. */
     public void releaseId()
     {
-        if (this.id != -1)
+        if (this.id != 0)
         {
             GL11.glDeleteTextures(this.id);
-            this.id = -1;
+            this.id = 0;
         }
     }
 

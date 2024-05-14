@@ -11,7 +11,7 @@ public class DakiSendHelper
 {
     private static final HashMap<Daki, byte[]> unfinishedSkins = new HashMap<>();
     //private static final int MAX_PACKET_SIZE = 2097050 - (97050 * 3);
-    private static final int MAX_PACKET_SIZE = Short.MAX_VALUE;
+    private static final int MAX_PACKET_SIZE = Integer.MAX_VALUE;//TODO change to Short and fix math that calculates how many packets get sent
 
     /**
      * Called on <strong>Server Side</strong> to send {@link Daki} texture parts.
@@ -64,7 +64,7 @@ public class DakiSendHelper
         byte[] oldSkinData = unfinishedSkins.get(daki);
         byte[] newSkinData = oldSkinData != null ? Arrays.copyOf(oldSkinData, oldSkinData.length + data.length) : data;
 
-        try {
+        try { //TODO ok I think the issue is that this is running before a check to see if the image is done
             byte[] data1 = sizeFront > 0 ? Arrays.copyOfRange(newSkinData, 0, sizeFront) : null;
             byte[] data2 = sizeBack > 0 ? Arrays.copyOfRange(newSkinData, sizeFront, sizeFront + sizeBack) : null;
 

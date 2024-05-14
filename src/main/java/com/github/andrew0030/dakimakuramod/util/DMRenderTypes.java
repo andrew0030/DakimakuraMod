@@ -1,6 +1,8 @@
 package com.github.andrew0030.dakimakuramod.util;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -29,7 +31,7 @@ public class DMRenderTypes extends RenderStateShard
     public static RenderType getSpecialDakimakuraType(int id)
     {
         RenderType.CompositeState state = RenderType.CompositeState.builder()
-                .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                .setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
                 .setTextureState(new DMRenderStateShard(id))
                 .setTransparencyState(NO_TRANSPARENCY)
                 .setLightmapState(LIGHTMAP)
