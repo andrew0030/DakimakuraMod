@@ -153,18 +153,20 @@ public class DakiTexture implements AutoCloseable
     {
         float scaleX = (float) srcWidth / destWidth;
         float scaleY = (float) srcHeight / destHeight;
+        byte[] pixel = new byte[4];
 
         for (int y = 0; y < destHeight; y++)
         {
+            int srcY = (int) (y * scaleY);
+
             for (int x = 0; x < destWidth; x++)
             {
                 int srcX = (int) (x * scaleX);
-                int srcY = (int) (y * scaleY);
-                int srcIndex = (srcY * srcWidth + srcX) * 4;
-                int destIndex = (y * destWidth + x) * 4;
+                int srcPosition = (srcY * srcWidth + srcX) * 4;
+                int destPosition = (y * destWidth + x) * 4;
 
-                for (int i = 0; i < 4; i++)
-                    destBuffer.put(destIndex + i, srcBuffer.get(srcIndex + i));
+                srcBuffer.get(srcPosition, pixel, 0, 4);
+                destBuffer.put(destPosition, pixel, 0, 4);
             }
         }
     }

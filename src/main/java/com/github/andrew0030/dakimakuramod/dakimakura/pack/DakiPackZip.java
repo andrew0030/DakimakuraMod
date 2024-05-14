@@ -10,7 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -70,11 +71,14 @@ public class DakiPackZip extends AbstractDakiPack
         try (ZipFile zipFile = new ZipFile(new File(this.dakiManager.getPackFolder(), this.getResourceName()), ZipFile.OPEN_READ)) {
             int depth = this.findDepth(zipFile);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
-            while (entries.hasMoreElements())
-            {
-                ZipEntry zipEntry = entries.nextElement();
-                if (zipEntry.isDirectory() && this.getDepth(zipEntry.getName()) == depth)
-                    this.loadDaki(zipFile, zipEntry);
+            List<ZipEntry> entryList = Collections.list(entries).stream()
+                    .filter(ZipEntry::isDirectory)
+                    .sorted(Comparator.comparing(ZipEntry::getName))
+                    .collect(Collectors.toList());
+            for (int i = 0; i < entryList.size(); i++) {
+                ZipEntry zipEntry = entryList.get(i);
+                if (this.getDepth(zipEntry.getName()) == depth)
+                    this.loadDaki(zipFile, zipEntry, (i == entryList.size() - 1));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,8 +118,9 @@ public class DakiPackZip extends AbstractDakiPack
         return count;
     }
 
-    private void loadDaki(ZipFile zipFile, ZipEntry zipEntry)
+    private void loadDaki(ZipFile zipFile, ZipEntry zipEntry, boolean lastInPack)
     {
+        String logPrefix = lastInPack ? " \\ " : " | ";
         String dakiName = zipEntry.getName().substring(0, zipEntry.getName().length() - 1);
         String[] split = dakiName.split("/");
         ZipEntry dakiJsonZipEntry = zipFile.getEntry(zipEntry.getName() + "daki-info.json");
@@ -126,7 +131,7 @@ public class DakiPackZip extends AbstractDakiPack
                 Daki daki = DakiJsonSerializer.deserialize(dakiJson, this.getResourceName(), dakiName);
                 if (daki != null)
                 {
-                    LOGGER.info(String.format("Loading Dakimakura: '%s'", split[split.length - 1]));
+                    LOGGER.info(String.format(logPrefix + "Loading Dakimakura: '%s'", split[split.length - 1]));
                     this.addDaki(daki);
                 }
             } catch (IOException e) {
@@ -135,7 +140,7 @@ public class DakiPackZip extends AbstractDakiPack
         }
         else
         {
-            // TODO test this fallback generation and maybe move the logger above up or add a new one here
+            LOGGER.info(String.format(logPrefix + "Loading Dakimakura Without Json: '%s' (No Json)", dakiName));
             this.addDaki(new Daki(this.getResourceName(), dakiName));
         }
     }

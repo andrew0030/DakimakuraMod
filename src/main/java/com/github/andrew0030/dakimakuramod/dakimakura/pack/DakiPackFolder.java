@@ -12,6 +12,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 public class DakiPackFolder extends AbstractDakiPack
 {
@@ -57,19 +63,23 @@ public class DakiPackFolder extends AbstractDakiPack
         LOGGER.info(String.format("Loading Pack: '%s'", this.getName()));
         File dir = new File(this.dakiManager.getPackFolder(), this.getResourceName());
         File[] files = dir.listFiles();
-        if (files == null || files.length == 0)
-        {
+        if (files == null || files.length == 0) {
             LOGGER.warn(String.format("No Files found in Pack: '%s'", this.getName()));
             return this;
         }
-        for (File file : files)
-            if (file.isDirectory())
-                this.loadDaki(dir, file);
+        List<File> fileList = Arrays.stream(files)
+                .filter(File::isDirectory)
+                .sorted(Comparator.comparing(File::getName))
+                .collect(Collectors.toList());
+        for(int i = 0; i < fileList.size(); i++)
+            if (fileList.get(i).isDirectory())
+                this.loadDaki(dir, fileList.get(i), (i == fileList.size() - 1));
         return this;
     }
 
-    private void loadDaki(File packDir, File dakiDir)
+    private void loadDaki(File packDir, File dakiDir, boolean lastInPack)
     {
+        String logPrefix = lastInPack ? " \\ " : " | ";
         File dakiFile = new File(dakiDir, "daki-info.json");
         if (dakiFile.exists())
         {
@@ -79,14 +89,14 @@ public class DakiPackFolder extends AbstractDakiPack
                 Daki dakimakura = DakiJsonSerializer.deserialize(dakiJson, packDir.getName(), dakiDir.getName());
                 if (dakimakura != null)
                 {
-                    LOGGER.info(String.format("Loading Dakimakura: '%s'", dakiDir.getName()));
+                    LOGGER.info(String.format(logPrefix + "Loading Dakimakura: '%s'", dakiDir.getName()));
                     this.addDaki(dakimakura);
                 }
             }
         }
         else
         {
-            // TODO test this fallback generation and maybe move the logger above up or add a new one here
+            LOGGER.info(String.format(logPrefix + "Loading Dakimakura: '%s' (No Json)", dakiDir.getName()));
             this.addDaki(new Daki(packDir.getName(), dakiDir.getName()));
         }
     }
