@@ -15,9 +15,9 @@ public class NetworkUtil
         DMNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new CommandClientMessage(CommandClientMessage.CommandType.OPEN_PACK_FOLDER));
     }
 
-    public static void sendTextures(ServerPlayer serverPlayer, Daki daki, int sizeFront, int sizeBack, byte[] data)
+    public static void sendTextures(ServerPlayer serverPlayer, Daki daki, int sizeFront, int sizeBack, int packetsNeeded, int idx, byte[] data)
     {
-        DMNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SendTexturesClientMessage(daki, sizeFront, sizeBack, data));
+        DMNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SendTexturesClientMessage(daki, sizeFront, sizeBack, packetsNeeded, idx, data));
     }
 
     public static void sendDakiList()

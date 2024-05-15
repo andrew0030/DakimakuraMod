@@ -2,15 +2,13 @@ package com.github.andrew0030.dakimakuramod.dakimakura;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
-import org.lwjgl.system.MemoryUtil;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
-import java.nio.ByteBuffer;
-
-/**
- * Used to handle loading the textures of a given {@link Daki} and storing them as byte arrays
- */
+/** Used to handle loading the textures of a given {@link Daki} and storing them as byte arrays */
 public class DakiImageData
 {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final String[] VALID_FILE_EXT = {"png", "jpg", "jpeg"};
     private static final String DEFAULT_NAME_FRONT = "front";
     private static final String DEFAULT_NAME_BACK = "back";
@@ -36,17 +34,13 @@ public class DakiImageData
         return this.daki;
     }
 
-    /**
-     * @return The Front Texture byte array
-     */
+    /** @return The Front Texture byte array */
     public byte[] getTextureFront()
     {
         return this.textureFront;
     }
 
-    /**
-     * @return The Back Texture byte array
-     */
+    /** @return The Back Texture byte array */
     public byte[] getTextureBack()
     {
         return this.textureBack;
@@ -58,9 +52,7 @@ public class DakiImageData
         this.textureBack = null;
     }
 
-    /**
-     * Sets the texture byte arrays based on the Images of the {@link Daki}, which was passed to the {@link DakiImageData} object during initialization
-     */
+    /** Sets the texture byte arrays based on the Images of the {@link Daki}, which was passed to the {@link DakiImageData} object during initialization. */
     public void load()
     {
         // We get the Daki Pack from the DakiManager
@@ -92,6 +84,8 @@ public class DakiImageData
             if (dakiPack.resourceExists(imagePath))
                 return imagePath; // If we find a match we use that path
         }
-        return null; // Lastly, if no suitable image path is found, we return null
+        // Lastly, if no suitable image path is found, we notify the user and return null
+        LOGGER.error(String.format("Failed finding any valid image for Daki: %s/%s", dakiDirectoryName, defaultImageName));
+        return null;
     }
 }

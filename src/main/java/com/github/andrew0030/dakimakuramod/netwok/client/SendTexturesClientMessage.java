@@ -11,13 +11,15 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record SendTexturesClientMessage(Daki daki, int sizeFront, int sizeBack, byte[] data)
+public record SendTexturesClientMessage(Daki daki, int sizeFront, int sizeBack, int packetsNeeded, int idx, byte[] data)
 {
     public void serialize(FriendlyByteBuf buf)
     {
         buf.writeUtf(daki.getPackDirectoryName() + ":" + daki.getDakiDirectoryName());
         buf.writeInt(sizeFront);
         buf.writeInt(sizeBack);
+        buf.writeInt(packetsNeeded);
+        buf.writeInt(idx);
         buf.writeBoolean(data != null);
         if (data != null)
         {
@@ -33,6 +35,8 @@ public record SendTexturesClientMessage(Daki daki, int sizeFront, int sizeBack, 
         Daki daki = DakimakuraMod.getDakimakuraManager().getDakiFromMap(pathSplit[0], pathSplit[1]);
         int sizeFront = buf.readInt();
         int sizeBack = buf.readInt();
+        int packetsNeeded = buf.readInt();
+        int idx = buf.readInt();
         byte[] data = new byte[0];
         if (buf.readBoolean())
         {
@@ -40,7 +44,7 @@ public record SendTexturesClientMessage(Daki daki, int sizeFront, int sizeBack, 
             data = new byte[size];
             buf.readBytes(data);
         }
-        return new SendTexturesClientMessage(daki, sizeFront, sizeBack, data);
+        return new SendTexturesClientMessage(daki, sizeFront, sizeBack, packetsNeeded, idx, data);
     }
 
     public static void handle(SendTexturesClientMessage message, Supplier<NetworkEvent.Context> ctx)

@@ -23,8 +23,10 @@ public class ClientPacketHandler
         Daki daki = msg.daki();
         int sizeFront = msg.sizeFront();
         int sizeBack = msg.sizeBack();
+        int packetsNeeded = msg.packetsNeeded();
+        int idx = msg.idx();
         byte[] data = msg.data();
-        DakiSendHelper.gotDakiTexturePartFromServer(daki, sizeFront, sizeBack, data);
+        DakiSendHelper.gotDakiTexturePartFromServer(daki, sizeFront, sizeBack, packetsNeeded, idx, data);
     }
 
     public static void handleSendDakiList(SendDakiListClientMessage msg)

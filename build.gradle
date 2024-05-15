@@ -49,12 +49,14 @@ mixin {
 }
 
 repositories {
-
+    maven { url "https://www.cursemaven.com" }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    implementation fg.deobf("curse.maven:spark-361579:4738952")
 }
 
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
