@@ -56,7 +56,9 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    implementation fg.deobf("curse.maven:spark-361579:4738952")
+    implementation fg.deobf("curse.maven:spark-361579:4738952") // Spark
+//    implementation fg.deobf("curse.maven:embeddium-908741:5321172") // Embedium
+//    implementation fg.deobf("curse.maven:oculus-581495:5299671") // Oculus
 }
 
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.

@@ -13,6 +13,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DakiTexture implements AutoCloseable
 {
@@ -22,6 +25,7 @@ public class DakiTexture implements AutoCloseable
     private boolean requested = false;
     private int textureSize = 0;
     private ByteBuffer imageBuffer;
+    private ExecutorService executorService;
 
     public DakiTexture(Daki daki)
     {
@@ -35,29 +39,49 @@ public class DakiTexture implements AutoCloseable
         try (InputStream inputStreamFront = isFrontMissing ? this.getMissingTexture() : new ByteArrayInputStream(imageData.getTextureFront());
              InputStream inputStreamBack = isBackMissing ? this.getMissingTexture() : new ByteArrayInputStream(imageData.getTextureBack())) {
 
-            // Load images using STBImage
-            int[] frontWidth = new int[1];
-            int[] frontHeight = new int[1];
-            int[] frontComp = new int[1];
-            int[] backWidth = new int[1];
-            int[] backHeight = new int[1];
-            int[] backComp = new int[1];
-            ByteBuffer imageBufferFront = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamFront), frontWidth, frontHeight, frontComp, 4);
-            ByteBuffer imageBufferBack = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamBack), backWidth, backHeight, backComp, 4);
+            this.executorService = Executors.newSingleThreadExecutor();
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                // Load images using STBImage
+                int[] frontWidth = new int[1];
+                int[] frontHeight = new int[1];
+                int[] frontComp = new int[1];
+                int[] backWidth = new int[1];
+                int[] backHeight = new int[1];
+                int[] backComp = new int[1];
+                ByteBuffer imageBufferFront = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamFront), frontWidth, frontHeight, frontComp, 4);
+                ByteBuffer imageBufferBack = STBImage.stbi_load_from_memory(this.inputStreamToByteBuffer(inputStreamBack), backWidth, backHeight, backComp, 4);
 
-            // We determine the bigger size to use, and make sure the size is within max size
-            int biggerTexture = Math.max(frontHeight[0], backHeight[0]);
-            int maxTextureSize = this.getMaxTextureSize();
-            this.textureSize = Math.min(biggerTexture, maxTextureSize);// TODO atm height is x2 because the images are stacked, either deal with this or ignore if fixed
+                // We determine the bigger size to use, and make sure the size is within max size
+                int biggerTexture = Math.max(frontHeight[0], backHeight[0]);
+                int maxTextureSize = this.getMaxTextureSize();
+                int textureSize = Math.min(biggerTexture, maxTextureSize);// TODO atm height is x2 because the images are stacked, either deal with this or ignore if fixed
 
-            // Resize images if needed
-            imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 3, textureSize, !isFrontMissing && this.daki.isSmooth());
-            imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 3, textureSize, !isBackMissing && this.daki.isSmooth());
+                // Resize images if needed
+                imageBufferFront = this.resize(imageBufferFront, frontWidth[0], frontHeight[0], textureSize / 3, textureSize, !isFrontMissing && this.daki.isSmooth());
+                imageBufferBack = this.resize(imageBufferBack, backWidth[0], backHeight[0], textureSize / 3, textureSize, !isBackMissing && this.daki.isSmooth());
 
-            // Stores the combines front and back images into one buffer
-            this.imageBuffer = this.combineImages(imageBufferFront, imageBufferBack, textureSize / 3, textureSize);
+                // Stores the combines front and back images into one buffer
+                ByteBuffer combinedBuffer = this.combineImages(imageBufferFront, imageBufferBack, textureSize / 3, textureSize);
 
-            imageData.clearTextureData();
+                synchronized (this)
+                {
+                    this.textureSize = textureSize;
+                    this.imageBuffer = combinedBuffer;
+                }
+                synchronized (imageData)
+                {
+                    imageData.clearTextureData();
+                }
+            }, this.executorService);
+
+            // handles thread shutdown on completion
+            future.thenRun(this.executorService::shutdown);
+            // handles thread shutdown on exception
+            future.exceptionally(ex -> {
+                System.err.println("Exception occurred: " + ex.getMessage());
+                this.executorService.shutdown();
+                return null;
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,9 +93,12 @@ public class DakiTexture implements AutoCloseable
         {
             if (DakiTexture.lastLoad + 25 < System.currentTimeMillis())
             {
-                if (this.load()) {
+                if (this.load())
+                {
                     DakiTexture.lastLoad = System.currentTimeMillis();
-                } else {
+                }
+                else
+                {
                     if (!this.requested)
                     {
                         DakiTextureManagerClient textureManager = DakimakuraModClient.getDakiTextureManager();
@@ -123,13 +150,18 @@ public class DakiTexture implements AutoCloseable
      * @param inputStream The {@link InputStream} to be converted
      * @return A new {@link ByteBuffer} containing all the bytes from the {@link InputStream}
      */
-    private ByteBuffer inputStreamToByteBuffer(InputStream inputStream) throws IOException
+    private ByteBuffer inputStreamToByteBuffer(InputStream inputStream)
     {
-        byte[] imageData = inputStream.readAllBytes();
-        ByteBuffer buffer = ByteBuffer.allocateDirect(imageData.length);
-        buffer.put(imageData);
-        buffer.flip();
-        return buffer;
+        try {
+            byte[] imageData = inputStream.readAllBytes();
+            ByteBuffer buffer = ByteBuffer.allocateDirect(imageData.length);
+            buffer.put(imageData);
+            buffer.flip();
+            return buffer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ByteBuffer.allocateDirect(0);
+        }
     }
 
     private ByteBuffer resize(ByteBuffer imgBuffer, int oldWidth, int oldHeight, int newWidth, int newHeight, boolean isSmooth)
@@ -190,9 +222,7 @@ public class DakiTexture implements AutoCloseable
         return combinedBuffer;
     }
 
-    /**
-     * @return The max texture size an image can be in pixels
-     */
+    /** @return The max texture size an image can be in pixels */
     private int getMaxTextureSize()
     {
         int maxGpuSize = DakimakuraModClient.getMaxGpuTextureSize();
@@ -201,9 +231,7 @@ public class DakiTexture implements AutoCloseable
         return maxGpuSize; // TODO: add config support for max image size
     }
 
-    /**
-     * @return An {@link InputStream} representing a missing texture
-     */
+    /** @return An {@link InputStream} representing a missing texture */
     private InputStream getMissingTexture()
     {
         return DakiTexture.class.getClassLoader().getResourceAsStream("assets/dakimakuramod/textures/obj/missing.png");
@@ -225,6 +253,8 @@ public class DakiTexture implements AutoCloseable
             GL11.glDeleteTextures(this.id);
             this.id = 0;
         }
+        if (this.executorService != null)
+            this.executorService.shutdownNow();
     }
 
     @Override
