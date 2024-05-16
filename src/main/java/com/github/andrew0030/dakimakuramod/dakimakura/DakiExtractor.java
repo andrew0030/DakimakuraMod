@@ -40,10 +40,11 @@ public final class DakiExtractor
 
     private static void extractReadmeFiles(File packFolder)
     {
-        for (String langCode : README_LIST)
+        LOGGER.info("Attempting READ_ME Extraction");
+        for (int i = 0; i < README_LIST.length; i++)
         {
-            String readmeName = "readme_" + langCode + ".txt";
-            DakiExtractor.extractResource(readmeName, new File(packFolder, readmeName), true);
+            String readmeName = "readme_" + README_LIST[i] + ".txt";
+            DakiExtractor.extractResource(readmeName, new File(packFolder, readmeName), true, i == README_LIST.length - 1);
         }
     }
 
@@ -56,7 +57,8 @@ public final class DakiExtractor
             return;
         }
         // If the folder was created successfully or already existed, we extract the "pack-info.json" and all the dakis
-        DakiExtractor.extractResource(packName + "/pack-info.json", new File(packFolder, "pack-info.json"), true);
+        LOGGER.info("Attempting pack-info Extraction");
+        DakiExtractor.extractResource(packName + "/pack-info.json", new File(packFolder, "pack-info.json"), true, true);
         for (String dakiName : dakiNames)
             DakiExtractor.extractDakiFiles(packFolder, packName, dakiName, true, "daki-info.json", "front.png", "back.png");
     }
@@ -75,13 +77,15 @@ public final class DakiExtractor
         // If the daki folder doesn't already exist we create it
         if (!dakiFolder.exists())
             dakiFolder.mkdir();
+        LOGGER.info(String.format("Attempting File Extraction for: '%s'", name));
         // Creates all the given files in the daki folder
-        for (String file : files)
-            DakiExtractor.extractResource(packName + "/" + name + "/" + file, new File(dakiFolder, file), overwrite);
+        for (int i = 0; i < files.length; i++)
+            DakiExtractor.extractResource(packName + "/" + name + "/" + files[i], new File(dakiFolder, files[i]), overwrite, (i == files.length - 1));
     }
 
-    private static void extractResource(String source, File target, boolean overwrite)
+    private static void extractResource(String source, File target, boolean overwrite, boolean isLast)
     {
+        String prefix = isLast ? " \\ " : " | ";
         // If we don't want to overwrite existing files and the file already exists we return
         if (!overwrite && target.exists())
             return;
@@ -89,13 +93,13 @@ public final class DakiExtractor
              OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
             if (input != null)
             {
-                LOGGER.info(String.format("Extracting file '%s' to '%s'.", source, target.getAbsolutePath()));
+                LOGGER.info(String.format(prefix + "Extracting: '%s' -> '%s'", source, target.getAbsolutePath()));
                 IOUtils.copy(input, output);
                 output.flush();
             }
             else
             {
-                LOGGER.error(String.format("Error extracting file '%s'.", source));
+                LOGGER.error(String.format(prefix + "Error extracting '%s'", source));
             }
         } catch (IOException e) {
             e.printStackTrace();
