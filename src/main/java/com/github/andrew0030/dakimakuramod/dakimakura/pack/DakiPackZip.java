@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-// TODO load zip in 1.12.2 and see if the folder structure is the same
 public class DakiPackZip extends AbstractDakiPack
 {
     private static final Logger LOGGER = LogUtils.getLogger();

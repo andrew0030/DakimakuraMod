@@ -4,31 +4,42 @@ import com.github.andrew0030.dakimakuramod.block_entities.dakimakura.DakimakuraB
 import com.github.andrew0030.dakimakuramod.dakimakura.Daki;
 import com.github.andrew0030.dakimakuramod.dakimakura.serialize.DakiTagSerializer;
 import com.github.andrew0030.dakimakuramod.items.DakimakuraItem;
+import com.github.andrew0030.dakimakuramod.registries.DMBlocks;
 import com.github.andrew0030.dakimakuramod.util.VoxelShapeTransformer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class DakimakuraBlock extends BaseEntityBlock
 {
@@ -139,27 +150,65 @@ public class DakimakuraBlock extends BaseEntityBlock
         }
     }
 
-    //TODO: probably maybe look into the non player method for destruction
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder)
+    {
+        List<ItemStack> stacks = super.getDrops(state, builder);
+        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        for (int i = 0; i < stacks.size(); i++)
+        {
+            ItemStack stack = stacks.get(i);
+            if (stack.is(DMBlocks.DAKIMAKURA.get().asItem()) && blockEntity instanceof DakimakuraBlockEntity dakiBlockEntity)
+            {
+                Daki daki = dakiBlockEntity.getDaki();
+                if (daki != null)
+                    stack.setTag(DakiTagSerializer.serialize(daki));
+                DakiTagSerializer.setFlipped(stack.getTag(), dakiBlockEntity.isFlipped());
+                stacks.set(i, stack);
+            }
+        }
+        return stacks;
+    }
+
     @Override
     public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
     {
-        if (!level.isClientSide())
+        if (state.getValue(TOP) && player.isCreative())
         {
-            boolean isWall = state.getValue(FACE).equals(AttachFace.WALL);
-            BlockPos blockpos = pos.relative(isWall ? getVerticalDirection(state.getValue(TOP)) : getNeighbourDirection(state.getValue(TOP), state.getValue(FACING)));
-            BlockState blockstate = level.getBlockState(blockpos);
-            if (blockstate.is(this))
-                level.destroyBlock(blockpos, false, player);
+            BlockPos offsetPos = state.getValue(FACE).equals(AttachFace.WALL) ?
+                    pos.relative(Direction.DOWN) :
+                    pos.relative(state.getValue(FACING).getOpposite());
+            BlockState offsetState = level.getBlockState(offsetPos);
+            if (offsetState.is(this))
+            {
+                if (!level.isClientSide())
+                    level.setBlock(offsetPos, Blocks.AIR.defaultBlockState(), 35);
+                this.spawnDestroyParticles(level, player, offsetPos, offsetState);
+            }
         }
         super.playerWillDestroy(level, pos, state, player);
     }
 
-    private Direction getNeighbourDirection(boolean isTop, Direction direction)
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston)
+    {
+        if (!level.isClientSide())
+        {
+            boolean isWall = state.getValue(FACE).equals(AttachFace.WALL);
+            BlockPos offsetPos = pos.relative(isWall ? DakimakuraBlock.getVerticalDirection(state.getValue(TOP)) : DakimakuraBlock.getNeighbourDirection(state.getValue(TOP), state.getValue(FACING)));
+            BlockState offsetState = level.getBlockState(offsetPos);
+            if (offsetState.is(this))
+                level.destroyBlock(offsetPos, true, null);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    public static Direction getNeighbourDirection(boolean isTop, Direction direction)
     {
         return !isTop ? direction : direction.getOpposite();
     }
 
-    private Direction getVerticalDirection(boolean isTop)
+    public static Direction getVerticalDirection(boolean isTop)
     {
         return isTop ? Direction.DOWN : Direction.UP;
     }

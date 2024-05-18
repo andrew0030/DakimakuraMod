@@ -1,7 +1,6 @@
 package com.github.andrew0030.dakimakuramod;
 
 import com.github.andrew0030.dakimakuramod.dakimakura.client.DakiTextureManagerClient;
-import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
 import com.github.andrew0030.dakimakuramod.entities.dakimakura.DakimakuraRenderer;
 import com.github.andrew0030.dakimakuramod.registries.DMBlockEntities;
 import com.github.andrew0030.dakimakuramod.registries.DMEntities;
@@ -12,8 +11,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
-
-import java.util.ArrayList;
 
 public class DakimakuraModClient
 {
@@ -60,11 +57,4 @@ public class DakimakuraModClient
     {
         return DakimakuraModClient.dakiTextureManagerClient;
     }
-
-    //TODO maybe remove? I moved this into ClientPacketHandler since its the only spot that calls it
-//    public static void setDakiList(ArrayList<IDakiPack> packs)
-//    {
-//        DakimakuraMod.getDakimakuraManager().setDakiList(packs);
-//        DakimakuraModClient.getDakiTextureManager().reloadTextures();
-//    }
 }

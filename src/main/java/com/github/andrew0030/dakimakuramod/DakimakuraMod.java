@@ -4,12 +4,10 @@ import com.github.andrew0030.dakimakuramod.commands.DakiCommand;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiExtractor;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiManager;
 import com.github.andrew0030.dakimakuramod.dakimakura.DakiTextureManagerCommon;
-import com.github.andrew0030.dakimakuramod.dakimakura.pack.IDakiPack;
 import com.github.andrew0030.dakimakuramod.events.LoggedInEvent;
 import com.github.andrew0030.dakimakuramod.netwok.DMNetwork;
 import com.github.andrew0030.dakimakuramod.registries.*;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -22,9 +20,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.slf4j.Logger;
-
-import java.io.File;
-import java.util.ArrayList;
 
 @Mod(DakimakuraMod.MODID)
 public class DakimakuraMod
@@ -91,10 +86,4 @@ public class DakimakuraMod
     {
         return DakimakuraMod.dakiTextureManagerCommon;
     }
-
-    //TODO probably remove this since we only have this in client now...
-//    public static void setDakiList(ArrayList<IDakiPack> packs)
-//    {
-//        DakimakuraMod.getDakimakuraManager().setDakiList(packs);
-//    }
 }
