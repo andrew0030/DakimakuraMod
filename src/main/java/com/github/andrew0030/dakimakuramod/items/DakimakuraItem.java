@@ -28,6 +28,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DakimakuraItem extends BEWLRBlockItem
@@ -105,16 +108,21 @@ public class DakimakuraItem extends BEWLRBlockItem
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag)
     {
         super.appendHoverText(stack, level, tooltip, flag);
+        List<Component> myToolTips = new ArrayList<>();
+        myToolTips.add(Component.translatable("tooltip.dakimakuramod.dakimakura"));
         Daki daki = DakiTagSerializer.deserialize(stack.getTag());
         if (daki != null)
         {
-            tooltip.add(Component.translatable("tooltip.dakimakuramod.dakimakura.flip"));
-            daki.addInformation(stack, tooltip);
+            myToolTips.add(Component.translatable("tooltip.dakimakuramod.dakimakura.flip"));
+            daki.addInformation(stack, myToolTips);
         }
         else
         {
-            tooltip.add(Component.translatable("tooltip.dakimakuramod.dakimakura.blank"));
+            myToolTips.add(Component.translatable("tooltip.dakimakuramod.dakimakura.blank"));
         }
+
+        TranslationHelper.formatTooltips(myToolTips);
+        tooltip.addAll(myToolTips);
     }
 
     public static boolean isFlipped(ItemStack itemStack)

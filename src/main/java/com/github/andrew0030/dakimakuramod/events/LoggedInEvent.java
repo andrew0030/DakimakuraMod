@@ -1,6 +1,5 @@
 package com.github.andrew0030.dakimakuramod.events;
 
-import com.github.andrew0030.dakimakuramod.DakimakuraMod;
 import com.github.andrew0030.dakimakuramod.netwok.NetworkUtil;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;

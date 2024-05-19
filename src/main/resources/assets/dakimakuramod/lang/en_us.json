@@ -6,9 +6,10 @@
   "block.dakimakuramod.dakimakura": "Dakimakura",
 
 "_comment3": "Tooltips",
-  "tooltip.dakimakuramod.dakimakura.blank": "Blank",
-  "tooltip.dakimakuramod.dakimakura.flip": "§7Sneak and §aright click§7 in the air to flip.",
+  "tooltip.dakimakuramod.dakimakura": "§7A huggable friend!",
+  "tooltip.dakimakuramod.dakimakura.blank": "§7Blank",
+  "tooltip.dakimakuramod.dakimakura.flip": "§7Sneak and §aRight Click§7 in the air to flip.",
   "tooltip.dakimakuramod.dakimakura.pack": "§7Pack: §f%s§7 - (%d/%d)",
   "tooltip.dakimakuramod.dakimakura.name": "§7Name: §f%s",
-  "tooltip.dakimakuramod.dakimakura.flavour": "§5%s"
+  "tooltip.dakimakuramod.dakimakura.flavour": "§5§o%s"
 }

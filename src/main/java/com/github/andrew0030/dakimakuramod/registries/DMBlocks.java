@@ -18,7 +18,7 @@ public class DMBlocks
 {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, DakimakuraMod.MODID);
 
-    public static final RegistryObject<Block> DAKIMAKURA = createDakimakuraBlock("dakimakura", () -> new DakimakuraBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.WHITE).sound(SoundType.WOOL).strength(1.0F).noOcclusion()), 1);
+    public static final RegistryObject<Block> DAKIMAKURA = createDakimakuraBlock("dakimakura", () -> new DakimakuraBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.WHITE).sound(SoundType.WOOL).strength(0.2F).noOcclusion()), 1);
 
     private static <B extends Block> RegistryObject<B> createDakimakuraBlock(String name, Supplier<? extends B> supplier, int maxStackSize)
     {

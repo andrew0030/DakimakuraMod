@@ -154,12 +154,11 @@ public class Daki implements Comparable<Daki>
         {
             int index =  dakiManager.getDakiIndexInPack(this) + 1;
             int total = dakiPack.getDakiCount();
-            TranslationHelper.getToolTipWithArgs(tooltip, "tooltip.dakimakuramod.dakimakura.pack", dakiPack.getName(), index, total);
-            TranslationHelper.getToolTipWithArgs(tooltip, "tooltip.dakimakuramod.dakimakura.name", this.getDisplayName());
+            tooltip.add(Component.translatable("tooltip.dakimakuramod.dakimakura.pack", dakiPack.getName(), index, total));
+            tooltip.add(Component.translatable("tooltip.dakimakuramod.dakimakura.name", this.getDisplayName()));
         }
+        // Flavour Text
         if (!StringUtil.isNullOrEmpty(this.getFlavourText()))
-        {
-            TranslationHelper.getToolTipWithArgs(tooltip, "tooltip.dakimakuramod.dakimakura.flavour", this.getFlavourText());
-        }
+            tooltip.add(Component.translatable("tooltip.dakimakuramod.dakimakura.flavour", this.getFlavourText()));
     }
 }
