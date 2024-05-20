@@ -1,7 +1,6 @@
 package com.github.andrew0030.dakimakuramod.entities.dakimakura;
 
 import com.github.andrew0030.dakimakuramod.DakimakuraMod;
-import com.github.andrew0030.dakimakuramod.util.DMRenderTypes;
 import com.github.andrew0030.dakimakuramod.util.obj.DakimakuraModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -37,7 +36,7 @@ public class DakimakuraRenderer extends EntityRenderer<Dakimakura>
         if (entity.isFlipped())
             poseStack.mulPose(Axis.YN.rotationDegrees(180));
 
-        this.dakimakuraModel.render(poseStack, buffer, packedLight, entity.getDaki());
+        this.dakimakuraModel.render(poseStack, buffer, packedLight, entity.getDaki(), entity.getX(), entity.getY(), entity.getZ());
 
         poseStack.popPose();
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
