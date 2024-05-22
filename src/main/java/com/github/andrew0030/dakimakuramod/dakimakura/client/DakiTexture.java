@@ -89,47 +89,44 @@ public class DakiTexture implements AutoCloseable
 
     public boolean isLoaded()
     {
-        if (this.id == 0)
+        // If id isn't 0 it means the texture has been loaded
+        if (this.id != 0) return true;
+
+        // Checks if enough time has passed since the last load attempt
+        if (DakiTexture.lastLoad + 25 >= System.currentTimeMillis()) return false;
+
+        // Attempts to load the texture
+        if (this.load())
         {
-            if (DakiTexture.lastLoad + 25 < System.currentTimeMillis())
-            {
-                if (this.load())
-                {
-                    DakiTexture.lastLoad = System.currentTimeMillis();
-                }
-                else
-                {
-                    if (!this.requested)
-                    {
-                        DakiTextureManagerClient textureManager = DakimakuraModClient.getDakiTextureManager();
-                        int requests = textureManager.getTextureRequests().get();
-                        if (requests < 2)
-                        {
-                            textureManager.getTextureRequests().incrementAndGet();
-                            if (this.daki != null)
-                            {
-                                this.requested = true;
-                                NetworkUtil.clientRequestTextures(daki);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (this.imageBuffer != null)
-                            this.load();
-                    }
-                }
-            }
+            DakiTexture.lastLoad = System.currentTimeMillis();
             return false;
         }
-        return true;
+
+        // If load failed because image buffer is null, and texture has not been requested, we request it
+        if (!this.requested)
+        {
+            DakiTextureManagerClient textureManager = DakimakuraModClient.getDakiTextureManager();
+            int requests = textureManager.getTextureRequests().get();
+
+            // If there are less than 2 requests, we increment and request the texture
+            if (requests < 2)
+            {
+                textureManager.getTextureRequests().incrementAndGet();
+                if (this.daki != null)
+                {
+                    this.requested = true;
+                    NetworkUtil.clientRequestTextures(daki);
+                }
+            }
+        }
+        return false;
     }
 
     private boolean load()
     {
         // If the ImageBuffer is null we can't load the image
         if (this.imageBuffer == null) return false;
-        this.releaseId(); // We remove former textures if there are any
+        this.releaseId(); // We remove former textures if there are any and close any still existing threads
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getId());
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
@@ -140,8 +137,8 @@ public class DakiTexture implements AutoCloseable
         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.textureSize / 3, this.textureSize * 2, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, this.imageBuffer);
 
         // Frees the memory associated with the Image Buffer
-//        MemoryUtil.memFree(this.imageBuffer);
-//        this.imageBuffer = null;// TODO: maybe we clear it? I mean we need to at some point but doing it here likely breaks the logic in isLoaded
+        MemoryUtil.memFree(this.imageBuffer);
+        this.imageBuffer = null;
         return true;
     }
 

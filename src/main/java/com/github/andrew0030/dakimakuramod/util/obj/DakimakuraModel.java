@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
@@ -37,7 +38,7 @@ public class DakimakuraModel
         double distance = 0;
         if (Minecraft.getInstance().player != null)
             distance = Minecraft.getInstance().player.distanceToSqr(pos.getCenter());
-        int lod = Mth.floor(distance / 48D);
+        int lod = Mth.floor(distance / 200D);
         this.render(stack, buffer, packedLight, daki, lod);
     }
 
@@ -46,7 +47,7 @@ public class DakimakuraModel
         double distance = 0;
         if (Minecraft.getInstance().player != null)
             distance = Minecraft.getInstance().player.distanceToSqr(x, y, z);
-        int lod = Mth.floor(distance / 48D);
+        int lod = Mth.floor(distance / 200D);
         this.render(stack, buffer, packedLight, daki, lod);
     }
 
