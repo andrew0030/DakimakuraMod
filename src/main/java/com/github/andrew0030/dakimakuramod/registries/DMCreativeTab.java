@@ -23,6 +23,7 @@ public class DMCreativeTab
             .title(Component.translatable("itemGroup." + DakimakuraMod.MODID + ".tab"))
             .icon(() -> new ItemStack(DMBlocks.DAKIMAKURA.get()))
             .displayItems((params, output) -> {
+                output.accept(DMItems.DAKIMAKURA_DESIGN.get());
                 output.accept(DMBlocks.DAKIMAKURA.get());
                 ArrayList<Daki> dakiList = DakimakuraMod.getDakimakuraManager().getDakiList();
                 Collections.sort(dakiList); // Sorts the list in ascending order

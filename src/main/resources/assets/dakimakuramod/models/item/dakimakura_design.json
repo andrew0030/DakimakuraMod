@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dakimakuramod:item/dakimakura_design"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "dakimakuramod:unlocked": 1
+      },
+      "model": "dakimakuramod:item/dakimakura_design_unlocked"
+    }
+  ]
+}

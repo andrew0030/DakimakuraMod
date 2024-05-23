@@ -24,6 +24,7 @@ public class TranslationHelper
         FORMATTING_REGEX = Pattern.compile(patternBuilder.toString());
     }
 
+    /** Takes a list of components and applies styles / splits lines */
     public static void formatTooltips(List<Component> tooltip)
     {
         // Holds the components which have been split/styled if needed

@@ -51,6 +51,10 @@ public class DakimakuraMod
 
     private void commonSetup(FMLCommonSetupEvent event)
     {
+        // Registers custom item properties
+        event.enqueueWork(() -> {
+           DMItems.registerItemProperties();
+        });
         // Initializes the DakiManager, this should only happen once per Mod
         DakimakuraMod.dakiManager = new DakiManager(FMLPaths.GAMEDIR.get().toFile());
         // Initializes the DakiTextureManagerCommon

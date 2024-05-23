@@ -1,0 +1,6 @@
+{
+  "parent": "dakimakuramod:item/dakimakura_design",
+  "textures": {
+    "layer0": "dakimakuramod:item/dakimakura_design_unlocked"
+  }
+}
